@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Playlist {
+	int id;
+
 	//Datos
 	private String nombre;
 	

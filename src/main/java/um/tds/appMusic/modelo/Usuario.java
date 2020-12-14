@@ -1,10 +1,13 @@
 package um.tds.appMusic.modelo;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Usuario {
+	int id;
+
 	//Datos personales
 	private String nombre;
 	private Date fechaNacimiento;
