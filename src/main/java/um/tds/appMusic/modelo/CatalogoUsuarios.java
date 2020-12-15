@@ -13,4 +13,8 @@ public class CatalogoUsuarios {
     public Usuario getUsuario(String usuario) {
         return usuarios.get(usuario);
     }
+
+    public Map<String, Usuario> getUsuarios() {
+        return usuarios;
+    }
 }

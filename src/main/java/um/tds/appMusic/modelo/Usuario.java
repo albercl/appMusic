@@ -1,6 +1,5 @@
 package um.tds.appMusic.modelo;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,31 +14,15 @@ public class Usuario {
 	
 	//Credenciales
 	private String usuario;
-	private String contraseña;
+	private String contrasena;
 	
 	//Datos de la cuenta
 	private boolean premium;
 	private List<Playlist> playlists;      
 	
 	//Constructores
-	/**
-	 * Constructor de la clase para el registro
-	 * @param nombre Nombre completo del usuario
-	 * @param fechaNacimiento Fecha de nacimiento del usuario
-	 * @param email Correo electrónico del usuario
-	 * @param usuario Nombre de usuario para el inicio de sesión
-	 * @param contraseña Contraseña para el inicio de sesión
-	 */
-	public Usuario(String nombre, Date fechaNacimiento, String email, String usuario, String contraseña) {
-		this.nombre = nombre;
-		this.fechaNacimiento = fechaNacimiento;
-		this.email = email;
-		
-		this.usuario = usuario;
-		this.contraseña = contraseña;
-		
-		premium = false;
-		playlists = new LinkedList<>();
+	public Usuario() {
+
 	}
 	
 	//Funciones
@@ -54,5 +37,69 @@ public class Usuario {
 			return pl.generarPDF();
 		
 		return false;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public boolean isPremium() {
+		return premium;
+	}
+
+	public void setPremium(boolean premium) {
+		this.premium = premium;
+	}
+
+	public Date getFechaNacimiento() {
+		return fechaNacimiento;
+	}
+
+	public void setFechaNacimiento(Date fechaNacimiento) {
+		this.fechaNacimiento = fechaNacimiento;
+	}
+
+	public List<Playlist> getPlaylists() {
+		return playlists;
+	}
+
+	public void setPlaylists(List<Playlist> playlists) {
+		this.playlists = playlists;
+	}
+
+	public String getContrasena() {
+		return contrasena;
+	}
+
+	public void setContrasena(String contrasena) {
+		this.contrasena = contrasena;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
 	}
 }

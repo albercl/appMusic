@@ -37,6 +37,15 @@ public class Playlist {
 	 * @return true si se ha generado el PDF
 	 */
 	public boolean generarPDF() {
+		//TODO: Implementar métodos
 		return false;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public String getNombre() {
+		return nombre;
 	}
 }

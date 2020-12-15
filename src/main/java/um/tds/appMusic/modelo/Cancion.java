@@ -8,4 +8,8 @@ public class Cancion {
 	 * Constructor
 	 * Carga de la canción de disco
 	 */
+
+	public int getId() {
+		return id;
+	}
 }
