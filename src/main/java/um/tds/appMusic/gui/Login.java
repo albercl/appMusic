@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.border.BevelBorder;
 
 import java.awt.Component;
+import java.awt.SystemColor;
 
 
 public class Login {
@@ -64,12 +65,12 @@ public class Login {
 		LoginFrame.setTitle("AppMusic");
 		LoginFrame.setBounds(500, 250, 480, 300);
 		LoginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 		ImageIcon iconoAppMusic = new ImageIcon("icons/iconoAppMusic.png");
 		LoginFrame.setIconImage(iconoAppMusic.getImage());
 
 		
 		JPanel loginPanel = new JPanel();
-		loginPanel.setBackground(Color.LIGHT_GRAY);
 		loginPanel.setBorder(null);
 		LoginFrame.getContentPane().add(loginPanel, BorderLayout.CENTER);
 		GridBagLayout gbl_loginPanel = new GridBagLayout();
@@ -145,8 +146,8 @@ public class Login {
 		});
 		
 		JLabel SplitLabel = new JLabel("label de separación");
+		SplitLabel.setForeground(SystemColor.menu);
 		SplitLabel.setFont(new Font("Tahoma", Font.PLAIN, 8));
-		SplitLabel.setForeground(Color.LIGHT_GRAY);
 		GridBagConstraints gbc_SplitLabel = new GridBagConstraints();
 		gbc_SplitLabel.insets = new Insets(0, 0, 5, 0);
 		gbc_SplitLabel.gridx = 0;
@@ -160,7 +161,6 @@ public class Login {
 		loginPanel.add(loginButton, gbc_loginButton);
 		
 		JPanel registerPanel = new JPanel();
-		registerPanel.setBackground(Color.LIGHT_GRAY);
 		LoginFrame.getContentPane().add(registerPanel, BorderLayout.SOUTH);
 		registerPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
