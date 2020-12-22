@@ -62,7 +62,7 @@ public class Login {
 		LoginFrame = new JFrame();
 		LoginFrame.setResizable(false);
 		LoginFrame.setTitle("AppMusic");
-		LoginFrame.setBounds(100, 100, 480, 300);
+		LoginFrame.setBounds(500, 250, 480, 300);
 		LoginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		ImageIcon iconoAppMusic = new ImageIcon("icons/iconoAppMusic.png");
 		LoginFrame.setIconImage(iconoAppMusic.getImage());
