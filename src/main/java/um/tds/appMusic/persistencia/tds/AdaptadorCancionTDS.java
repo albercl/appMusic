@@ -1,6 +1,5 @@
 package um.tds.appMusic.persistencia.tds;
 
-import beans.Entidad;
 import um.tds.appMusic.modelo.Cancion;
 import um.tds.appMusic.persistencia.IAdaptadorCancionDAO;
 
@@ -8,6 +7,7 @@ import java.util.List;
 
 import tds.driver.*;
 
+@SuppressWarnings("unused")
 public class AdaptadorCancionTDS implements IAdaptadorCancionDAO {
     private static ServicioPersistencia servicioPersistencia;
     private static AdaptadorCancionTDS instanciaUnica;

@@ -29,6 +29,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 public class Main {
 
@@ -110,18 +111,19 @@ public class Main {
 		songsListPanel.setBorder(new TitledBorder(null, "Canciones Recientes", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		centerPanel.add(songsListPanel);
 		GridBagLayout gbl_recentsSongsPanel_1 = new GridBagLayout();
-		gbl_recentsSongsPanel_1.rowHeights = new int[] {300, 50};
-		gbl_recentsSongsPanel_1.columnWidths = new int[] {30, 300, 30};
+		gbl_recentsSongsPanel_1.rowHeights = new int[] {10, 300, 50};
+		gbl_recentsSongsPanel_1.columnWidths = new int[] {10, 300, 10};
 		gbl_recentsSongsPanel_1.columnWeights = new double[]{0.0, 1.0, 0.0};
-		gbl_recentsSongsPanel_1.rowWeights = new double[]{1.0, 0.0};
+		gbl_recentsSongsPanel_1.rowWeights = new double[]{0.0, 1.0, 0.0};
 		songsListPanel.setLayout(gbl_recentsSongsPanel_1);
 		
 		JScrollPane tableScrollPane = new JScrollPane();
+		tableScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		GridBagConstraints gbc_tableScrollPane = new GridBagConstraints();
 		gbc_tableScrollPane.insets = new Insets(0, 0, 5, 5);
 		gbc_tableScrollPane.fill = GridBagConstraints.BOTH;
 		gbc_tableScrollPane.gridx = 1;
-		gbc_tableScrollPane.gridy = 0;
+		gbc_tableScrollPane.gridy = 1;
 		songsListPanel.add(tableScrollPane, gbc_tableScrollPane);
 		
 		recentSongsTable = new JTable();
@@ -147,11 +149,10 @@ public class Main {
 		
 		playerPanel = new JPanel();
 		GridBagConstraints gbc_playerPanel = new GridBagConstraints();
-		gbc_playerPanel.gridwidth = 2;
 		gbc_playerPanel.insets = new Insets(0, 0, 0, 5);
 		gbc_playerPanel.fill = GridBagConstraints.BOTH;
 		gbc_playerPanel.gridx = 1;
-		gbc_playerPanel.gridy = 1;
+		gbc_playerPanel.gridy = 2;
 		songsListPanel.add(playerPanel, gbc_playerPanel);
 		
 		JPanel navigationPanel = new JPanel();
