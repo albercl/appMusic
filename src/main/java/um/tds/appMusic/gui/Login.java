@@ -8,6 +8,7 @@ import java.awt.BorderLayout;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 
 import javax.swing.JTextField;
 import java.awt.GridBagConstraints;
@@ -63,12 +64,12 @@ public class Login {
 		LoginFrame = new JFrame();
 		LoginFrame.setResizable(false);
 		LoginFrame.setTitle("AppMusic");
-		LoginFrame.setBounds(500, 250, 480, 300);
+		LoginFrame.setBounds(450, 250, 480, 300);
 		LoginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		ImageIcon iconoAppMusic = new ImageIcon("icons/iconoAppMusic.png");
 		LoginFrame.setIconImage(iconoAppMusic.getImage());
-
+		
 		
 		JPanel loginPanel = new JPanel();
 		loginPanel.setBorder(null);
@@ -81,12 +82,18 @@ public class Login {
 		loginPanel.setLayout(gbl_loginPanel);
 		
 		JLabel titleLabel = new JLabel("AppMusic");
+		ImageIcon imageIcon = new ImageIcon("icons/iconoCircular.png"); // load the image to a imageIcon
+		Image image = imageIcon.getImage(); // transform it 
+		Image newimg = image.getScaledInstance(40, 40,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+		imageIcon = new ImageIcon(newimg);
+		titleLabel.setIcon(imageIcon);
 		titleLabel.setForeground(new Color(178, 34, 34));
 		titleLabel.setFont(new Font("Tahoma", Font.BOLD, 19));
 		GridBagConstraints gbc_titleLabel = new GridBagConstraints();
 		gbc_titleLabel.insets = new Insets(0, 0, 5, 0);
 		gbc_titleLabel.gridx = 0;
 		gbc_titleLabel.gridy = 0;
+
 		loginPanel.add(titleLabel, gbc_titleLabel);
 		
 		JLabel userLabel = new JLabel("Usuario:");

@@ -8,6 +8,8 @@ import java.awt.BorderLayout;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.GridBagLayout;
+import java.awt.Image;
+
 import javax.swing.JTextField;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -70,8 +72,12 @@ public class Register {
 		
 		JPanel titlePanel = new JPanel();
 		RegisterFrame.getContentPane().add(titlePanel, BorderLayout.NORTH);
-		
 		JLabel titleLabel = new JLabel("AppMusic");
+		ImageIcon imageIcon = new ImageIcon("icons/iconoCircular.png"); // load the image to a imageIcon
+		Image image = imageIcon.getImage(); // transform it 
+		Image newimg = image.getScaledInstance(40, 40,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+		imageIcon = new ImageIcon(newimg);
+		titleLabel.setIcon(imageIcon);
 		titleLabel.setForeground(new Color(178, 34, 34));
 		titleLabel.setFont(new Font("Tahoma", Font.BOLD, 19));
 		titlePanel.add(titleLabel);
@@ -262,13 +268,23 @@ public class Register {
 		registerPanel.add(registerButton, gbc_registerButton);
 		registerButton.setFont(new Font("Tahoma", Font.BOLD, 13));
 		
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		RegisterFrame.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
+		JPanel bottomPanel = new JPanel();
+		bottomPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		RegisterFrame.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 		
-		JLabel message2Label = new JLabel("<html><p>¿Ya tienes cuenta? <span style=\"color: rgb(178, 34, 34)\"><u>Inicia sesión</u></span>.</p></html>");
+		JLabel message2Label = new JLabel("¿Ya tienes cuenta?");
 		message2Label.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		buttonPanel.add(message2Label);
+		bottomPanel.add(message2Label);
+		
+
+		JButton loginButton = new JButton("<html><p><span style=\"color: rgb(178, 34, 34)\"><u>Inicia sesión</u></span>.</p></html>");
+		loginButton.setMargin(new Insets(2, 0, 2, 14));
+		loginButton.setIconTextGap(0);
+		loginButton.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		loginButton.setOpaque(false);
+		loginButton.setContentAreaFilled(false);
+		loginButton.setBorderPainted(false);
+		bottomPanel.add(loginButton);
 	}
 
 }
