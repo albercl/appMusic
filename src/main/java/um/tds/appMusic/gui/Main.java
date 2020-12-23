@@ -66,7 +66,7 @@ public class Main {
 		MainFrame.setBounds(500, 200, 500, 505);
 		MainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		ImageIcon iconoAppMusic = new ImageIcon(loadImage("icons/iconoAppMusic.png"));
+		ImageIcon iconoAppMusic = new ImageIcon(loadAppIcon("icons/iconoAppMusic.png"));
 		MainFrame.setIconImage(iconoAppMusic.getImage());
 		
 		JPanel topPanel = new JPanel();
@@ -201,7 +201,7 @@ public class Main {
 		navigationPanel.add(panel, gbc_panel);
 	}
 
-	private static Image loadImage(String name) {
+	private static Image loadImage(String name, int w, int h) {
 		Image imagen = null;
 		URL url = ClassLoader.getSystemResource(name);
 		BufferedImage myPicture;
@@ -214,5 +214,13 @@ public class Main {
 		}
 
 		return imagen;
+	}
+
+	private static Image loadImage(String name) {
+		return loadImage(name, 35, 35);
+	}
+
+	private static Image loadAppIcon(String name) {
+		return loadImage(name, 100, 100);
 	}
 }
