@@ -2,13 +2,11 @@ package um.tds.appMusic.gui;
 
 import java.awt.EventQueue;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
-import java.awt.Image;
 
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -23,16 +21,22 @@ import java.awt.event.ActionEvent;
 import java.awt.Component;
 import java.awt.SystemColor;
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URL;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.border.TitledBorder;
+import javax.swing.ListSelectionModel;
+import javax.swing.JScrollPane;
 
 public class Main {
 
 	private JFrame MainFrame;
+	private JTable recentSongsTable;
+	
+	private JPanel playerPanel;
+	private JPanel songsListPanel;
 
 	/**
 	 * Launch the application.
@@ -99,6 +103,56 @@ public class Main {
 		centerPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		centerPanel.setBackground(SystemColor.inactiveCaption);
 		MainFrame.getContentPane().add(centerPanel, BorderLayout.CENTER);
+		centerPanel.setLayout(new BorderLayout(0, 0));
+		
+		//Panel de canciones recientes
+		songsListPanel = new JPanel();
+		songsListPanel.setBorder(new TitledBorder(null, "Canciones Recientes", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		centerPanel.add(songsListPanel);
+		GridBagLayout gbl_recentsSongsPanel_1 = new GridBagLayout();
+		gbl_recentsSongsPanel_1.rowHeights = new int[] {300, 50};
+		gbl_recentsSongsPanel_1.columnWidths = new int[] {30, 300, 30};
+		gbl_recentsSongsPanel_1.columnWeights = new double[]{0.0, 1.0, 0.0};
+		gbl_recentsSongsPanel_1.rowWeights = new double[]{1.0, 0.0};
+		songsListPanel.setLayout(gbl_recentsSongsPanel_1);
+		
+		JScrollPane tableScrollPane = new JScrollPane();
+		GridBagConstraints gbc_tableScrollPane = new GridBagConstraints();
+		gbc_tableScrollPane.insets = new Insets(0, 0, 5, 5);
+		gbc_tableScrollPane.fill = GridBagConstraints.BOTH;
+		gbc_tableScrollPane.gridx = 1;
+		gbc_tableScrollPane.gridy = 0;
+		songsListPanel.add(tableScrollPane, gbc_tableScrollPane);
+		
+		recentSongsTable = new JTable();
+		recentSongsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		recentSongsTable.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+			},
+			new String[] {
+				"Canci\u00F3n", "Artista/s"
+			}
+		));
+		tableScrollPane.setViewportView(recentSongsTable);
+		
+		playerPanel = new JPanel();
+		GridBagConstraints gbc_playerPanel = new GridBagConstraints();
+		gbc_playerPanel.gridwidth = 2;
+		gbc_playerPanel.insets = new Insets(0, 0, 0, 5);
+		gbc_playerPanel.fill = GridBagConstraints.BOTH;
+		gbc_playerPanel.gridx = 1;
+		gbc_playerPanel.gridy = 1;
+		songsListPanel.add(playerPanel, gbc_playerPanel);
 		
 		JPanel navigationPanel = new JPanel();
 		navigationPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
