@@ -207,7 +207,7 @@ public class Main {
 		BufferedImage myPicture;
 		try {
 			myPicture = ImageIO.read(url);
-			imagen=myPicture.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+			imagen=myPicture.getScaledInstance(w, h, Image.SCALE_SMOOTH);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 			System.exit(1);
