@@ -66,7 +66,7 @@ public class Main {
 		MainFrame.setBounds(500, 200, 500, 505);
 		MainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		ImageIcon iconoAppMusic = new ImageIcon(loadAppIcon("icons/iconoAppMusic.png"));
+		ImageIcon iconoAppMusic = new ImageIcon(GuiUtils.loadAppIcon("icons/iconoAppMusic.png"));
 		MainFrame.setIconImage(iconoAppMusic.getImage());
 		
 		JPanel topPanel = new JPanel();
@@ -121,7 +121,7 @@ public class Main {
 		searchButton.setContentAreaFilled(false);
 		searchButton.setBorderPainted(false);
 
-		ImageIcon imageIcon = new ImageIcon(loadImage("icons/iconoSearch.png"));
+		ImageIcon imageIcon = new ImageIcon(GuiUtils.loadImage("icons/iconoSearch.png"));
 		searchButton.setIcon(imageIcon);
 		searchButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		GridBagConstraints gbc_searchButton = new GridBagConstraints();
@@ -150,7 +150,7 @@ public class Main {
 		newListButton.setOpaque(false);
 		newListButton.setContentAreaFilled(false);
 		newListButton.setBorderPainted(false);
-		ImageIcon imageIcon2 = new ImageIcon(loadImage("icons/iconoNewList.png")); // load the image to a imageIcon
+		ImageIcon imageIcon2 = new ImageIcon(GuiUtils.loadImage("icons/iconoNewList.png")); // load the image to a imageIcon
 		newListButton.setIcon(imageIcon2);
 		navigationPanel.add(newListButton, gbc_newListButton);
 		
@@ -170,7 +170,7 @@ public class Main {
 		recentsButton.setOpaque(false);
 		recentsButton.setContentAreaFilled(false);
 		recentsButton.setBorderPainted(false);
-		ImageIcon imageIcon3 = new ImageIcon(loadImage("icons/iconoRecents.png")); // load the image to a imageIcon
+		ImageIcon imageIcon3 = new ImageIcon(GuiUtils.loadImage("icons/iconoRecents.png")); // load the image to a imageIcon
 		recentsButton.setIcon(imageIcon3);
 		navigationPanel.add(recentsButton, gbc_recentsButton);
 		
@@ -187,7 +187,7 @@ public class Main {
 		myListsButton.setOpaque(false);
 		myListsButton.setContentAreaFilled(false);
 		myListsButton.setBorderPainted(false);
-		ImageIcon imageIcon4 = new ImageIcon(loadImage("icons/iconoMyLists.png")); // load the image to a imageIcon
+		ImageIcon imageIcon4 = new ImageIcon(GuiUtils.loadImage("icons/iconoMyLists.png")); // load the image to a imageIcon
 		myListsButton.setIcon(imageIcon4);
 		navigationPanel.add(myListsButton, gbc_myListsButton);
 		
@@ -199,28 +199,5 @@ public class Main {
 		gbc_panel.gridx = 0;
 		gbc_panel.gridy = 4;
 		navigationPanel.add(panel, gbc_panel);
-	}
-
-	private static Image loadImage(String name, int w, int h) {
-		Image imagen = null;
-		URL url = ClassLoader.getSystemResource(name);
-		BufferedImage myPicture;
-		try {
-			myPicture = ImageIO.read(url);
-			imagen=myPicture.getScaledInstance(w, h, Image.SCALE_SMOOTH);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			System.exit(1);
-		}
-
-		return imagen;
-	}
-
-	private static Image loadImage(String name) {
-		return loadImage(name, 35, 35);
-	}
-
-	private static Image loadAppIcon(String name) {
-		return loadImage(name, 100, 100);
 	}
 }

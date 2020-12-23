@@ -67,13 +67,13 @@ public class Register {
 		RegisterFrame.setBounds(500, 200, 440, 460);
 		RegisterFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		ImageIcon iconoAppMusic = new ImageIcon("icons/iconoAppMusic.png");
+		ImageIcon iconoAppMusic = new ImageIcon(GuiUtils.loadAppIcon("icons/iconoAppMusic.png"));
 		RegisterFrame.setIconImage(iconoAppMusic.getImage());
 		
 		JPanel titlePanel = new JPanel();
 		RegisterFrame.getContentPane().add(titlePanel, BorderLayout.NORTH);
 		JLabel titleLabel = new JLabel("AppMusic");
-		ImageIcon imageIcon = new ImageIcon("icons/iconoCircular.png"); // load the image to a imageIcon
+		ImageIcon imageIcon = new ImageIcon(GuiUtils.loadImage("icons/iconoCircular.png")); // load the image to a imageIcon
 		Image image = imageIcon.getImage(); // transform it 
 		Image newimg = image.getScaledInstance(40, 40,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
 		imageIcon = new ImageIcon(newimg);
