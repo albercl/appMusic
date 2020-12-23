@@ -2,6 +2,7 @@ package um.tds.appMusic.gui;
 
 import java.awt.EventQueue;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
@@ -22,6 +23,9 @@ import java.awt.event.ActionEvent;
 import java.awt.Component;
 import java.awt.SystemColor;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
@@ -62,7 +66,7 @@ public class Main {
 		MainFrame.setBounds(500, 200, 500, 505);
 		MainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		ImageIcon iconoAppMusic = new ImageIcon("icons/iconoAppMusic.png");
+		ImageIcon iconoAppMusic = new ImageIcon(loadImage("icons/iconoAppMusic.png"));
 		MainFrame.setIconImage(iconoAppMusic.getImage());
 		
 		JPanel topPanel = new JPanel();
@@ -116,10 +120,8 @@ public class Main {
 		searchButton.setOpaque(false);
 		searchButton.setContentAreaFilled(false);
 		searchButton.setBorderPainted(false);
-		ImageIcon imageIcon = new ImageIcon("icons/iconoSearch.png"); // load the image to a imageIcon
-		Image image = imageIcon.getImage(); // transform it 
-		Image newimg = image.getScaledInstance(35, 35,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-		imageIcon = new ImageIcon(newimg);
+
+		ImageIcon imageIcon = new ImageIcon(loadImage("icons/iconoSearch.png"));
 		searchButton.setIcon(imageIcon);
 		searchButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		GridBagConstraints gbc_searchButton = new GridBagConstraints();
@@ -148,10 +150,7 @@ public class Main {
 		newListButton.setOpaque(false);
 		newListButton.setContentAreaFilled(false);
 		newListButton.setBorderPainted(false);
-		ImageIcon imageIcon2 = new ImageIcon("icons/iconoNewList.png"); // load the image to a imageIcon
-		Image image2 = imageIcon2.getImage(); // transform it 
-		Image newimg2 = image2.getScaledInstance(35, 35,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-		imageIcon2 = new ImageIcon(newimg2);
+		ImageIcon imageIcon2 = new ImageIcon(loadImage("icons/iconoNewList.png")); // load the image to a imageIcon
 		newListButton.setIcon(imageIcon2);
 		navigationPanel.add(newListButton, gbc_newListButton);
 		
@@ -171,10 +170,7 @@ public class Main {
 		recentsButton.setOpaque(false);
 		recentsButton.setContentAreaFilled(false);
 		recentsButton.setBorderPainted(false);
-		ImageIcon imageIcon3 = new ImageIcon("icons/iconoRecents.png"); // load the image to a imageIcon
-		Image image3 = imageIcon3.getImage(); // transform it 
-		Image newimg3 = image3.getScaledInstance(35, 35,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-		imageIcon3 = new ImageIcon(newimg3);
+		ImageIcon imageIcon3 = new ImageIcon(loadImage("icons/iconoRecents.png")); // load the image to a imageIcon
 		recentsButton.setIcon(imageIcon3);
 		navigationPanel.add(recentsButton, gbc_recentsButton);
 		
@@ -191,10 +187,7 @@ public class Main {
 		myListsButton.setOpaque(false);
 		myListsButton.setContentAreaFilled(false);
 		myListsButton.setBorderPainted(false);
-		ImageIcon imageIcon4 = new ImageIcon("icons/iconoMyLists.png"); // load the image to a imageIcon
-		Image image4 = imageIcon4.getImage(); // transform it 
-		Image newimg4 = image4.getScaledInstance(35, 35,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-		imageIcon4 = new ImageIcon(newimg4);
+		ImageIcon imageIcon4 = new ImageIcon(loadImage("icons/iconoMyLists.png")); // load the image to a imageIcon
 		myListsButton.setIcon(imageIcon4);
 		navigationPanel.add(myListsButton, gbc_myListsButton);
 		
@@ -208,4 +201,18 @@ public class Main {
 		navigationPanel.add(panel, gbc_panel);
 	}
 
+	private static Image loadImage(String name) {
+		Image imagen = null;
+		URL url = ClassLoader.getSystemResource(name);
+		BufferedImage myPicture;
+		try {
+			myPicture = ImageIO.read(url);
+			imagen=myPicture.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+			System.exit(1);
+		}
+
+		return imagen;
+	}
 }
