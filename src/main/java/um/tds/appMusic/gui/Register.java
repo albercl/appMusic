@@ -22,8 +22,10 @@ import com.toedter.calendar.JDateChooser;
 import javax.swing.border.BevelBorder;
 
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.awt.event.ActionEvent;
 import javax.swing.border.EtchedBorder;
+import java.awt.SystemColor;
 
 public class Register {
 
@@ -260,9 +262,28 @@ public class Register {
 		gbc_repeatField.gridy = 7;
 		registerPanel.add(repeatField, gbc_repeatField);
 		
+		JLabel passwordErrorLabel = new JLabel("* Las contraseñas deben coincidir");
+		passwordErrorLabel.setForeground(Color.RED);
+		passwordErrorLabel.setBackground(SystemColor.menu);
+		passwordErrorLabel.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		GridBagConstraints gbc_passwordErrorLabel = new GridBagConstraints();
+		gbc_passwordErrorLabel.fill = GridBagConstraints.HORIZONTAL;
+		gbc_passwordErrorLabel.gridx = 1;
+		gbc_passwordErrorLabel.gridy = 9;
+		registerPanel.add(passwordErrorLabel, gbc_passwordErrorLabel);
+		passwordErrorLabel.setVisible(false);
+		
 		JButton registerButton = new JButton("Registrarse");
 		registerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+		        String pass1 = String.valueOf(passwordField.getPassword());
+		        String pass2 = String.valueOf(repeatField.getPassword());
+				if (!(pass1.equals(pass2))){
+					passwordErrorLabel.setVisible(true);
+				}
+				else {
+					passwordErrorLabel.setVisible(false);
+				}
 			}
 		});
 		registerButton.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
