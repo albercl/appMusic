@@ -2,13 +2,11 @@ package um.tds.appMusic.gui;
 
 import java.awt.EventQueue;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
-import java.awt.Image;
 
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -23,16 +21,23 @@ import java.awt.event.ActionEvent;
 import java.awt.Component;
 import java.awt.SystemColor;
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URL;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.border.TitledBorder;
+import javax.swing.ListSelectionModel;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 public class Main {
 
 	private JFrame MainFrame;
+	private JTable recentSongsTable;
+	
+	private JPanel playerPanel;
+	private JPanel songsListPanel;
 
 	/**
 	 * Launch the application.
@@ -66,7 +71,7 @@ public class Main {
 		MainFrame.setBounds(500, 200, 500, 505);
 		MainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		ImageIcon iconoAppMusic = new ImageIcon(loadAppIcon("icons/iconoAppMusic.png"));
+		ImageIcon iconoAppMusic = new ImageIcon(GuiUtils.loadAppIcon("icons/iconoAppMusic.png"));
 		MainFrame.setIconImage(iconoAppMusic.getImage());
 		
 		JPanel topPanel = new JPanel();
@@ -99,6 +104,56 @@ public class Main {
 		centerPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		centerPanel.setBackground(SystemColor.inactiveCaption);
 		MainFrame.getContentPane().add(centerPanel, BorderLayout.CENTER);
+		centerPanel.setLayout(new BorderLayout(0, 0));
+		
+		//Panel de canciones recientes
+		songsListPanel = new JPanel();
+		songsListPanel.setBorder(new TitledBorder(null, "Canciones Recientes", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		centerPanel.add(songsListPanel);
+		GridBagLayout gbl_recentsSongsPanel_1 = new GridBagLayout();
+		gbl_recentsSongsPanel_1.rowHeights = new int[] {10, 300, 50};
+		gbl_recentsSongsPanel_1.columnWidths = new int[] {10, 300, 10};
+		gbl_recentsSongsPanel_1.columnWeights = new double[]{0.0, 1.0, 0.0};
+		gbl_recentsSongsPanel_1.rowWeights = new double[]{0.0, 1.0, 0.0};
+		songsListPanel.setLayout(gbl_recentsSongsPanel_1);
+		
+		JScrollPane tableScrollPane = new JScrollPane();
+		tableScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		GridBagConstraints gbc_tableScrollPane = new GridBagConstraints();
+		gbc_tableScrollPane.insets = new Insets(0, 0, 5, 5);
+		gbc_tableScrollPane.fill = GridBagConstraints.BOTH;
+		gbc_tableScrollPane.gridx = 1;
+		gbc_tableScrollPane.gridy = 1;
+		songsListPanel.add(tableScrollPane, gbc_tableScrollPane);
+		
+		recentSongsTable = new JTable();
+		recentSongsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		recentSongsTable.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+				{null, null},
+			},
+			new String[] {
+				"Canci\u00F3n", "Artista/s"
+			}
+		));
+		tableScrollPane.setViewportView(recentSongsTable);
+		
+		playerPanel = new JPanel();
+		GridBagConstraints gbc_playerPanel = new GridBagConstraints();
+		gbc_playerPanel.insets = new Insets(0, 0, 0, 5);
+		gbc_playerPanel.fill = GridBagConstraints.BOTH;
+		gbc_playerPanel.gridx = 1;
+		gbc_playerPanel.gridy = 2;
+		songsListPanel.add(playerPanel, gbc_playerPanel);
 		
 		JPanel navigationPanel = new JPanel();
 		navigationPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -121,7 +176,7 @@ public class Main {
 		searchButton.setContentAreaFilled(false);
 		searchButton.setBorderPainted(false);
 
-		ImageIcon imageIcon = new ImageIcon(loadImage("icons/iconoSearch.png"));
+		ImageIcon imageIcon = new ImageIcon(GuiUtils.loadImage("icons/iconoSearch.png"));
 		searchButton.setIcon(imageIcon);
 		searchButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		GridBagConstraints gbc_searchButton = new GridBagConstraints();
@@ -150,7 +205,7 @@ public class Main {
 		newListButton.setOpaque(false);
 		newListButton.setContentAreaFilled(false);
 		newListButton.setBorderPainted(false);
-		ImageIcon imageIcon2 = new ImageIcon(loadImage("icons/iconoNewList.png")); // load the image to a imageIcon
+		ImageIcon imageIcon2 = new ImageIcon(GuiUtils.loadImage("icons/iconoNewList.png")); // load the image to a imageIcon
 		newListButton.setIcon(imageIcon2);
 		navigationPanel.add(newListButton, gbc_newListButton);
 		
@@ -170,7 +225,7 @@ public class Main {
 		recentsButton.setOpaque(false);
 		recentsButton.setContentAreaFilled(false);
 		recentsButton.setBorderPainted(false);
-		ImageIcon imageIcon3 = new ImageIcon(loadImage("icons/iconoRecents.png")); // load the image to a imageIcon
+		ImageIcon imageIcon3 = new ImageIcon(GuiUtils.loadImage("icons/iconoRecents.png")); // load the image to a imageIcon
 		recentsButton.setIcon(imageIcon3);
 		navigationPanel.add(recentsButton, gbc_recentsButton);
 		
@@ -187,7 +242,7 @@ public class Main {
 		myListsButton.setOpaque(false);
 		myListsButton.setContentAreaFilled(false);
 		myListsButton.setBorderPainted(false);
-		ImageIcon imageIcon4 = new ImageIcon(loadImage("icons/iconoMyLists.png")); // load the image to a imageIcon
+		ImageIcon imageIcon4 = new ImageIcon(GuiUtils.loadImage("icons/iconoMyLists.png")); // load the image to a imageIcon
 		myListsButton.setIcon(imageIcon4);
 		navigationPanel.add(myListsButton, gbc_myListsButton);
 		
@@ -199,28 +254,5 @@ public class Main {
 		gbc_panel.gridx = 0;
 		gbc_panel.gridy = 4;
 		navigationPanel.add(panel, gbc_panel);
-	}
-
-	private static Image loadImage(String name, int w, int h) {
-		Image imagen = null;
-		URL url = ClassLoader.getSystemResource(name);
-		BufferedImage myPicture;
-		try {
-			myPicture = ImageIO.read(url);
-			imagen=myPicture.getScaledInstance(w, h, Image.SCALE_SMOOTH);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			System.exit(1);
-		}
-
-		return imagen;
-	}
-
-	private static Image loadImage(String name) {
-		return loadImage(name, 35, 35);
-	}
-
-	private static Image loadAppIcon(String name) {
-		return loadImage(name, 100, 100);
 	}
 }

@@ -7,8 +7,9 @@ import um.tds.appMusic.persistencia.IAdaptadorPlaylistDAO;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class AdaptadorPlaylistTDS implements IAdaptadorPlaylistDAO {
-    private static ServicioPersistencia servicioPersistencia;
+	private static ServicioPersistencia servicioPersistencia;
     private static AdaptadorPlaylistTDS instanciaUnica;
 
     public static AdaptadorPlaylistTDS getInstanciaUnica() {
