@@ -30,12 +30,14 @@ import javax.swing.border.TitledBorder;
 import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 public class Main {
 
 	private JFrame MainFrame;
 	private JTable recentSongsTable;
-	
+
 	private JPanel playerPanel;
 	private JPanel songsListPanel;
 
@@ -68,23 +70,25 @@ public class Main {
 	private void initialize() {
 		MainFrame = new JFrame();
 		MainFrame.setTitle("AppMusic");
-		MainFrame.setBounds(500, 200, 500, 505);
+		MainFrame.setBounds(400, 100, 650, 650);
 		MainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		ImageIcon iconoAppMusic = new ImageIcon(GuiUtils.loadAppIcon("icons/iconoAppMusic.png"));
 		MainFrame.setIconImage(iconoAppMusic.getImage());
-		
+
 		JPanel topPanel = new JPanel();
 		topPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		topPanel.setBackground(SystemColor.inactiveCaption);
 		MainFrame.getContentPane().add(topPanel, BorderLayout.NORTH);
 		topPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
-		
-		JLabel welcomeMessageLabel = new JLabel("<html><p><b><span style=\"color: rgb(178, 34, 34)\">Bienvenido, </b></span>%user%</p></html>");
+
+		JLabel welcomeMessageLabel = new JLabel(
+				"<html><p><b><span style=\"color: rgb(178, 34, 34)\">Bienvenido, </b></span>%user%</p></html>");
 		welcomeMessageLabel.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		topPanel.add(welcomeMessageLabel);
-		
-		JButton upgradeButton = new JButton("<html><p><b><span style=\"color: rgb(239, 184, 16)\">Mejora tu cuenta</b></span></p></html>");
+
+		JButton upgradeButton = new JButton(
+				"<html><p><b><span style=\"color: rgb(239, 184, 16)\">Mejora tu cuenta</b></span></p></html>");
 		upgradeButton.setForeground(Color.YELLOW);
 		upgradeButton.setBackground(new Color(0, 0, 0));
 		upgradeButton.addActionListener(new ActionListener() {
@@ -93,31 +97,33 @@ public class Main {
 		});
 		upgradeButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		topPanel.add(upgradeButton);
-		
+
 		JButton logoutButton = new JButton("Cerrar sesión");
 		logoutButton.setForeground(Color.WHITE);
 		logoutButton.setBackground(new Color(178, 34, 34));
 		logoutButton.setFont(new Font("Tahoma", Font.BOLD, 13));
 		topPanel.add(logoutButton);
-		
+
 		JPanel centerPanel = new JPanel();
 		centerPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		centerPanel.setBackground(SystemColor.inactiveCaption);
 		MainFrame.getContentPane().add(centerPanel, BorderLayout.CENTER);
 		centerPanel.setLayout(new BorderLayout(0, 0));
-		
-		//Panel de canciones recientes
+
+		// Panel de canciones recientes
 		songsListPanel = new JPanel();
-		songsListPanel.setBorder(new TitledBorder(null, "Canciones Recientes", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		songsListPanel.setBorder(
+				new TitledBorder(null, "Canciones Recientes", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		centerPanel.add(songsListPanel);
 		GridBagLayout gbl_recentsSongsPanel_1 = new GridBagLayout();
-		gbl_recentsSongsPanel_1.rowHeights = new int[] {10, 300, 50};
-		gbl_recentsSongsPanel_1.columnWidths = new int[] {10, 300, 10};
-		gbl_recentsSongsPanel_1.columnWeights = new double[]{0.0, 1.0, 0.0};
-		gbl_recentsSongsPanel_1.rowWeights = new double[]{0.0, 1.0, 0.0};
+		gbl_recentsSongsPanel_1.rowHeights = new int[] { 10, 300, 50 };
+		gbl_recentsSongsPanel_1.columnWidths = new int[] { 10, 300, 10 };
+		gbl_recentsSongsPanel_1.columnWeights = new double[] { 0.0, 0.0, 0.0 };
+		gbl_recentsSongsPanel_1.rowWeights = new double[] { 0.0, 1.0, 0.0 };
 		songsListPanel.setLayout(gbl_recentsSongsPanel_1);
-		
+
 		JScrollPane tableScrollPane = new JScrollPane();
+		tableScrollPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		tableScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		GridBagConstraints gbc_tableScrollPane = new GridBagConstraints();
 		gbc_tableScrollPane.insets = new Insets(0, 0, 5, 5);
@@ -125,47 +131,119 @@ public class Main {
 		gbc_tableScrollPane.gridx = 1;
 		gbc_tableScrollPane.gridy = 1;
 		songsListPanel.add(tableScrollPane, gbc_tableScrollPane);
-		
+
 		recentSongsTable = new JTable();
+		recentSongsTable.setBorder(new EmptyBorder(0, 0, 0, 0));
+		recentSongsTable.setEnabled(false);
 		recentSongsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		recentSongsTable.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-			},
-			new String[] {
-				"Canci\u00F3n", "Artista/s"
-			}
-		));
+				new Object[][] { { null, null }, { null, null }, { null, null }, { null, null }, { null, null },
+						{ null, null }, { null, null }, { null, null }, { null, null }, { null, null }, },
+				new String[] { "Canci\u00F3n", "Artista/s" }));
 		tableScrollPane.setViewportView(recentSongsTable);
-		
+
 		playerPanel = new JPanel();
 		GridBagConstraints gbc_playerPanel = new GridBagConstraints();
+		gbc_playerPanel.anchor = GridBagConstraints.WEST;
 		gbc_playerPanel.insets = new Insets(0, 0, 0, 5);
-		gbc_playerPanel.fill = GridBagConstraints.BOTH;
 		gbc_playerPanel.gridx = 1;
 		gbc_playerPanel.gridy = 2;
 		songsListPanel.add(playerPanel, gbc_playerPanel);
-		
+
+		JButton randomButton = new JButton("");
+		randomButton.setHorizontalTextPosition(SwingConstants.LEADING);
+		randomButton.setMargin(new Insets(2, 0, 2, 0));
+		randomButton.setIconTextGap(0);
+		randomButton.setHorizontalAlignment(SwingConstants.LEFT);
+		randomButton.setOpaque(false);
+		randomButton.setContentAreaFilled(false);
+		randomButton.setBorderPainted(false);
+
+		ImageIcon imageIcon5 = new ImageIcon(GuiUtils.loadImage("icons/iconoRandom.png"));
+		randomButton.setIcon(imageIcon5);
+		ImageIcon imageIcon10 = new ImageIcon(GuiUtils.loadImage("icons/iconoDefault.png"));
+		randomButton.addActionListener(new ActionListener() {
+			private boolean flag = true;
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				randomButton.setIcon(flag ? imageIcon10 : imageIcon5);
+				flag = !flag;
+			}
+		});
+
+		JButton invisibleButton = new JButton("");
+		invisibleButton.setMargin(new Insets(2, 14, 2, 86));
+		invisibleButton.setOpaque(false);
+		invisibleButton.setContentAreaFilled(false);
+		invisibleButton.setBorderPainted(false);
+		playerPanel.add(invisibleButton);
+		playerPanel.add(randomButton);
+
+		JButton backButton = new JButton("");
+		backButton.setMargin(new Insets(2, 0, 2, 0));
+		backButton.setHorizontalAlignment(SwingConstants.LEFT);
+		backButton.setOpaque(false);
+		backButton.setContentAreaFilled(false);
+		backButton.setBorderPainted(false);
+
+		ImageIcon imageIcon6 = new ImageIcon(GuiUtils.loadImage("icons/iconoBack.png"));
+		backButton.setIcon(imageIcon6);
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+			}
+		});
+		playerPanel.add(backButton);
+
+		JButton playButton = new JButton("");
+		playButton.setMargin(new Insets(2, 0, 2, 0));
+		playButton.setHorizontalAlignment(SwingConstants.LEFT);
+		playButton.setOpaque(false);
+		playButton.setContentAreaFilled(false);
+		playButton.setBorderPainted(false);
+
+		ImageIcon imageIcon7 = new ImageIcon(GuiUtils.loadImage("icons/iconoPlay.png", 45, 45));
+		playButton.setIcon(imageIcon7);
+		ImageIcon imageIcon9 = new ImageIcon(GuiUtils.loadImage("icons/iconoPause.png", 45, 45));
+		playButton.addActionListener(new ActionListener() {
+			private boolean flag = true;
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				playButton.setIcon(flag ? imageIcon9 : imageIcon7);
+				flag = !flag;
+			}
+		});
+
+		playerPanel.add(playButton);
+
+		JButton forwardButton = new JButton("");
+		forwardButton.setHorizontalAlignment(SwingConstants.LEFT);
+		forwardButton.setMargin(new Insets(2, 0, 2, 0));
+		forwardButton.setOpaque(false);
+		forwardButton.setContentAreaFilled(false);
+		forwardButton.setBorderPainted(false);
+
+		ImageIcon imageIcon8 = new ImageIcon(GuiUtils.loadImage("icons/iconoForward.png"));
+		forwardButton.setIcon(imageIcon8);
+		forwardButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		playerPanel.add(forwardButton);
+
 		JPanel navigationPanel = new JPanel();
 		navigationPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		navigationPanel.setBackground(SystemColor.activeCaption);
 		MainFrame.getContentPane().add(navigationPanel, BorderLayout.WEST);
 		GridBagLayout gbl_navigationPanel = new GridBagLayout();
-		gbl_navigationPanel.columnWidths = new int[] {110, 0};
-		gbl_navigationPanel.rowHeights = new int[]{25, 25, 25, 25, 0, 0};
-		gbl_navigationPanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_navigationPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gbl_navigationPanel.columnWidths = new int[] { 110, 0 };
+		gbl_navigationPanel.rowHeights = new int[] { 25, 25, 25, 25, 0, 0 };
+		gbl_navigationPanel.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+		gbl_navigationPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
 		navigationPanel.setLayout(gbl_navigationPanel);
-		
+
 		JButton searchButton = new JButton("Buscar");
 		searchButton.setIconTextGap(5);
 		searchButton.addActionListener(new ActionListener() {
@@ -186,7 +264,7 @@ public class Main {
 		gbc_searchButton.gridx = 0;
 		gbc_searchButton.gridy = 0;
 		navigationPanel.add(searchButton, gbc_searchButton);
-		
+
 		JButton newListButton = new JButton("Nueva lista");
 		newListButton.setMargin(new Insets(2, 14, 5, 2));
 		newListButton.addActionListener(new ActionListener() {
@@ -205,12 +283,11 @@ public class Main {
 		newListButton.setOpaque(false);
 		newListButton.setContentAreaFilled(false);
 		newListButton.setBorderPainted(false);
-		ImageIcon imageIcon2 = new ImageIcon(GuiUtils.loadImage("icons/iconoNewList.png")); // load the image to a imageIcon
+		ImageIcon imageIcon2 = new ImageIcon(GuiUtils.loadImage("icons/iconoNewList.png")); // load the image to a
+																							// imageIcon
 		newListButton.setIcon(imageIcon2);
 		navigationPanel.add(newListButton, gbc_newListButton);
-		
-		
-			
+
 		JButton recentsButton = new JButton("Recientes");
 		recentsButton.setBackground(SystemColor.activeCaption);
 		recentsButton.setMargin(new Insets(2, 14, 2, 7));
@@ -225,10 +302,11 @@ public class Main {
 		recentsButton.setOpaque(false);
 		recentsButton.setContentAreaFilled(false);
 		recentsButton.setBorderPainted(false);
-		ImageIcon imageIcon3 = new ImageIcon(GuiUtils.loadImage("icons/iconoRecents.png")); // load the image to a imageIcon
+		ImageIcon imageIcon3 = new ImageIcon(GuiUtils.loadImage("icons/iconoRecents.png")); // load the image to a
+																							// imageIcon
 		recentsButton.setIcon(imageIcon3);
 		navigationPanel.add(recentsButton, gbc_recentsButton);
-		
+
 		JButton myListsButton = new JButton("Mis listas");
 		myListsButton.setBounds(new Rectangle(3, 0, 0, 0));
 		myListsButton.setIconTextGap(5);
@@ -242,10 +320,11 @@ public class Main {
 		myListsButton.setOpaque(false);
 		myListsButton.setContentAreaFilled(false);
 		myListsButton.setBorderPainted(false);
-		ImageIcon imageIcon4 = new ImageIcon(GuiUtils.loadImage("icons/iconoMyLists.png")); // load the image to a imageIcon
+		ImageIcon imageIcon4 = new ImageIcon(GuiUtils.loadImage("icons/iconoMyLists.png")); // load the image to a
+																							// imageIcon
 		myListsButton.setIcon(imageIcon4);
 		navigationPanel.add(myListsButton, gbc_myListsButton);
-		
+
 		JPanel panel = new JPanel();
 		panel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panel.setBackground(SystemColor.inactiveCaption);
