@@ -56,6 +56,14 @@ public class Main {
 			}
 		});
 	}
+	
+	/**
+	 * Launch the application.
+	 */
+	public void setVisible(boolean b) {
+		// TODO Auto-generated method stub
+		MainFrame.setVisible(b);
+	}
 
 	/**
 	 * Create the application.
@@ -99,6 +107,13 @@ public class Main {
 		topPanel.add(upgradeButton);
 
 		JButton logoutButton = new JButton("Cerrar sesión");
+		logoutButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				MainFrame.setVisible(false);
+				Login LoginFrame = new Login();
+				LoginFrame.setVisible(true);
+			}
+		});
 		logoutButton.setForeground(Color.WHITE);
 		logoutButton.setBackground(new Color(178, 34, 34));
 		logoutButton.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -334,4 +349,6 @@ public class Main {
 		gbc_panel.gridy = 4;
 		navigationPanel.add(panel, gbc_panel);
 	}
+
+
 }

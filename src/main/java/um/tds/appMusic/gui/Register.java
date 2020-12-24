@@ -50,7 +50,15 @@ public class Register {
 			}
 		});
 	}
-
+	
+	/**
+	 * Change the JFrame visibility.
+	 */
+	public void setVisible(boolean b) {
+		// TODO Auto-generated method stub
+		RegisterFrame.setVisible(b);
+	}
+	
 	/**
 	 * Create the application.
 	 */
@@ -278,6 +286,13 @@ public class Register {
 		
 
 		JButton loginButton = new JButton("<html><p><span style=\"color: rgb(178, 34, 34)\"><u>Inicia sesión</u></span>.</p></html>");
+		loginButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+		        RegisterFrame.setVisible(false);
+		        Login LoginFrame = new Login();
+		        LoginFrame.setVisible(true);
+			}
+		});
 		loginButton.setMargin(new Insets(2, 0, 2, 14));
 		loginButton.setIconTextGap(0);
 		loginButton.setFont(new Font("Tahoma", Font.PLAIN, 17));

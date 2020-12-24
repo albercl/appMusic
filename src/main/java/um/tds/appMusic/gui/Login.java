@@ -49,6 +49,13 @@ public class Login {
 		});
 	}
 	
+	/**
+	 * Change the JFrame visibility.
+	 */
+	public void setVisible(boolean b) {
+		// TODO Auto-generated method stub
+		LoginFrame.setVisible(b);
+	}
 	
 	/**
 	 * Create the application.
@@ -62,7 +69,6 @@ public class Login {
 	 */
 	private void initialize() {
 		LoginFrame = new JFrame();
-		LoginFrame.setResizable(false);
 		LoginFrame.setTitle("AppMusic");
 		LoginFrame.setBounds(450, 250, 480, 300);
 		LoginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -149,6 +155,9 @@ public class Login {
 		loginButton.setForeground(new Color(255, 255, 255));
 		loginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+		        LoginFrame.setVisible(false);
+		        Main MainFrame = new Main();
+		        MainFrame.setVisible(true);
 			}
 		});
 		
@@ -185,6 +194,9 @@ public class Login {
 		JButton registerButton = new JButton("Reg\u00EDstrate");
 		registerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+		        LoginFrame.setVisible(false);
+		        Register RegisterFrame = new Register();
+		        RegisterFrame.setVisible(true);
 			}
 		});
 		registerButton.setBackground(Color.DARK_GRAY);
