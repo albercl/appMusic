@@ -22,7 +22,6 @@ import com.toedter.calendar.JDateChooser;
 import javax.swing.border.BevelBorder;
 
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 import java.awt.event.ActionEvent;
 import javax.swing.border.EtchedBorder;
 import java.awt.SystemColor;
