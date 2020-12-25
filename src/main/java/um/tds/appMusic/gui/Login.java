@@ -160,7 +160,7 @@ public class Login {
 			public void actionPerformed(ActionEvent arg0) {
 		        String user = userField.getText();
 		        String password = String.valueOf(passwordField.getPassword());
-				if(user.equals("Luis_Gregorio")&& password.equals("hola")) {
+				if(user.equals("Luis_Gregorio")&& password.equals("wsl2")) {
 					LoginFrame.setVisible(false);
 			        Main MainFrame = new Main();
 			        MainFrame.setVisible(true);

@@ -37,10 +37,10 @@ import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
-public class Main {
+public class Pruebas {
 
 	private JFrame MainFrame;
-	private JTable recentSongsTable;
+	private JTable favouritesSongsTable;
 
 	private JPanel playerPanel;
 	private JPanel songsListPanel;
@@ -52,7 +52,7 @@ public class Main {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Main window = new Main();
+					Pruebas window = new Pruebas();
 					window.MainFrame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -84,7 +84,7 @@ public class Main {
 	/**
 	 * Create the application.
 	 */
-	public Main() {
+	public Pruebas() {
 		initialize();
 	}
 
@@ -153,7 +153,7 @@ public class Main {
 		// Panel de canciones recientes
 		songsListPanel = new JPanel();
 		songsListPanel.setBorder(
-				new TitledBorder(null, "Canciones Recientes", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+				new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Canciones m\u00E1s escuchadas", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		centerPanel.add(songsListPanel);
 		GridBagLayout gbl_recentsSongsPanel_1 = new GridBagLayout();
 		gbl_recentsSongsPanel_1.rowHeights = new int[] { 10, 300, 50 };
@@ -173,43 +173,46 @@ public class Main {
 		horaLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
 		showTime(horaLabel);
 
-		JScrollPane tableScrollPane = new JScrollPane();
-		tableScrollPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		tableScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		GridBagConstraints gbc_tableScrollPane = new GridBagConstraints();
-		gbc_tableScrollPane.insets = new Insets(0, 0, 5, 5);
-		gbc_tableScrollPane.fill = GridBagConstraints.BOTH;
-		gbc_tableScrollPane.gridx = 1;
-		gbc_tableScrollPane.gridy = 1;
-		songsListPanel.add(tableScrollPane, gbc_tableScrollPane);
+		JScrollPane tableFavouritesScrollPane = new JScrollPane();
+		tableFavouritesScrollPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		tableFavouritesScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		GridBagConstraints gbc_tableFavouritesScrollPane = new GridBagConstraints();
+		gbc_tableFavouritesScrollPane.insets = new Insets(0, 0, 5, 5);
+		gbc_tableFavouritesScrollPane.fill = GridBagConstraints.BOTH;
+		gbc_tableFavouritesScrollPane.gridx = 1;
+		gbc_tableFavouritesScrollPane.gridy = 1;
+		songsListPanel.add(tableFavouritesScrollPane, gbc_tableFavouritesScrollPane);
 
-		recentSongsTable = new JTable();
-		recentSongsTable.setBorder(new EmptyBorder(0, 0, 0, 0));
-		recentSongsTable.setEnabled(false);
-		recentSongsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		recentSongsTable.setModel(new DefaultTableModel(
+		favouritesSongsTable = new JTable();
+		favouritesSongsTable.setBorder(new EmptyBorder(0, 0, 0, 0));
+		favouritesSongsTable.setEnabled(false);
+		favouritesSongsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		favouritesSongsTable.setModel(new DefaultTableModel(
 			new Object[][] {
-				{"Cara al Sol.mp3", "Francisco Franco & Adolf Hitler"},
-				{"Doble Excavadora.mp3", "Elminion & Xixauxas"},
-				{"Play Hard.mp3", "David Guetta & Akon & Ne-Yo"},
-				{"Soy Peor.mp3", "Bad Bunny"},
-				{"We dont talk anymore.mp3", "Charlie Puth & Selena G\u00F3mez"},
-				{"Vodovorot.mp3", "Vladimir Putin & Donald Trump"},
-				{"MORE.mp3", "K/DA"},
-				{"Somebody that I used to know.mp3", "Goyte & Kimbra"},
-				{"Blinding Lights.mp3", "The Weekend"},
-				{"Watermelon sugar.mp3", "Harry Styles"},
+				{"Soy Peor.mp3", "Bad Bunny", "300"},
+				{"Cara al Sol.mp3", "Francisco Franco & Adolf Hitler", "200"},
+				{"Vodovorot.mp3", "Vladimir Putin & Donald Trump", "150"},
+				{"Doble Excavadora.mp3", "Elminion & Xixauxas", "100"},
+				{"We dont talk anymore.mp3", "Charlie Puth & Selena G\u00F3mez", "50"},
+				{"Play Hard.mp3", "David Guetta & Akon & Ne-Yo", "40"},
+				{"MORE.mp3", "K/DA", "30"},
+				{"Somebody that I used to know.mp3", "Goyte & Kimbra", "20"},
+				{"Blinding Lights.mp3", "The Weekend", "10"},
+				{"Watermelon sugar.mp3", "Harry Styles", "5"},
 			},
 			new String[] {
-				"Canci\u00F3n", "Artista/s"
-			}
-		));
+				"Canci\u00F3n", "Artista/s", "N\u00BA veces"
+			}));
+
+		favouritesSongsTable.getColumnModel().getColumn(0).setPreferredWidth(180);
+		favouritesSongsTable.getColumnModel().getColumn(1).setPreferredWidth(180);
+		favouritesSongsTable.getColumnModel().getColumn(2).setPreferredWidth(54);
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-		for (int i = 0; i < recentSongsTable.getColumnCount() ; ++i) {
-			recentSongsTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+		for (int i = 0; i < favouritesSongsTable.getColumnCount() ; ++i) {
+			favouritesSongsTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
 		}
-		tableScrollPane.setViewportView(recentSongsTable);
+		tableFavouritesScrollPane.setViewportView(favouritesSongsTable);
 
 		playerPanel = new JPanel();
 		GridBagConstraints gbc_playerPanel = new GridBagConstraints();
@@ -364,13 +367,6 @@ public class Main {
 		navigationPanel.add(newListButton, gbc_newListButton);
 
 		JButton recentsButton = new JButton("Recientes");
-		recentsButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				tableScrollPane.setVisible(true);
-				songsListPanel.setBorder(
-					new TitledBorder(null, "Canciones recientes", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			}
-		});
 		recentsButton.setFocusPainted(false);
 		recentsButton.setBackground(SystemColor.activeCaption);
 		recentsButton.setMargin(new Insets(2, 14, 2, 7));
@@ -409,56 +405,7 @@ public class Main {
 		myListsButton.setIcon(imageIcon4);
 		navigationPanel.add(myListsButton, gbc_myListsButton);
 		
-		JScrollPane tableFavouritesScrollPane = new JScrollPane();
-		tableFavouritesScrollPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		tableFavouritesScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		GridBagConstraints gbc_tableFavouritesScrollPane = new GridBagConstraints();
-		gbc_tableFavouritesScrollPane.insets = new Insets(0, 0, 5, 5);
-		gbc_tableFavouritesScrollPane.fill = GridBagConstraints.BOTH;
-		gbc_tableFavouritesScrollPane.gridx = 1;
-		gbc_tableFavouritesScrollPane.gridy = 1;
-		songsListPanel.add(tableFavouritesScrollPane, gbc_tableFavouritesScrollPane);
-
-		JTable favouritesSongsTable = new JTable();
-		favouritesSongsTable.setVisible(false);
-		favouritesSongsTable.setBorder(new EmptyBorder(0, 0, 0, 0));
-		favouritesSongsTable.setEnabled(false);
-		favouritesSongsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		favouritesSongsTable.setModel(new DefaultTableModel(
-			new Object[][] {
-				{"Soy Peor.mp3", "Bad Bunny", "300"},
-				{"Cara al Sol.mp3", "Francisco Franco & Adolf Hitler", "200"},
-				{"Vodovorot.mp3", "Vladimir Putin & Donald Trump", "150"},
-				{"Doble Excavadora.mp3", "Elminion & Xixauxas", "100"},
-				{"We dont talk anymore.mp3", "Charlie Puth & Selena G\u00F3mez", "50"},
-				{"Play Hard.mp3", "David Guetta & Akon & Ne-Yo", "40"},
-				{"MORE.mp3", "K/DA", "30"},
-				{"Somebody that I used to know.mp3", "Goyte & Kimbra", "20"},
-				{"Blinding Lights.mp3", "The Weekend", "10"},
-				{"Watermelon sugar.mp3", "Harry Styles", "5"},
-			},
-			new String[] {
-				"Canci\u00F3n", "Artista/s", "N\u00BA veces"
-			}));
-
-		favouritesSongsTable.getColumnModel().getColumn(0).setPreferredWidth(180);
-		favouritesSongsTable.getColumnModel().getColumn(1).setPreferredWidth(180);
-		favouritesSongsTable.getColumnModel().getColumn(2).setPreferredWidth(54);
-		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-		for (int i = 0; i < favouritesSongsTable.getColumnCount() ; ++i) {
-			favouritesSongsTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-		}
-		tableFavouritesScrollPane.setViewportView(favouritesSongsTable);
-		
 		JButton favouritesButton = new JButton("Favoritas");
-		favouritesButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				tableScrollPane.setVisible(false);
-				songsListPanel.setBorder(
-					new TitledBorder(null, "Canciones más escuchadas", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-					favouritesSongsTable.setVisible(true);
-			}
-		});
 		favouritesButton.setFocusPainted(false);
 		favouritesButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		GridBagConstraints gbc_favouritesButton = new GridBagConstraints();

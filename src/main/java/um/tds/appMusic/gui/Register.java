@@ -341,7 +341,7 @@ public class Register {
 		bottomPanel.add(message2Label);
 
 		JButton loginButton = new JButton(
-				"<html><p><span style=\"color: rgb(178, 34, 34)\"><u>Inicia sesión</u></span>.</p></html>");
+				"<html><p><span style=\"color: rgb(178, 34, 34)\"><u>Inicia sesión</u></span></p></html>");
 		loginButton.setFocusPainted(false);
 		loginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
