@@ -151,6 +151,7 @@ public class Login {
 		loginPanel.add(passwordField, gbc_passwordField);
 		
 		JButton loginButton = new JButton("Iniciar sesión");
+		loginButton.setFocusPainted(false);
 		loginButton.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 		loginButton.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		loginButton.setBackground(new Color(178, 34, 34));
@@ -165,7 +166,7 @@ public class Login {
 			        MainFrame.setVisible(true);
 				}
 				else {
-					JOptionPane.showMessageDialog(LoginFrame, "Nombre de usuario o contraseña no válido", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(LoginFrame, "Nombre de usuario o contraseña no válido.", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 
 			}
@@ -202,6 +203,7 @@ public class Login {
 		arrowLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
 		
 		JButton registerButton = new JButton("Reg\u00EDstrate");
+		registerButton.setFocusPainted(false);
 		registerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 		        LoginFrame.setVisible(false);

@@ -119,6 +119,7 @@ public class Main {
 
 		JButton upgradeButton = new JButton(
 				"<html><p><b><span style=\"color: rgb(239, 184, 16)\">Mejora tu cuenta</b></span></p></html>");
+		upgradeButton.setFocusPainted(false);
 		upgradeButton.setForeground(Color.YELLOW);
 		upgradeButton.setBackground(new Color(0, 0, 0));
 		upgradeButton.addActionListener(new ActionListener() {
@@ -129,6 +130,7 @@ public class Main {
 		topPanel.add(upgradeButton);
 
 		JButton logoutButton = new JButton("Cerrar sesión");
+		logoutButton.setFocusPainted(false);
 		logoutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				MainFrame.setVisible(false);
@@ -199,6 +201,7 @@ public class Main {
 		songsListPanel.add(playerPanel, gbc_playerPanel);
 
 		JButton randomButton = new JButton("");
+		randomButton.setFocusPainted(false);
 		randomButton.setHorizontalTextPosition(SwingConstants.LEADING);
 		randomButton.setMargin(new Insets(2, 0, 2, 0));
 		randomButton.setIconTextGap(0);
@@ -229,6 +232,7 @@ public class Main {
 		playerPanel.add(randomButton);
 
 		JButton backButton = new JButton("");
+		backButton.setFocusPainted(false);
 		backButton.setMargin(new Insets(2, 0, 2, 0));
 		backButton.setHorizontalAlignment(SwingConstants.LEFT);
 		backButton.setOpaque(false);
@@ -245,6 +249,7 @@ public class Main {
 		playerPanel.add(backButton);
 
 		JButton playButton = new JButton("");
+		playButton.setFocusPainted(false);
 		playButton.setMargin(new Insets(2, 0, 2, 0));
 		playButton.setHorizontalAlignment(SwingConstants.LEFT);
 		playButton.setOpaque(false);
@@ -267,6 +272,7 @@ public class Main {
 		playerPanel.add(playButton);
 
 		JButton forwardButton = new JButton("");
+		forwardButton.setFocusPainted(false);
 		forwardButton.setHorizontalAlignment(SwingConstants.LEFT);
 		forwardButton.setMargin(new Insets(2, 0, 2, 0));
 		forwardButton.setOpaque(false);
@@ -293,6 +299,7 @@ public class Main {
 		navigationPanel.setLayout(gbl_navigationPanel);
 
 		JButton searchButton = new JButton("Buscar");
+		searchButton.setFocusPainted(false);
 		searchButton.setIconTextGap(5);
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -314,6 +321,7 @@ public class Main {
 		navigationPanel.add(searchButton, gbc_searchButton);
 
 		JButton newListButton = new JButton("Nueva lista");
+		newListButton.setFocusPainted(false);
 		newListButton.setMargin(new Insets(2, 14, 5, 2));
 		newListButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -337,6 +345,7 @@ public class Main {
 		navigationPanel.add(newListButton, gbc_newListButton);
 
 		JButton recentsButton = new JButton("Recientes");
+		recentsButton.setFocusPainted(false);
 		recentsButton.setBackground(SystemColor.activeCaption);
 		recentsButton.setMargin(new Insets(2, 14, 2, 7));
 		recentsButton.setIconTextGap(5);
@@ -356,6 +365,7 @@ public class Main {
 		navigationPanel.add(recentsButton, gbc_recentsButton);
 
 		JButton myListsButton = new JButton("Mis listas");
+		myListsButton.setFocusPainted(false);
 		myListsButton.setBounds(new Rectangle(3, 0, 0, 0));
 		myListsButton.setIconTextGap(5);
 		myListsButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -374,6 +384,7 @@ public class Main {
 		navigationPanel.add(myListsButton, gbc_myListsButton);
 		
 		JButton favouritesButton = new JButton("Favoritas");
+		favouritesButton.setFocusPainted(false);
 		favouritesButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		GridBagConstraints gbc_favouritesButton = new GridBagConstraints();
 		gbc_favouritesButton.anchor = GridBagConstraints.WEST;
