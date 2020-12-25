@@ -17,6 +17,8 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 import java.awt.Component;
 import java.awt.SystemColor;
@@ -31,6 +33,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
 public class Main {
@@ -64,7 +67,19 @@ public class Main {
 		// TODO Auto-generated method stub
 		MainFrame.setVisible(b);
 	}
-
+	
+	void showTime(JLabel label) {
+		new Timer(0, new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Date d = new Date();
+		        String strDateFormat = "kk:mm:ss zz"; // El formato de fecha está especificado  
+		        SimpleDateFormat objSDF = new SimpleDateFormat(strDateFormat);
+		        label.setText("- "+objSDF.format(d)+" -");
+			}
+		}) .start();
+	}
 	/**
 	 * Create the application.
 	 */
@@ -89,9 +104,16 @@ public class Main {
 		topPanel.setBackground(SystemColor.inactiveCaption);
 		MainFrame.getContentPane().add(topPanel, BorderLayout.NORTH);
 		topPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+		Date date1 = new Date();
+        String strDateFormat = "E dd/MM/yyyy"; // El formato de fecha está especificado  
+        SimpleDateFormat objSDF = new SimpleDateFormat(strDateFormat);
+		JLabel fechaLabel = new JLabel();
+		fechaLabel.setText(objSDF.format(date1) + " -");
+		fechaLabel.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		topPanel.add(fechaLabel);
 
 		JLabel welcomeMessageLabel = new JLabel(
-				"<html><p><b><span style=\"color: rgb(178, 34, 34)\">Bienvenido, </b></span>%user%</p></html>");
+				"<html><p><b><span style=\"color: rgb(178, 34, 34)\">Bienvenido, </b></span>Luis_Gregorio -</p></html>");
 		welcomeMessageLabel.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		topPanel.add(welcomeMessageLabel);
 
@@ -136,6 +158,17 @@ public class Main {
 		gbl_recentsSongsPanel_1.columnWeights = new double[] { 0.0, 0.0, 0.0 };
 		gbl_recentsSongsPanel_1.rowWeights = new double[] { 0.0, 1.0, 0.0 };
 		songsListPanel.setLayout(gbl_recentsSongsPanel_1);
+		
+		JLabel horaLabel = new JLabel("Hora");
+		GridBagConstraints gbc_horaLabel = new GridBagConstraints();
+		gbc_horaLabel.fill = GridBagConstraints.VERTICAL;
+		gbc_horaLabel.anchor = GridBagConstraints.EAST;
+		gbc_horaLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_horaLabel.gridx = 1;
+		gbc_horaLabel.gridy = 0;
+		songsListPanel.add(horaLabel, gbc_horaLabel);
+		horaLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
+		showTime(horaLabel);
 
 		JScrollPane tableScrollPane = new JScrollPane();
 		tableScrollPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -254,9 +287,9 @@ public class Main {
 		MainFrame.getContentPane().add(navigationPanel, BorderLayout.WEST);
 		GridBagLayout gbl_navigationPanel = new GridBagLayout();
 		gbl_navigationPanel.columnWidths = new int[] { 110, 0 };
-		gbl_navigationPanel.rowHeights = new int[] { 25, 25, 25, 25, 0, 0 };
+		gbl_navigationPanel.rowHeights = new int[] { 25, 25, 25, 25, 0, 0, 0 };
 		gbl_navigationPanel.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-		gbl_navigationPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
+		gbl_navigationPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
 		navigationPanel.setLayout(gbl_navigationPanel);
 
 		JButton searchButton = new JButton("Buscar");
@@ -339,6 +372,21 @@ public class Main {
 																							// imageIcon
 		myListsButton.setIcon(imageIcon4);
 		navigationPanel.add(myListsButton, gbc_myListsButton);
+		
+		JButton favouritesButton = new JButton("Favoritas");
+		favouritesButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		GridBagConstraints gbc_favouritesButton = new GridBagConstraints();
+		gbc_favouritesButton.anchor = GridBagConstraints.WEST;
+		gbc_favouritesButton.fill = GridBagConstraints.VERTICAL;
+		gbc_favouritesButton.insets = new Insets(0, 0, 5, 0);
+		gbc_favouritesButton.gridx = 0;
+		gbc_favouritesButton.gridy = 4;
+		favouritesButton.setOpaque(false);
+		favouritesButton.setContentAreaFilled(false);
+		favouritesButton.setBorderPainted(false);
+		ImageIcon imageIcon11 = new ImageIcon(GuiUtils.loadImage("icons/iconoMasEscuchadas.png")); // load the image to a																					// imageIcon
+		favouritesButton.setIcon(imageIcon11);
+		navigationPanel.add(favouritesButton, gbc_favouritesButton);
 
 		JPanel panel = new JPanel();
 		panel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -346,7 +394,7 @@ public class Main {
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		gbc_panel.fill = GridBagConstraints.BOTH;
 		gbc_panel.gridx = 0;
-		gbc_panel.gridy = 4;
+		gbc_panel.gridy = 5;
 		navigationPanel.add(panel, gbc_panel);
 	}
 
