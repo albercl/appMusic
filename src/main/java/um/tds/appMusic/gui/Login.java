@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -155,9 +157,17 @@ public class Login {
 		loginButton.setForeground(new Color(255, 255, 255));
 		loginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-		        LoginFrame.setVisible(false);
-		        Main MainFrame = new Main();
-		        MainFrame.setVisible(true);
+		        String user = userField.getText();
+		        String password = String.valueOf(passwordField.getPassword());
+				if(user.equals("Luis_Gregorio")&& password.equals("hola")) {
+					LoginFrame.setVisible(false);
+			        Main MainFrame = new Main();
+			        MainFrame.setVisible(true);
+				}
+				else {
+					JOptionPane.showMessageDialog(LoginFrame, "Nombre de usuario o contraseña no válido", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+
 			}
 		});
 		

@@ -113,7 +113,7 @@ public class Main {
 		topPanel.add(fechaLabel);
 
 		JLabel welcomeMessageLabel = new JLabel(
-				"<html><p><b><span style=\"color: rgb(178, 34, 34)\">Bienvenido, </b></span>Luis_Gregorio -</p></html>");
+				"<html><p><b><span style=\"color: rgb(178, 34, 34)\">Bienvenido, </span>Luis_Gregorio</b> -</p></html>");
 		welcomeMessageLabel.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		topPanel.add(welcomeMessageLabel);
 
