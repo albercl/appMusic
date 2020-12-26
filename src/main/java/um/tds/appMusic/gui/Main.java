@@ -23,7 +23,6 @@ import java.awt.event.ActionEvent;
 import java.awt.Component;
 import java.awt.SystemColor;
 import java.awt.Rectangle;
-import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.JTable;
@@ -36,6 +35,10 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
+import java.awt.Dimension;
+import javax.swing.JList;
+import java.awt.GridLayout;
+import javax.swing.AbstractListModel;
 
 public class Main {
 
@@ -297,7 +300,8 @@ public class Main {
 		forwardButton.setOpaque(false);
 		forwardButton.setContentAreaFilled(false);
 		forwardButton.setBorderPainted(false);
-
+		JScrollPane tableFavouritesScrollPane = new JScrollPane();
+		
 		ImageIcon imageIcon8 = new ImageIcon(GuiUtils.loadImage("icons/iconoForward.png"));
 		forwardButton.setIcon(imageIcon8);
 		forwardButton.addActionListener(new ActionListener() {
@@ -305,7 +309,8 @@ public class Main {
 			}
 		});
 		playerPanel.add(forwardButton);
-
+		
+		JScrollPane scrollPane = new JScrollPane();
 		JPanel navigationPanel = new JPanel();
 		navigationPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		navigationPanel.setBackground(SystemColor.activeCaption);
@@ -322,6 +327,12 @@ public class Main {
 		searchButton.setIconTextGap(5);
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				songsListPanel.setBorder(
+						new TitledBorder(null, "Buscar canciones", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+				tableScrollPane.setVisible(false);
+				playerPanel.setVisible(false);
+				scrollPane.setVisible(false);
+				tableFavouritesScrollPane.setVisible(false);
 			}
 		});
 		searchButton.setOpaque(false);
@@ -339,11 +350,18 @@ public class Main {
 		gbc_searchButton.gridy = 0;
 		navigationPanel.add(searchButton, gbc_searchButton);
 
+		
 		JButton newListButton = new JButton("Nueva lista");
 		newListButton.setFocusPainted(false);
 		newListButton.setMargin(new Insets(2, 14, 5, 2));
 		newListButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				songsListPanel.setBorder(
+						new TitledBorder(null, "Crear playlist", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+				scrollPane.setVisible(true);
+				tableScrollPane.setVisible(false);
+				playerPanel.setVisible(false);
+				tableFavouritesScrollPane.setVisible(false);
 			}
 		});
 		newListButton.setIconTextGap(5);
@@ -362,13 +380,17 @@ public class Main {
 																							// imageIcon
 		newListButton.setIcon(imageIcon2);
 		navigationPanel.add(newListButton, gbc_newListButton);
+		
 
+		
 		JButton recentsButton = new JButton("Recientes");
 		recentsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				tableScrollPane.setVisible(true);
 				songsListPanel.setBorder(
 					new TitledBorder(null, "Canciones recientes", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+				scrollPane.setVisible(false);
+				playerPanel.setVisible(true);
 			}
 		});
 		recentsButton.setFocusPainted(false);
@@ -390,7 +412,17 @@ public class Main {
 		recentsButton.setIcon(imageIcon3);
 		navigationPanel.add(recentsButton, gbc_recentsButton);
 
+		
 		JButton myListsButton = new JButton("Mis listas");
+		myListsButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				songsListPanel.setBorder(
+						new TitledBorder(null, "Mis listas", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+				scrollPane.setVisible(true);
+				tableScrollPane.setVisible(true);
+				playerPanel.setVisible(true);
+			}
+		});
 		myListsButton.setFocusPainted(false);
 		myListsButton.setBounds(new Rectangle(3, 0, 0, 0));
 		myListsButton.setIconTextGap(5);
@@ -409,7 +441,6 @@ public class Main {
 		myListsButton.setIcon(imageIcon4);
 		navigationPanel.add(myListsButton, gbc_myListsButton);
 		
-		JScrollPane tableFavouritesScrollPane = new JScrollPane();
 		tableFavouritesScrollPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		tableFavouritesScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		GridBagConstraints gbc_tableFavouritesScrollPane = new GridBagConstraints();
@@ -456,7 +487,10 @@ public class Main {
 				tableScrollPane.setVisible(false);
 				songsListPanel.setBorder(
 					new TitledBorder(null, "Canciones más escuchadas", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-					favouritesSongsTable.setVisible(true);
+				tableFavouritesScrollPane.setVisible(true);
+				favouritesSongsTable.setVisible(true);
+				scrollPane.setVisible(false);
+				playerPanel.setVisible(true);
 			}
 		});
 		favouritesButton.setFocusPainted(false);
@@ -475,13 +509,40 @@ public class Main {
 		navigationPanel.add(favouritesButton, gbc_favouritesButton);
 
 		JPanel panel = new JPanel();
-		panel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		panel.setPreferredSize(new Dimension(100, 100));
+		panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel.setBackground(SystemColor.inactiveCaption);
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		gbc_panel.fill = GridBagConstraints.BOTH;
 		gbc_panel.gridx = 0;
 		gbc_panel.gridy = 5;
 		navigationPanel.add(panel, gbc_panel);
+		panel.setLayout(new GridLayout(0, 1, 0, 0));
+		
+
+		scrollPane.setVisible(false);
+		panel.add(scrollPane);
+		
+		JList<String> list = new JList<>();
+		list.setModel(new AbstractListModel() {
+			String[] values = new String[] {"Ahora soy peor", "New playlist", "Requiem", "Fifa Playlist", "Pepote", "Non-heterosexual playlist", "Pain", "Anele", "Musicote", "Boruto's Dad", "MMM", "DC", "Muzi"};
+			public int getSize() {
+				return values.length;
+			}
+			public Object getElementAt(int index) {
+				return values[index];
+			}
+		});
+		/*list.setModel(new AbstractListModel() {
+			String[] values = new String[] {};
+			public int getSize() {
+				return values.length;
+			}
+			public Object getElementAt(int index) {
+				return values[index];
+			}
+		}); */
+		scrollPane.setViewportView(list);
 	}
 
 
