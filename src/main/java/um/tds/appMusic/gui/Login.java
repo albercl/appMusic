@@ -166,7 +166,13 @@ public class Login {
 			        MainFrame.setVisible(true);
 				}
 				else {
-					JOptionPane.showMessageDialog(LoginFrame, "Nombre de usuario o contraseña no válido.", "Error", JOptionPane.ERROR_MESSAGE);
+					String[] opt1 = {"Aceptar"};
+					JOptionPane.showOptionDialog(LoginFrame, 
+						"Nombre de usuario o contraseña no válido.", 
+						"Error", 
+						JOptionPane.OK_OPTION, 
+						JOptionPane.ERROR_MESSAGE, 
+						null, opt1, opt1[0]);
 				}
 
 			}

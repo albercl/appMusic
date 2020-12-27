@@ -323,7 +323,14 @@ public class Register {
 				}
 
 				if (ok) {
-					JOptionPane.showMessageDialog(RegisterFrame, "Te acabas de registrar en AppMusic.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+					String[] opt1 = {"Aceptar"};
+					JOptionPane.showOptionDialog(RegisterFrame, 
+							"Te acabas de registrar en AppMusic.", 
+							"Éxito", 
+							JOptionPane.OK_OPTION, 
+							JOptionPane.INFORMATION_MESSAGE, 
+							null, opt1, opt1[0]);
+					
 					RegisterFrame.setVisible(false);
 					Login LoginFrame = new Login();
 					LoginFrame.setVisible(true);
