@@ -36,6 +36,8 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JTextField;
+import java.awt.Dimension;
 
 public class Pruebas {
 
@@ -44,6 +46,7 @@ public class Pruebas {
 
 	private JPanel playerPanel;
 	private JPanel songsListPanel;
+	private JTextField textField;
 
 	/**
 	 * Launch the application.
@@ -156,22 +159,30 @@ public class Pruebas {
 				new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Canciones m\u00E1s escuchadas", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		centerPanel.add(songsListPanel);
 		GridBagLayout gbl_recentsSongsPanel_1 = new GridBagLayout();
-		gbl_recentsSongsPanel_1.rowHeights = new int[] { 10, 300, 50 };
-		gbl_recentsSongsPanel_1.columnWidths = new int[] { 10, 300, 10 };
-		gbl_recentsSongsPanel_1.columnWeights = new double[] { 0.0, 0.0, 0.0 };
-		gbl_recentsSongsPanel_1.rowWeights = new double[] { 0.0, 1.0, 0.0 };
+		gbl_recentsSongsPanel_1.rowHeights = new int[] { 10, 0, 0, 300, 0, 50 };
+		gbl_recentsSongsPanel_1.columnWidths = new int[] { 10, 300, 0, 10 };
+		gbl_recentsSongsPanel_1.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0 };
+		gbl_recentsSongsPanel_1.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 0.0, 0.0 };
 		songsListPanel.setLayout(gbl_recentsSongsPanel_1);
 		
-		JLabel horaLabel = new JLabel("Hora");
-		GridBagConstraints gbc_horaLabel = new GridBagConstraints();
-		gbc_horaLabel.fill = GridBagConstraints.VERTICAL;
-		gbc_horaLabel.anchor = GridBagConstraints.EAST;
-		gbc_horaLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_horaLabel.gridx = 1;
-		gbc_horaLabel.gridy = 0;
-		songsListPanel.add(horaLabel, gbc_horaLabel);
-		horaLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
-		showTime(horaLabel);
+		JPanel panel_1 = new JPanel();
+		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
+		gbc_panel_1.insets = new Insets(0, 0, 5, 5);
+		gbc_panel_1.fill = GridBagConstraints.BOTH;
+		gbc_panel_1.gridx = 1;
+		gbc_panel_1.gridy = 1;
+		songsListPanel.add(panel_1, gbc_panel_1);
+		panel_1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		textField = new JTextField();
+		panel_1.add(textField);
+		textField.setColumns(10);
+		
+		JButton btnNewButton_1 = new JButton("New button");
+		panel_1.add(btnNewButton_1);
+		
+		JButton btnNewButton = new JButton("Crear");
+		panel_1.add(btnNewButton);
 
 		JScrollPane tableFavouritesScrollPane = new JScrollPane();
 		tableFavouritesScrollPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -180,7 +191,7 @@ public class Pruebas {
 		gbc_tableFavouritesScrollPane.insets = new Insets(0, 0, 5, 5);
 		gbc_tableFavouritesScrollPane.fill = GridBagConstraints.BOTH;
 		gbc_tableFavouritesScrollPane.gridx = 1;
-		gbc_tableFavouritesScrollPane.gridy = 1;
+		gbc_tableFavouritesScrollPane.gridy = 3;
 		songsListPanel.add(tableFavouritesScrollPane, gbc_tableFavouritesScrollPane);
 
 		favouritesSongsTable = new JTable();
@@ -219,7 +230,7 @@ public class Pruebas {
 		gbc_playerPanel.anchor = GridBagConstraints.WEST;
 		gbc_playerPanel.insets = new Insets(0, 0, 0, 5);
 		gbc_playerPanel.gridx = 1;
-		gbc_playerPanel.gridy = 2;
+		gbc_playerPanel.gridy = 5;
 		songsListPanel.add(playerPanel, gbc_playerPanel);
 
 		JButton randomButton = new JButton("");
@@ -308,6 +319,16 @@ public class Pruebas {
 			}
 		});
 		playerPanel.add(forwardButton);
+		
+		JLabel horaLabel = new JLabel("Hora");
+		GridBagConstraints gbc_horaLabel = new GridBagConstraints();
+		gbc_horaLabel.fill = GridBagConstraints.VERTICAL;
+		gbc_horaLabel.anchor = GridBagConstraints.EAST;
+		gbc_horaLabel.gridx = 3;
+		gbc_horaLabel.gridy = 5;
+		songsListPanel.add(horaLabel, gbc_horaLabel);
+		horaLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
+		showTime(horaLabel);
 
 		JPanel navigationPanel = new JPanel();
 		navigationPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
