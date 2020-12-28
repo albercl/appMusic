@@ -4,7 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Playlist {
-	int id;
+	
+	//Atributos
+	private int id;
 
 	//Datos
 	private String nombre;
@@ -23,6 +25,13 @@ public class Playlist {
 	 */
 	public void addCancion(Cancion cancion) {
 		canciones.add(cancion);
+	}
+	
+	/**
+	 * @param cancion Elimina la canción.
+	 */
+	public void removeCancion(Cancion cancion) {
+		canciones.remove(cancion);
 	}
 	
 	/**

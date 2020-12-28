@@ -44,7 +44,7 @@ public class AdaptadorPlaylistTDS implements IAdaptadorPlaylistDAO {
     }
 
     @Override
-    public List<Playlist> recuperarTodasPlaylistes() {
+    public List<Playlist> recuperarTodasPlaylists() {
         return null;
     }
 }
