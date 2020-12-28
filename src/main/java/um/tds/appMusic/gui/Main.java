@@ -118,7 +118,7 @@ public class Main {
 	private void initialize() {
 		MainFrame = new JFrame();
 		MainFrame.setTitle("AppMusic");
-		MainFrame.setBounds(300, 10, 950, 850);
+		MainFrame.setBounds(375, 75, 1050, 950);
 		MainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		ImageIcon iconoAppMusic = new ImageIcon(GuiUtils.loadAppIcon("icons/iconoAppMusic.png"));

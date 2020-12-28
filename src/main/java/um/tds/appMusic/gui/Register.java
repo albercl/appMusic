@@ -75,7 +75,7 @@ public class Register {
 	private void initialize() {
 		RegisterFrame = new JFrame();
 		RegisterFrame.setTitle("Registro AppMusic");
-		RegisterFrame.setBounds(500, 200, 440, 460);
+		RegisterFrame.setBounds(675, 235, 475, 500);
 		RegisterFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		ImageIcon iconoAppMusic = new ImageIcon(GuiUtils.loadAppIcon("icons/iconoAppMusic.png"));
@@ -91,7 +91,7 @@ public class Register {
 		imageIcon = new ImageIcon(newimg);
 		titleLabel.setIcon(imageIcon);
 		titleLabel.setForeground(new Color(178, 34, 34));
-		titleLabel.setFont(new Font("Tahoma", Font.BOLD, 19));
+		titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
 		titlePanel.add(titleLabel);
 
 		JPanel registerPanel = new JPanel();

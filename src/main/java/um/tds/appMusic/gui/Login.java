@@ -76,7 +76,7 @@ public class Login {
         
 		LoginFrame = new JFrame();
 		LoginFrame.setTitle("AppMusic");
-		LoginFrame.setBounds(450, 250, 480, 300);
+		LoginFrame.setBounds(630, 300, 550, 325);
 		LoginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		ImageIcon iconoAppMusic = new ImageIcon(GuiUtils.loadAppIcon("icons/iconoAppMusic.png"));
@@ -100,7 +100,7 @@ public class Login {
 		imageIcon = new ImageIcon(newimg);
 		titleLabel.setIcon(imageIcon);
 		titleLabel.setForeground(new Color(178, 34, 34));
-		titleLabel.setFont(new Font("Tahoma", Font.BOLD, 19));
+		titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
 		GridBagConstraints gbc_titleLabel = new GridBagConstraints();
 		gbc_titleLabel.insets = new Insets(0, 0, 5, 0);
 		gbc_titleLabel.gridx = 0;
