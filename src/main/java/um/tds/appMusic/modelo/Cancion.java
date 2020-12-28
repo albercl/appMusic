@@ -1,19 +1,27 @@
 package um.tds.appMusic.modelo;
 
-import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
 public class Cancion {
 	int id;
 	
 	//Atributos
 	private String titulo;
-	private String interprete;
+	private List<String> interpretes;
 	private String estilo;
-	private String ruta;    
+	private String ruta;
+	private int numReproducciones;
 	
 	//Constructores
 	public Cancion() {
 
+	}
+
+	public Cancion(String titulo, String ruta, String... interpretes) {
+		this.titulo = titulo;
+		this.ruta = ruta;
+		this.interpretes = Arrays.asList(interpretes);
 	}
 	
 	/* TODO: implementar clase
@@ -29,20 +37,20 @@ public class Cancion {
 		this.titulo = titulo;
 	}
 
-	public String getInterprete() {
-		return interprete;
-	}
-
-	public void setInterprete(String interprete) {
-		this.interprete = interprete;
-	}
-
 	public String getEstilo() {
 		return estilo;
 	}
 
 	public void setEstilo(String estilo) {
 		this.estilo = estilo;
+	}
+	
+	public List<String> getInterpretes() {
+		return interpretes;
+	}
+	
+	public void addInterprete(String interprete) {
+		interpretes.add(interprete);
 	}
 
 	public String getRuta() {
@@ -59,5 +67,13 @@ public class Cancion {
 
 	public int getId() {
 		return id;
+	}
+
+	public int getNumReproducciones() {
+		return numReproducciones;
+	}
+
+	public void setNumReproducciones(int numReproducciones) {
+		this.numReproducciones = numReproducciones;
 	}
 }

@@ -23,6 +23,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.border.BevelBorder;
 
+import um.tds.appMusic.modelo.Cancion;
+import um.tds.appMusic.modelo.Reproductor;
+
 import java.awt.Component;
 import java.awt.SystemColor;
 
@@ -61,6 +64,7 @@ public class Login {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+        
 		LoginFrame = new JFrame();
 		LoginFrame.setResizable(false);
 		LoginFrame.setTitle("AppMusic");

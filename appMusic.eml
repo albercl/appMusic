@@ -6,6 +6,9 @@
 		<excludeFolder url="file://$MODULE_DIR$/target"/>
 	</contentEntry>
 	<lib name="Maven: junit:junit:3.8.1" scope="TEST"/>
+	<lib name="DriverPersistencia" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/DriverPersistencia.jar!/"/>
+	</lib>
 	<levels>
 		<level name="Maven: junit:junit:3.8.1" value="project"/>
 		<level name="Maven: org.eclipse.persistence:eclipselink:2.7.7" value="project"/>
@@ -13,5 +16,6 @@
 		<level name="Maven: org.eclipse.persistence:commonj.sdo:2.1.1" value="project"/>
 		<level name="Maven: javax.persistence:javax.persistence-api:2.2" value="project"/>
 		<level name="Maven: com.toedter:jcalendar:1.4" value="project"/>
+		<level name="h2-1.4.200" value="project"/>
 	</levels>
 </component>

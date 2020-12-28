@@ -2,18 +2,14 @@ package um.tds.appMusic.persistencia.tds;
 
 import beans.Entidad;
 import um.tds.appMusic.modelo.Cancion;
-import um.tds.appMusic.modelo.Playlist;
-import um.tds.appMusic.modelo.Usuario;
 import um.tds.appMusic.persistencia.IAdaptadorCancionDAO;
 import um.tds.appMusic.persistencia.PoolDAO;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import beans.Entidad;
 import beans.Propiedad;
 import tds.driver.*;
 
