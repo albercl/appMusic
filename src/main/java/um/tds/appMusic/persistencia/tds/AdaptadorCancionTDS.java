@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import beans.Entidad;
 import beans.Propiedad;
 import tds.driver.*;
 
