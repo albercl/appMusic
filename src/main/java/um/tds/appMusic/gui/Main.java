@@ -19,6 +19,7 @@ import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Vector;
 import java.awt.event.ActionEvent;
 import java.awt.Component;
 import java.awt.SystemColor;
@@ -28,22 +29,23 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.border.TitledBorder;
 import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
-import javax.swing.border.EmptyBorder;
 import java.awt.Dimension;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 
 import java.awt.GridLayout;
-import javax.swing.AbstractListModel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.border.SoftBevelBorder;
@@ -58,15 +60,15 @@ public class Main {
 	private JPanel songsListPanel;
 	
 	
-	private JTextField textField;
-	private JTextField txtIntrprete;
-	private JTextField txtTtulo;
+	private JTextField txtNewList;
+	private JTextField txtInterprete;
+	private JTextField txtTitulo;
 	
 	private JScrollPane tableScrollPane;
 
 	private JList<String> list;
-	private JTable modSearchPanel;
-	private JTable modPlaylistPanel;
+	private JTable modSearchTable;
+	private JTable modPlaylistTable;
 	private JPanel searchPanel;
 	private JPanel searchPanel2;
 	private JPanel modifyPlaylistPanel;
@@ -109,6 +111,7 @@ public class Main {
 
 	/**
 	 * Initialize the contents of the frame.
+	 * @wbp.parser.entryPoint
 	 */
 	private void initialize() {
 		MainFrame = new JFrame();
@@ -159,6 +162,9 @@ public class Main {
 			Login LoginFrame = new Login();
 			LoginFrame.setVisible(true);
 		});
+		
+		DefaultListModel<String> modelList = new DefaultListModel<>();
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		logoutButton.setForeground(Color.WHITE);
 		logoutButton.setBackground(new Color(178, 34, 34));
 		logoutButton.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -192,11 +198,11 @@ public class Main {
 		gbc_newListPanel.gridy = 0;
 		songsListPanel.add(newListPanel, gbc_newListPanel);
 		
-		textField = new JTextField();
-		textField.setPreferredSize(new Dimension(7, 20));
-		textField.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		newListPanel.add(textField);
-		textField.setColumns(10);
+		txtNewList = new JTextField();
+		txtNewList.setPreferredSize(new Dimension(7, 20));
+		txtNewList.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		newListPanel.add(txtNewList);
+		txtNewList.setColumns(10);
 		
 		//Boton de nueva lista
 		JButton btnNewButton = new JButton("Crear");
@@ -206,7 +212,7 @@ public class Main {
 		btnNewButton.addActionListener(arg0 -> {
 				boolean ok = true;
 				
-				String nombreLista = textField.getText();
+				String nombreLista = txtNewList.getText();
 				
 				String[] options = {"Si", "No"};
 				int reply = JOptionPane.showOptionDialog(null, 
@@ -234,9 +240,14 @@ public class Main {
 						}
 							
 					}
-						
+					String[] opt1 = {"Aceptar"};	
 					if(ok) {
-						JOptionPane.showMessageDialog(null, "Creada lista: " + nombreLista);
+						JOptionPane.showOptionDialog(null, "Creada lista: " + nombreLista,
+								"Éxito", 
+								JOptionPane.OK_OPTION, 
+								JOptionPane.INFORMATION_MESSAGE, 
+								null, opt1, opt1[0]);
+						modelList.addElement(nombreLista);
 						setVisibleListModificationPanels(true);
 					}
 				}
@@ -261,24 +272,24 @@ public class Main {
 		gbc_searchPanel.gridy = 1;
 		songsListPanel.add(searchPanel, gbc_searchPanel);
 		
-		txtIntrprete = new JTextField();
-		txtIntrprete.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		txtIntrprete.addMouseListener(new MouseAdapter() {
+		txtInterprete = new JTextField();
+		txtInterprete.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		txtInterprete.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				txtIntrprete.setText("");
+				txtInterprete.setText("");
 			}
 		});
-		txtIntrprete.setText("Intérprete");
-		searchPanel.add(txtIntrprete);
-		txtIntrprete.setColumns(10);
+		txtInterprete.setText("Intérprete");
+		searchPanel.add(txtInterprete);
+		txtInterprete.setColumns(10);
 		
-		txtTtulo = new JTextField();
-		txtTtulo.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		txtTtulo.addMouseListener(new MouseAdapter() {
+		txtTitulo = new JTextField();
+		txtTitulo.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		txtTitulo.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				txtTtulo.setText("");
+				txtTitulo.setText("");
 			}
 		});
 		
@@ -288,9 +299,9 @@ public class Main {
 		invisibleButton2_1.setContentAreaFilled(false);
 		invisibleButton2_1.setBorderPainted(false);
 		searchPanel.add(invisibleButton2_1);
-		txtTtulo.setText("Título");
-		searchPanel.add(txtTtulo);
-		txtTtulo.setColumns(10);
+		txtTitulo.setText("Título");
+		searchPanel.add(txtTitulo);
+		txtTitulo.setColumns(10);
 		
 		JButton invisibleButton2_2 = new JButton("");
 		invisibleButton2_2.setOpaque(false);
@@ -313,15 +324,36 @@ public class Main {
 		songsListPanel.add(searchPanel2, gbc_searchPanel2);
 		
 		JButton btnNewButton_1 = new JButton("Buscar");
+		btnNewButton_1.setFocusPainted(false);
 		btnNewButton_1.addActionListener(arg0 -> {
-			tableScrollPane.setVisible(true);
-			playerPanel.setVisible(true);
+			if (modifyPlaylistPanel.isVisible() == true) {
+			}
+			else {
+				tableScrollPane.setVisible(true); 
+				playerPanel.setVisible(true);
+			}
+
 		});
 		searchPanel2.add(btnNewButton_1);
 		btnNewButton_1.setForeground(new Color(0, 128, 128));
 		btnNewButton_1.setBackground(SystemColor.inactiveCaption);
 		
 		JButton btnNewButton_2 = new JButton("Cancelar");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (modifyPlaylistPanel.isVisible() == false) {
+					tableScrollPane.setVisible(false);
+					playerPanel.setVisible(false);
+					txtInterprete.setText("Intérprete");
+					txtTitulo.setText("Título");
+				}
+				else {
+					txtInterprete.setText("Intérprete");
+					txtTitulo.setText("Título");
+				}
+			}
+		});
+		btnNewButton_2.setFocusPainted(false);
 		searchPanel2.add(btnNewButton_2);
 		btnNewButton_2.setForeground(new Color(0, 128, 128));
 		btnNewButton_2.setBackground(SystemColor.inactiveCaption);
@@ -342,6 +374,7 @@ public class Main {
 		modifyPlaylistPanel.setVisible(false);
 		
 		JScrollPane searchScrollPanel = new JScrollPane();
+		searchScrollPanel.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		searchScrollPanel.setBorder(
 				new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Búsqueda", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		searchScrollPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -362,34 +395,58 @@ public class Main {
 		gbc_playlistPanel.gridy = 0;
 		modifyPlaylistPanel.add(playlistPanel, gbc_playlistPanel);
 		
-		modSearchPanel = new JTable();
-		modSearchPanel.setFillsViewportHeight(true);
-		modSearchPanel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		modSearchPanel.setModel(new DefaultTableModel(
+		modSearchTable = new JTable() {       
+			public boolean editCellAt(int row, int column, java.util.EventObject e) {
+	            return false;
+				}
+		};
+		modSearchTable.setBackground(Color.WHITE);
+		modSearchTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		modSearchTable.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null},
-				{null, null},
+				{"Megalovania.mp3", "Sans"},
+				{"Wsl2.mp3", "Luis Gregorio"},
+				{"xd.mp3", "xd"},
 			},
 			new String[] {
-				"T\u00EDtulo", "Int\u00E9rprete"
+				"T\u00EDtulo", "Int\u00E9rpretes"
 			}
 		));
-		searchScrollPanel.setViewportView(modSearchPanel);
+		for (int i = 0; i < modSearchTable.getColumnCount() ; ++i) {
+			modSearchTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+		}
 		
-		modPlaylistPanel = new JTable();	
-		modPlaylistPanel.setFillsViewportHeight(true);
-		modPlaylistPanel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		modPlaylistPanel.setModel(new DefaultTableModel(
+	    JTableHeader headerSearchTable = modSearchTable.getTableHeader();
+	    headerSearchTable.setForeground(new Color(0, 128, 128));
+	    headerSearchTable.setBackground(SystemColor.inactiveCaption);
+	    headerSearchTable.setFont(new Font("Tahoma", Font.BOLD, 12));
+		searchScrollPanel.setViewportView(modSearchTable);
+		
+		modPlaylistTable = new JTable() {       
+			public boolean editCellAt(int row, int column, java.util.EventObject e) {
+	            return false;
+				}
+		};
+		modPlaylistTable.setBackground(Color.WHITE);
+		modPlaylistTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		modPlaylistTable.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null},
-				{null, null},
-				{null, null},
+				{"Cara al Sol.mp3", "Francsico Franco & Adolf Hitler"},
+				{"Russian Hardbass.mp3", "Vladimir Putin"},
+				{"Toxicidad fuera.mp3", "Ibai Llanos"},
 			},
 			new String[] {
-				"T\u00EDtulo", "Int\u00E9rprete"
+				"T\u00EDtulo", "Int\u00E9rpretes"
 			}
 		));
-		playlistPanel.setViewportView(modPlaylistPanel);
+		for (int i = 0; i < modPlaylistTable.getColumnCount() ; ++i) {
+			modPlaylistTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+		}
+	    JTableHeader headerPlaylistTable = modPlaylistTable.getTableHeader();
+	    headerPlaylistTable.setForeground(new Color(0, 128, 128));
+	    headerPlaylistTable.setBackground(SystemColor.inactiveCaption);
+	    headerPlaylistTable.setFont(new Font("Tahoma", Font.BOLD, 12));
+		playlistPanel.setViewportView(modPlaylistTable);
 		
 		JPanel modButtonPanel = new JPanel();
 		GridBagConstraints gbc_modButtonPanel = new GridBagConstraints();
@@ -400,25 +457,54 @@ public class Main {
 		modifyPlaylistPanel.add(modButtonPanel, gbc_modButtonPanel);
 		GridBagLayout gbl_modButtonPanel = new GridBagLayout();
 		gbl_modButtonPanel.columnWidths = new int[] {0};
-		gbl_modButtonPanel.rowHeights = new int[] {30, 30};
-		gbl_modButtonPanel.columnWeights = new double[]{0.0};
-		gbl_modButtonPanel.rowWeights = new double[]{0.0, 0.0};
+		gbl_modButtonPanel.rowHeights = new int[] {0, 0, 30, 30};
+		gbl_modButtonPanel.columnWeights = new double[]{1.0};
+		gbl_modButtonPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0};
 		modButtonPanel.setLayout(gbl_modButtonPanel);
 		
-		JButton addSongButton = new JButton("Añadir");
-		GridBagConstraints gbc_addSongButton = new GridBagConstraints();
-		gbc_addSongButton.fill = GridBagConstraints.BOTH;
-		gbc_addSongButton.insets = new Insets(0, 0, 5, 0);
-		gbc_addSongButton.gridx = 0;
-		gbc_addSongButton.gridy = 0;
-		modButtonPanel.add(addSongButton, gbc_addSongButton);
+		JButton btnNewButton_1_1 = new JButton("Añadir");
+		btnNewButton_1_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+		        // check for selected row first
+		        if (modSearchTable.getSelectedRow() != -1) {
+		            // remove selected row from the model
+		        	Vector<String> selectedRow = ((DefaultTableModel) modSearchTable.getModel()).getDataVector().elementAt(modSearchTable.getSelectedRow());
+		        	DefaultTableModel modelTable = (DefaultTableModel)modPlaylistTable.getModel(); 
+		        	modelTable.addRow(selectedRow);
+		        }    
+			
+			}
+		});
+		btnNewButton_1_1.setFocusPainted(false);
+		btnNewButton_1_1.setForeground(new Color(0, 128, 128));
+		btnNewButton_1_1.setBackground(SystemColor.inactiveCaption);
+		GridBagConstraints gbc_btnNewButton_1_1 = new GridBagConstraints();
+		gbc_btnNewButton_1_1.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnNewButton_1_1.insets = new Insets(0, 0, 5, 0);
+		gbc_btnNewButton_1_1.gridx = 0;
+		gbc_btnNewButton_1_1.gridy = 0;
+		modButtonPanel.add(btnNewButton_1_1, gbc_btnNewButton_1_1);
 		
-		JButton deleteSongButton = new JButton("Eliminar");
-		GridBagConstraints gbc_deleteSongButton = new GridBagConstraints();
-		gbc_deleteSongButton.fill = GridBagConstraints.BOTH;
-		gbc_deleteSongButton.gridx = 0;
-		gbc_deleteSongButton.gridy = 1;
-		modButtonPanel.add(deleteSongButton, gbc_deleteSongButton);
+		JButton btnNewButton_2_1 = new JButton("Eliminar");
+		btnNewButton_2_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+		        // check for selected row first
+		        if (modPlaylistTable.getSelectedRow() != -1) {
+		            // remove selected row from the model
+		        	DefaultTableModel modelTable = (DefaultTableModel)modPlaylistTable.getModel(); 
+		        	modelTable.removeRow(modPlaylistTable.getSelectedRow());
+		        }    
+			}
+		});
+		btnNewButton_2_1.setFocusPainted(false);
+		btnNewButton_2_1.setForeground(new Color(0, 128, 128));
+		btnNewButton_2_1.setBackground(SystemColor.inactiveCaption);
+		GridBagConstraints gbc_btnNewButton_2_1 = new GridBagConstraints();
+		gbc_btnNewButton_2_1.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnNewButton_2_1.insets = new Insets(0, 0, 5, 0);
+		gbc_btnNewButton_2_1.gridx = 0;
+		gbc_btnNewButton_2_1.gridy = 1;
+		modButtonPanel.add(btnNewButton_2_1, gbc_btnNewButton_2_1);
 
 		tableScrollPane = new JScrollPane();
 		tableScrollPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -435,7 +521,6 @@ public class Main {
             return false;
 			}
 		};
-		recentSongsTable.setBorder(new EmptyBorder(0, 0, 0, 0));
 		recentSongsTable.setEnabled(true);
 		recentSongsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		recentSongsTable.setModel(new DefaultTableModel(
@@ -452,14 +537,18 @@ public class Main {
 				{"Watermelon sugar.mp3", "Harry Styles"},
 			},
 			new String[] {
-				"Canci\u00F3n", "Artista/s"
+				"Canci\u00F3n", "Intérpretes"
 			}
 		));
-		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 		for (int i = 0; i < recentSongsTable.getColumnCount() ; ++i) {
 			recentSongsTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
 		}
+	    JTableHeader headerRecentsSongsTable = recentSongsTable.getTableHeader();
+	    headerRecentsSongsTable.setForeground(new Color(0, 128, 128));
+	    headerRecentsSongsTable.setBackground(SystemColor.inactiveCaption);
+	    headerRecentsSongsTable.setFont(new Font("Tahoma", Font.BOLD, 12));
 		tableScrollPane.setViewportView(recentSongsTable);
 
 		playerPanel = new JPanel();
@@ -567,6 +656,8 @@ public class Main {
 		searchButton.setFocusPainted(false);
 		searchButton.setIconTextGap(5);
 		searchButton.addActionListener(arg0 -> {
+			txtInterprete.setText("Intérprete");
+			txtTitulo.setText("Título");
 			songsListPanel.setBorder(
 					new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Buscar canciones", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
@@ -599,10 +690,15 @@ public class Main {
 		newListButton.setFocusPainted(false);
 		newListButton.setMargin(new Insets(2, 14, 5, 2));
 		newListButton.addActionListener(arg0 -> {
+			txtInterprete.setText("Intérprete");
+			txtTitulo.setText("Título");
+			txtNewList.setText("");
 			songsListPanel.setBorder(
 					new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Crear playlist", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			scrollPane.setVisible(true);
 			tableScrollPane.setVisible(false);
+			searchPanel.setVisible(false);
+			searchPanel2.setVisible(false);
 			playerPanel.setVisible(false);
 			tableFavouritesScrollPane.setVisible(false);
 			newListPanel.setVisible(true);
@@ -701,7 +797,6 @@ public class Main {
 	          }
 	       };
 		favouritesSongsTable.setVisible(false);
-		favouritesSongsTable.setBorder(new EmptyBorder(0, 0, 0, 0));
 		favouritesSongsTable.setEnabled(true);
 		
 		favouritesSongsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -719,7 +814,7 @@ public class Main {
 				{"Watermelon sugar.mp3", "Harry Styles", "5"},
 			},
 			new String[] {
-				"Canci\u00F3n", "Artista/s", "N\u00BA veces"
+				"Canci\u00F3n", "Intérpretes", "N\u00BA veces"
 			}));
 
 		favouritesSongsTable.getColumnModel().getColumn(0).setPreferredWidth(180);
@@ -729,6 +824,10 @@ public class Main {
 		for (int i = 0; i < favouritesSongsTable.getColumnCount() ; ++i) {
 			favouritesSongsTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
 		}
+	    JTableHeader headerFavouritesSongsTable = favouritesSongsTable.getTableHeader();
+	    headerFavouritesSongsTable.setForeground(new Color(0, 128, 128));
+	    headerFavouritesSongsTable.setBackground(SystemColor.inactiveCaption);
+	    headerFavouritesSongsTable.setFont(new Font("Tahoma", Font.BOLD, 12));
 		tableFavouritesScrollPane.setViewportView(favouritesSongsTable);
 		
 		JButton favouritesButton = new JButton("Favoritas");
@@ -772,27 +871,10 @@ public class Main {
 		panel.setLayout(new GridLayout(0, 1, 0, 0));
 		panel.add(scrollPane);
 		
-		list = new JList<>();
+		list = new JList<>(modelList);
 		list.setBorder(null);
 		list.setBackground(SystemColor.inactiveCaption);
-		list.setModel(new AbstractListModel() {
-			String[] values = new String[] {"Ahora soy peor", "New playlist", "Requiem", "Fifa Playlist", "Pepote", "Non-heterosexual playlist", "Pain", "Anele", "Musicote", "Boruto's Dad", "MMM", "DC", "Muzi", "FIN"};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
-		/*list.setModel(new AbstractListModel() {
-			String[] values = new String[] {};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		}); */
+
 		scrollPane.setViewportView(list);
 	}
 
