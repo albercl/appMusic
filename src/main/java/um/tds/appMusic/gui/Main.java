@@ -134,17 +134,17 @@ public class Main {
         SimpleDateFormat objSDF = new SimpleDateFormat(strDateFormat);
 		JLabel fechaLabel = new JLabel();
 		fechaLabel.setText(objSDF.format(date1));
-		fechaLabel.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		fechaLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		topPanel.add(fechaLabel);
 		
 		JLabel horaLabel = new JLabel("Hora");
 		topPanel.add(horaLabel);
-		horaLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
+		horaLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
 		GuiUtils.showTime(horaLabel);
 
 		JLabel welcomeMessageLabel = new JLabel(
 				"<html><p><b><span style=\"color: rgb(178, 34, 34)\">Bienvenido, </span>Luis_Gregorio</b>.</p></html>");
-		welcomeMessageLabel.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		welcomeMessageLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		topPanel.add(welcomeMessageLabel);
 
 		JButton upgradeButton = new JButton(
@@ -155,7 +155,7 @@ public class Main {
 		upgradeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {}
 		});
-		upgradeButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		upgradeButton.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		topPanel.add(upgradeButton);
 
 		JButton logoutButton = new JButton("Cerrar sesión");
@@ -172,7 +172,7 @@ public class Main {
 		centerRenderer = new DefaultTableCellRenderer();
 		logoutButton.setForeground(Color.WHITE);
 		logoutButton.setBackground(new Color(178, 34, 34));
-		logoutButton.setFont(new Font("Tahoma", Font.BOLD, 13));
+		logoutButton.setFont(new Font("Tahoma", Font.BOLD, 16));
 		topPanel.add(logoutButton);
 
 		JPanel centerPanel = new JPanel();
@@ -566,7 +566,7 @@ public class Main {
 		JButton randomButton = new JButton("");
 		randomButton.setFocusPainted(false);
 		randomButton.setHorizontalTextPosition(SwingConstants.LEADING);
-		randomButton.setMargin(new Insets(2, 0, 2, 0));
+		randomButton.setMargin(new Insets(2, 0, 2, 8));
 		randomButton.setIconTextGap(0);
 		randomButton.setHorizontalAlignment(SwingConstants.LEFT);
 		randomButton.setOpaque(false);
@@ -628,7 +628,7 @@ public class Main {
 		playerPanel.add(playButton);
 
 		JButton forwardButton = new JButton("");
-		forwardButton.setMargin(new Insets(2, 0, 2, 0));
+		forwardButton.setMargin(new Insets(2, 0, 2, 8));
 		forwardButton.setFocusPainted(false);
 		forwardButton.setHorizontalAlignment(SwingConstants.LEFT);
 		forwardButton.setOpaque(false);
@@ -642,6 +642,31 @@ public class Main {
 			public void actionPerformed(ActionEvent arg0) {}
 		});
 		playerPanel.add(forwardButton);
+		
+		JButton replayButton = new JButton("");
+		replayButton.setOpaque(false);
+		replayButton.setMargin(new Insets(2, 0, 2, 0));
+		replayButton.setIconTextGap(0);
+		replayButton.setHorizontalTextPosition(SwingConstants.LEADING);
+		replayButton.setHorizontalAlignment(SwingConstants.LEFT);
+		replayButton.setFocusPainted(false);
+		replayButton.setContentAreaFilled(false);
+		replayButton.setBorderPainted(false);
+		
+		ImageIcon imageIcon12 = new ImageIcon(GuiUtils.loadImage("icons/iconoReplay.png"));
+		replayButton.setIcon(imageIcon12);
+		ImageIcon imageIcon13 = new ImageIcon(GuiUtils.loadImage("icons/iconoReplay2.png"));
+		replayButton.addActionListener(new ActionListener() {
+			private boolean flag = true;
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				replayButton.setIcon(flag ? imageIcon13 : imageIcon12);
+				flag = !flag;
+			}
+		});
+		
+		playerPanel.add(replayButton);
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setBorder(null);
