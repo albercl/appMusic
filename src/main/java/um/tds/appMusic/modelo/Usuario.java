@@ -5,7 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Usuario {
-	int id;
+	
+	//Atributos
+	private int id;
 
 	//Datos personales
 	private String nombre;
@@ -21,8 +23,15 @@ public class Usuario {
 	private List<Playlist> playlists;      
 	
 	//Constructores
-	public Usuario() {
-
+	public Usuario(String nombreReal, Date fechaU, String emailU, String nombreU, String passwordU) {
+		this.id = 0;
+		this.nombre = nombreReal;
+		this.fechaNacimiento = fechaU;
+		this.email = emailU;
+		this.usuario = nombreU;
+		this.contrasena = passwordU;
+		this.premium = false;
+		this.playlists = new LinkedList<Playlist>();
 	}
 	
 	//Funciones
@@ -101,5 +110,9 @@ public class Usuario {
 
 	public void setUsuario(String usuario) {
 		this.usuario = usuario;
+	}
+	
+	public void addPlaylist(Playlist pl) {
+		playlists.add(pl);
 	}
 }

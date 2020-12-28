@@ -10,15 +10,10 @@ import um.tds.appMusic.persistencia.FactoriaDAO;
 import um.tds.appMusic.persistencia.IAdaptadorUsuarioDAO;
 
 
-/* El catálogo mantiene los objetos en memoria, en una tabla hash
- * para mejorar el rendimiento. Esto no se podrá hacer en una base de
- * datos con un número grande de objetos. En ese caso se consultaria
- * directamente la base de datos
- */
 public class CatalogoUsuarios {
+	
 	private Map<String,Usuario> usuarios; 
 	private static CatalogoUsuarios unicaInstancia = new CatalogoUsuarios();
-	
 	private FactoriaDAO dao;
 	private IAdaptadorUsuarioDAO adaptadorUsuarios;
 	
@@ -43,6 +38,13 @@ public class CatalogoUsuarios {
 		for (Usuario c:usuarios.values()) 
 			lista.add(c);
 		return lista;
+	}
+	
+	public Usuario getUsuario(int id) {
+		for (Usuario u:usuarios.values()) {
+			if (u.getId()==id) return u;
+		}
+		return null;
 	}
 	
 	public Usuario getUsuario(String nombreUsuario) {
