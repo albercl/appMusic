@@ -9,5 +9,5 @@ public interface IAdaptadorPlaylistDAO {
     void borrarPlaylist(Playlist playlist);
     void modificarPlaylist(Playlist playlist);
     Playlist recuperarPlaylist(int codigo);
-    List<Playlist> recuperarTodasPlaylistes();
+    List<Playlist> recuperarTodasPlaylists();
 }

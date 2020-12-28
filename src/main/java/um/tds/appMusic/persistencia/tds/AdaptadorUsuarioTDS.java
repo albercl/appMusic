@@ -172,7 +172,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
     }
 
     @Override
-    public List<Usuario> recuperarTodasUsuarios() {
+    public List<Usuario> recuperarTodosUsuarios() {
         List<Usuario> usuarios = new LinkedList<>();
         List<Entidad> entidadesUsuario = servicioPersistencia.recuperarEntidades("usuario");
 
