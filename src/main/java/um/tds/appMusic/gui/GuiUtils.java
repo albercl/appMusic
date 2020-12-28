@@ -41,7 +41,7 @@ public class GuiUtils {
     }
 
     public static void showTime(JLabel label) {
-        new Timer(0, e -> {
+        new Timer(1000, e -> {
             Date d = new Date();
             String strDateFormat = "kk:mm:ss zz"; // El formato de fecha está especificado
             SimpleDateFormat objSDF = new SimpleDateFormat(strDateFormat);
