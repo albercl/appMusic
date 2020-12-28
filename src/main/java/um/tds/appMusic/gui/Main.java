@@ -72,6 +72,14 @@ public class Main {
 	private JPanel searchPanel;
 	private JPanel searchPanel2;
 	private JPanel modifyPlaylistPanel;
+	private JPanel newListPanel;
+	private JScrollPane scrollPane;
+	private JScrollPane tableFavouritesScrollPane;
+
+	private JScrollPane searchScrollPanel;
+
+	private DefaultTableCellRenderer centerRenderer;
+
 	/**
 	 * Launch the application.
 	 */
@@ -94,14 +102,8 @@ public class Main {
 		MainFrame.setVisible(b);
 	}
 	
-	void showTime(JLabel label) {
-		new Timer(0, e -> {
-			Date d = new Date();
-			String strDateFormat = "kk:mm:ss zz"; // El formato de fecha está especificado
-			SimpleDateFormat objSDF = new SimpleDateFormat(strDateFormat);
-			label.setText("- "+objSDF.format(d)+" -");
-		}) .start();
-	}
+
+
 	/**
 	 * Create the application.
 	 */
@@ -138,7 +140,7 @@ public class Main {
 		JLabel horaLabel = new JLabel("Hora");
 		topPanel.add(horaLabel);
 		horaLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
-		showTime(horaLabel);
+		GuiUtils.showTime(horaLabel);
 
 		JLabel welcomeMessageLabel = new JLabel(
 				"<html><p><b><span style=\"color: rgb(178, 34, 34)\">Bienvenido, </span>Luis_Gregorio</b>.</p></html>");
@@ -167,7 +169,7 @@ public class Main {
 		});
 		
 		DefaultListModel<String> modelList = new DefaultListModel<>();
-		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer = new DefaultTableCellRenderer();
 		logoutButton.setForeground(Color.WHITE);
 		logoutButton.setBackground(new Color(178, 34, 34));
 		logoutButton.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -192,7 +194,7 @@ public class Main {
 		songsListPanel.setLayout(gbl_recentsSongsPanel_1);
 		
 		//Panel de nombre de nueva lista
-		JPanel newListPanel = new JPanel();
+		newListPanel = new JPanel();
 		newListPanel.setVisible(false);
 		GridBagConstraints gbc_newListPanel = new GridBagConstraints();
 		gbc_newListPanel.fill = GridBagConstraints.BOTH;
@@ -252,7 +254,7 @@ public class Main {
 								JOptionPane.INFORMATION_MESSAGE,
 								null, opt1, opt1[0]);
 						modelList.addElement(nombreLista);
-						setVisibleListModificationPanels(true);
+						enableModListPanel();
 					}
 				}
 			}
@@ -333,8 +335,7 @@ public class Main {
 			public void actionPerformed(ActionEvent arg0) {
 				if (modifyPlaylistPanel.isVisible() == true) {
 				} else {
-					tableScrollPane.setVisible(true);
-					playerPanel.setVisible(true);
+					enableSearchResultPanel();
 				}
 			}
 		});
@@ -377,7 +378,7 @@ public class Main {
 		modifyPlaylistPanel.setLayout(gbl_modifyPlaylistPanel);
 		modifyPlaylistPanel.setVisible(false);
 		
-		JScrollPane searchScrollPanel = new JScrollPane();
+		searchScrollPanel = new JScrollPane();
 		searchScrollPanel.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		searchScrollPanel.setBorder(
 				new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Búsqueda", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
@@ -416,9 +417,8 @@ public class Main {
 				"T\u00EDtulo", "Int\u00E9rpretes"
 			}
 		));
-		for (int i = 0; i < modSearchTable.getColumnCount() ; ++i) {
-			modSearchTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-		}
+
+		GuiUtils.centerTable(modSearchTable, centerRenderer);
 		
 	    JTableHeader headerSearchTable = modSearchTable.getTableHeader();
 	    headerSearchTable.setForeground(new Color(0, 128, 128));
@@ -443,9 +443,9 @@ public class Main {
 				"T\u00EDtulo", "Int\u00E9rpretes"
 			}
 		));
-		for (int i = 0; i < modPlaylistTable.getColumnCount() ; ++i) {
-			modPlaylistTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-		}
+
+		GuiUtils.centerTable(modPlaylistTable, centerRenderer);
+
 	    JTableHeader headerPlaylistTable = modPlaylistTable.getTableHeader();
 	    headerPlaylistTable.setForeground(new Color(0, 128, 128));
 	    headerPlaylistTable.setBackground(SystemColor.inactiveCaption);
@@ -546,9 +546,9 @@ public class Main {
 		));
 
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-		for (int i = 0; i < recentSongsTable.getColumnCount() ; ++i) {
-			recentSongsTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-		}
+
+		GuiUtils.centerTable(recentSongsTable, centerRenderer);
+
 	    JTableHeader headerRecentsSongsTable = recentSongsTable.getTableHeader();
 	    headerRecentsSongsTable.setForeground(new Color(0, 128, 128));
 	    headerRecentsSongsTable.setBackground(SystemColor.inactiveCaption);
@@ -634,7 +634,7 @@ public class Main {
 		forwardButton.setOpaque(false);
 		forwardButton.setContentAreaFilled(false);
 		forwardButton.setBorderPainted(false);
-		JScrollPane tableFavouritesScrollPane = new JScrollPane();
+		tableFavouritesScrollPane = new JScrollPane();
 		
 		ImageIcon imageIcon8 = new ImageIcon(GuiUtils.loadImage("icons/iconoForward.png"));
 		forwardButton.setIcon(imageIcon8);
@@ -643,7 +643,7 @@ public class Main {
 		});
 		playerPanel.add(forwardButton);
 		
-		JScrollPane scrollPane = new JScrollPane();
+		scrollPane = new JScrollPane();
 		scrollPane.setBorder(null);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setVisible(false);
@@ -665,17 +665,9 @@ public class Main {
 			public void actionPerformed(ActionEvent arg0) {
 				txtInterprete.setText("Intérprete");
 				txtTitulo.setText("Título");
-				songsListPanel.setBorder(
-						new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Buscar canciones", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
-				tableScrollPane.setVisible(false);
-				playerPanel.setVisible(false);
-				scrollPane.setVisible(false);
-				tableFavouritesScrollPane.setVisible(false);
-				newListPanel.setVisible(false);
-				searchPanel.setVisible(true);
-				searchPanel2.setVisible(true);
-				modifyPlaylistPanel.setVisible(false);
+				setMainPanelBorderTitle("Buscar canciones");
+				setViewSearch();
 			}
 		});
 		searchButton.setOpaque(false);
@@ -702,15 +694,8 @@ public class Main {
 				txtInterprete.setText("Intérprete");
 				txtTitulo.setText("Título");
 				txtNewList.setText("");
-				songsListPanel.setBorder(
-						new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Crear playlist", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-				scrollPane.setVisible(true);
-				tableScrollPane.setVisible(false);
-				searchPanel.setVisible(false);
-				searchPanel2.setVisible(false);
-				playerPanel.setVisible(false);
-				tableFavouritesScrollPane.setVisible(false);
-				newListPanel.setVisible(true);
+				setMainPanelBorderTitle("Crear playlist");
+				setViewNewList();
 			}
 		});
 		newListButton.setIconTextGap(5);
@@ -733,15 +718,8 @@ public class Main {
 		JButton recentsButton = new JButton("Recientes");
 		recentsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				tableScrollPane.setVisible(true);
-				songsListPanel.setBorder(
-						new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Canciones recientes", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-				scrollPane.setVisible(false);
-				playerPanel.setVisible(true);
-				searchPanel.setVisible(false);
-				newListPanel.setVisible(false);
-				searchPanel2.setVisible(false);
-				modifyPlaylistPanel.setVisible(false);
+				setMainPanelBorderTitle("Canciones recientes");
+				setViewRecent();
 			}
 		});
 		recentsButton.setFocusPainted(false);
@@ -767,15 +745,8 @@ public class Main {
 		JButton myListsButton = new JButton("Mis listas");
 		myListsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				songsListPanel.setBorder(
-						new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Mis listas", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-				scrollPane.setVisible(true);
-				tableScrollPane.setVisible(true);
-				playerPanel.setVisible(true);
-				searchPanel.setVisible(false);
-				newListPanel.setVisible(false);
-				searchPanel2.setVisible(false);
-				modifyPlaylistPanel.setVisible(false);
+				setMainPanelBorderTitle("Mis listas");
+				setViewMyLists();
 			}
 		});
 		myListsButton.setFocusPainted(false);
@@ -810,7 +781,6 @@ public class Main {
 	             return false;
 	          }
 	       };
-		favouritesSongsTable.setVisible(false);
 		favouritesSongsTable.setEnabled(true);
 		
 		favouritesSongsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -835,9 +805,8 @@ public class Main {
 		favouritesSongsTable.getColumnModel().getColumn(1).setPreferredWidth(180);
 		favouritesSongsTable.getColumnModel().getColumn(2).setPreferredWidth(54);
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-		for (int i = 0; i < favouritesSongsTable.getColumnCount() ; ++i) {
-			favouritesSongsTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-		}
+		GuiUtils.centerTable(favouritesSongsTable, centerRenderer);
+
 	    JTableHeader headerFavouritesSongsTable = favouritesSongsTable.getTableHeader();
 	    headerFavouritesSongsTable.setForeground(new Color(0, 128, 128));
 	    headerFavouritesSongsTable.setBackground(SystemColor.inactiveCaption);
@@ -850,14 +819,7 @@ public class Main {
 				tableScrollPane.setVisible(false);
 				songsListPanel.setBorder(
 						new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Canciones más escuchadas", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-				tableFavouritesScrollPane.setVisible(true);
-				favouritesSongsTable.setVisible(true);
-				scrollPane.setVisible(false);
-				playerPanel.setVisible(true);
-				searchPanel.setVisible(false);
-				newListPanel.setVisible(false);
-				searchPanel2.setVisible(false);
-				modifyPlaylistPanel.setVisible(false);
+				setViewFavourites();
 			}
 		});
 		favouritesButton.setFocusPainted(false);
@@ -895,10 +857,79 @@ public class Main {
 	}
 
 	
-	private void setVisibleListModificationPanels(boolean b) {
-		searchPanel.setVisible(b);
-		searchPanel2.setVisible(b);
-		modifyPlaylistPanel.setVisible(b);
+	private void setViewNewList() {
+		resetView();
+
+		newListPanel.setVisible(true);
 	}
 
+	private void enableModListPanel() {
+		searchPanel.setVisible(true);
+		searchPanel2.setVisible(true);
+		modifyPlaylistPanel.setVisible(true);
+	}
+
+	private void setViewSearch() {
+		resetView();
+
+		searchPanel.setVisible(true);
+		searchPanel2.setVisible(true);
+	}
+
+	private void enableSearchResultPanel() {
+		tableScrollPane.setVisible(true);
+		playerPanel.setVisible(true);
+	}
+
+	private void setViewRecent() {
+		resetView();
+
+		tableScrollPane.setVisible(true);
+		playerPanel.setVisible(true);
+	}
+
+	private void setViewMyLists() {
+		resetView();
+
+		scrollPane.setVisible(true);
+	}
+
+	private void enableListTable() {
+		tableScrollPane.setVisible(true);
+		playerPanel.setVisible(true);
+	}
+
+	private void setViewFavourites() {
+		resetView();
+
+		tableFavouritesScrollPane.setVisible(true);
+
+		playerPanel.setVisible(true);
+	}
+
+	private void resetView() {
+		searchPanel.setVisible(false);
+		searchPanel2.setVisible(false);
+		playerPanel.setVisible(false);
+		tableScrollPane.setVisible(false);
+		newListPanel.setVisible(false);
+		modifyPlaylistPanel.setVisible(false);
+		scrollPane.setVisible(false);
+		tableFavouritesScrollPane.setVisible(false);
+	}
+
+	private void setMainPanelBorderTitle(String title) {
+		songsListPanel.setBorder(
+				new TitledBorder(
+						new EtchedBorder(
+								EtchedBorder.LOWERED,
+								new Color(255, 255, 255),
+								new Color(160, 160, 160)),
+						title,
+						TitledBorder.LEADING,
+						TitledBorder.TOP,
+						null,
+						null));
+
+	}
 }
