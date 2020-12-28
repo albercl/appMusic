@@ -14,10 +14,6 @@ public class Cancion {
 	private int numReproducciones;
 	
 	//Constructores
-	public Cancion() {
-
-	}
-
 	public Cancion(String titulo, String ruta, String... interpretes) {
 		this.titulo = titulo;
 		this.ruta = ruta;
