@@ -9,8 +9,11 @@ import java.util.List;
 public class AppMusic {
 	private static AppMusic instanciaUnica;
 
+	@SuppressWarnings("unused")
 	private CatalogoCanciones canciones;
+	@SuppressWarnings("unused")
 	private CatalogoUsuarios usuarios;
+	@SuppressWarnings("unused")
 	private Reproductor reproductor;
 
 	private Usuario loggedUser;

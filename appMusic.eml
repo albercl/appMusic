@@ -11,12 +11,12 @@
 	<lib name="Maven: junit:junit:3.8.1" scope="TEST"/>
 	<levels>
 		<level name="h2-1.4.200" value="project"/>
-		<level name="DriverPersistencia" value="project"/>
 		<level name="Maven: junit:junit:3.8.1" value="project"/>
 		<level name="Maven: org.eclipse.persistence:eclipselink:2.7.7" value="project"/>
 		<level name="Maven: org.eclipse.persistence:jakarta.persistence:2.2.3" value="project"/>
-		<level name="Maven: org.eclipse.persistence:commonj.sdo:2.1.1" value="project"/>
 		<level name="Maven: javax.persistence:javax.persistence-api:2.2" value="project"/>
+		<level name="Maven: org.eclipse.persistence:commonj.sdo:2.1.1" value="project"/>
 		<level name="Maven: com.toedter:jcalendar:1.4" value="project"/>
+		<level name="DriverPersistencia" value="project"/>
 	</levels>
 </component>

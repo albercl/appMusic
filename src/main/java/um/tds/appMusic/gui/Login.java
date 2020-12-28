@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -52,6 +54,13 @@ public class Login {
 		});
 	}
 	
+	/**
+	 * Change the JFrame visibility.
+	 */
+	public void setVisible(boolean b) {
+		// TODO Auto-generated method stub
+		LoginFrame.setVisible(b);
+	}
 	
 	/**
 	 * Create the application.
@@ -66,12 +75,11 @@ public class Login {
 	private void initialize() {
         
 		LoginFrame = new JFrame();
-		LoginFrame.setResizable(false);
 		LoginFrame.setTitle("AppMusic");
 		LoginFrame.setBounds(450, 250, 480, 300);
 		LoginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		ImageIcon iconoAppMusic = new ImageIcon("icons/iconoAppMusic.png");
+		ImageIcon iconoAppMusic = new ImageIcon(GuiUtils.loadAppIcon("icons/iconoAppMusic.png"));
 		LoginFrame.setIconImage(iconoAppMusic.getImage());
 		
 		
@@ -86,7 +94,7 @@ public class Login {
 		loginPanel.setLayout(gbl_loginPanel);
 		
 		JLabel titleLabel = new JLabel("AppMusic");
-		ImageIcon imageIcon = new ImageIcon("icons/iconoCircular.png"); // load the image to a imageIcon
+		ImageIcon imageIcon = new ImageIcon(GuiUtils.loadImage("icons/iconoCircular.png")); // load the image to a imageIcon
 		Image image = imageIcon.getImage(); // transform it 
 		Image newimg = image.getScaledInstance(40, 40,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
 		imageIcon = new ImageIcon(newimg);
@@ -147,12 +155,30 @@ public class Login {
 		loginPanel.add(passwordField, gbc_passwordField);
 		
 		JButton loginButton = new JButton("Iniciar sesión");
+		loginButton.setFocusPainted(false);
 		loginButton.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 		loginButton.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		loginButton.setBackground(new Color(178, 34, 34));
 		loginButton.setForeground(new Color(255, 255, 255));
 		loginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+		        String user = userField.getText();
+		        String password = String.valueOf(passwordField.getPassword());
+				if(user.equals("Luis_Gregorio")&& password.equals("wsl2")) {
+					LoginFrame.setVisible(false);
+			        Main MainFrame = new Main();
+			        MainFrame.setVisible(true);
+				}
+				else {
+					String[] opt1 = {"Aceptar"};
+					JOptionPane.showOptionDialog(LoginFrame, 
+						"Nombre de usuario o contraseña no válido.", 
+						"Error", 
+						JOptionPane.OK_OPTION, 
+						JOptionPane.ERROR_MESSAGE, 
+						null, opt1, opt1[0]);
+				}
+
 			}
 		});
 		
@@ -187,8 +213,12 @@ public class Login {
 		arrowLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
 		
 		JButton registerButton = new JButton("Reg\u00EDstrate");
+		registerButton.setFocusPainted(false);
 		registerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+		        LoginFrame.setVisible(false);
+		        Register RegisterFrame = new Register();
+		        RegisterFrame.setVisible(true);
 			}
 		});
 		registerButton.setBackground(Color.DARK_GRAY);

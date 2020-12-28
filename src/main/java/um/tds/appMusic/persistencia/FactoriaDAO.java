@@ -8,7 +8,7 @@ public abstract class FactoriaDAO {
     public static FactoriaDAO getInstancia(String tipo) throws DAOException {
         if(instanciaUnica == null) {
             try {
-                instanciaUnica = (FactoriaDAO) Class.forName(tipo).newInstance();
+                instanciaUnica = (FactoriaDAO) Class.forName(tipo).getDeclaredConstructor().newInstance();
             } catch (Exception e) {
                 throw new DAOException(e.getMessage());
             }

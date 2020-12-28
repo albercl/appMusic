@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -24,6 +26,7 @@ import javax.swing.border.BevelBorder;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.border.EtchedBorder;
+import java.awt.SystemColor;
 
 public class Register {
 
@@ -52,6 +55,14 @@ public class Register {
 	}
 
 	/**
+	 * Change the JFrame visibility.
+	 */
+	public void setVisible(boolean b) {
+		// TODO Auto-generated method stub
+		RegisterFrame.setVisible(b);
+	}
+
+	/**
 	 * Create the application.
 	 */
 	public Register() {
@@ -66,33 +77,35 @@ public class Register {
 		RegisterFrame.setTitle("Registro AppMusic");
 		RegisterFrame.setBounds(500, 200, 440, 460);
 		RegisterFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		ImageIcon iconoAppMusic = new ImageIcon("icons/iconoAppMusic.png");
+
+		ImageIcon iconoAppMusic = new ImageIcon(GuiUtils.loadAppIcon("icons/iconoAppMusic.png"));
 		RegisterFrame.setIconImage(iconoAppMusic.getImage());
-		
+
 		JPanel titlePanel = new JPanel();
 		RegisterFrame.getContentPane().add(titlePanel, BorderLayout.NORTH);
 		JLabel titleLabel = new JLabel("AppMusic");
-		ImageIcon imageIcon = new ImageIcon("icons/iconoCircular.png"); // load the image to a imageIcon
-		Image image = imageIcon.getImage(); // transform it 
-		Image newimg = image.getScaledInstance(40, 40,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+		ImageIcon imageIcon = new ImageIcon(GuiUtils.loadImage("icons/iconoCircular.png")); // load the image to a
+																							// imageIcon
+		Image image = imageIcon.getImage(); // transform it
+		Image newimg = image.getScaledInstance(40, 40, java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
 		imageIcon = new ImageIcon(newimg);
 		titleLabel.setIcon(imageIcon);
 		titleLabel.setForeground(new Color(178, 34, 34));
 		titleLabel.setFont(new Font("Tahoma", Font.BOLD, 19));
 		titlePanel.add(titleLabel);
-		
+
 		JPanel registerPanel = new JPanel();
 		registerPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		RegisterFrame.getContentPane().add(registerPanel, BorderLayout.CENTER);
 		GridBagLayout gbl_registerPanel = new GridBagLayout();
-		gbl_registerPanel.columnWidths = new int[] {100, 0};
-		gbl_registerPanel.rowHeights = new int[] {0, 0, 0, 30, 30, 30, 30, 30, 30, 30};
-		gbl_registerPanel.columnWeights = new double[]{0.0, 0.0};
-		gbl_registerPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+		gbl_registerPanel.columnWidths = new int[] { 100, 0 };
+		gbl_registerPanel.rowHeights = new int[] { 0, 0, 0, 30, 30, 30, 30, 30, 30, 30, 0, 0 };
+		gbl_registerPanel.columnWeights = new double[] { 0.0, 0.0 };
+		gbl_registerPanel.rowWeights = new double[] { 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
 		registerPanel.setLayout(gbl_registerPanel);
-		
-		JLabel messageLabel = new JLabel("<html><p><b>Regístrate <span style=\"color: green\">gratis</span>!</b></p></html>");
+
+		JLabel messageLabel = new JLabel(
+				"<html><p><b>Regístrate <span style=\"color: green\">gratis</span>!</b></p></html>");
 		messageLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		GridBagConstraints gbc_messageLabel = new GridBagConstraints();
 		gbc_messageLabel.fill = GridBagConstraints.VERTICAL;
@@ -100,7 +113,7 @@ public class Register {
 		gbc_messageLabel.gridx = 1;
 		gbc_messageLabel.gridy = 0;
 		registerPanel.add(messageLabel, gbc_messageLabel);
-		
+
 		JLabel nameLabel = new JLabel("Nombre:");
 		nameLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 		nameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -111,7 +124,7 @@ public class Register {
 		gbc_nameLabel.gridx = 0;
 		gbc_nameLabel.gridy = 1;
 		registerPanel.add(nameLabel, gbc_nameLabel);
-		
+
 		nameField = new JTextField();
 		nameField.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		nameField.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -122,7 +135,7 @@ public class Register {
 		gbc_nameField.gridx = 1;
 		gbc_nameField.gridy = 1;
 		registerPanel.add(nameField, gbc_nameField);
-		
+
 		JLabel surnameLabel = new JLabel("Apellidos:");
 		surnameLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 		surnameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -133,7 +146,7 @@ public class Register {
 		gbc_surnameLabel.gridx = 0;
 		gbc_surnameLabel.gridy = 2;
 		registerPanel.add(surnameLabel, gbc_surnameLabel);
-		
+
 		surnameField = new JTextField();
 		surnameField.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		surnameField.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -144,7 +157,7 @@ public class Register {
 		gbc_surnameField.gridx = 1;
 		gbc_surnameField.gridy = 2;
 		registerPanel.add(surnameField, gbc_surnameField);
-		
+
 		JLabel birthdateLabel = new JLabel("Fecha de nacimiento:");
 		birthdateLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 		birthdateLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -155,7 +168,7 @@ public class Register {
 		gbc_birthdateLabel.gridx = 0;
 		gbc_birthdateLabel.gridy = 3;
 		registerPanel.add(birthdateLabel, gbc_birthdateLabel);
-		
+
 		JDateChooser dateChooser = new JDateChooser();
 		GridBagConstraints gbc_dateChooser = new GridBagConstraints();
 		gbc_dateChooser.insets = new Insets(0, 0, 5, 0);
@@ -163,7 +176,7 @@ public class Register {
 		gbc_dateChooser.gridx = 1;
 		gbc_dateChooser.gridy = 3;
 		registerPanel.add(dateChooser, gbc_dateChooser);
-		
+
 		JLabel emailLabel = new JLabel("Email:");
 		emailLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 		emailLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -174,7 +187,7 @@ public class Register {
 		gbc_emailLabel.gridx = 0;
 		gbc_emailLabel.gridy = 4;
 		registerPanel.add(emailLabel, gbc_emailLabel);
-		
+
 		emailField = new JTextField();
 		emailField.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		emailField.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -185,7 +198,7 @@ public class Register {
 		gbc_emailField.gridx = 1;
 		gbc_emailField.gridy = 4;
 		registerPanel.add(emailField, gbc_emailField);
-		
+
 		JLabel userLabel = new JLabel("Nombre de usuario:");
 		userLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		userLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -196,7 +209,7 @@ public class Register {
 		gbc_userLabel.gridx = 0;
 		gbc_userLabel.gridy = 5;
 		registerPanel.add(userLabel, gbc_userLabel);
-		
+
 		userField = new JTextField();
 		userField.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		userField.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -207,7 +220,7 @@ public class Register {
 		gbc_userField.gridy = 5;
 		registerPanel.add(userField, gbc_userField);
 		userField.setColumns(20);
-		
+
 		JLabel passwordLabel = new JLabel("Contrase\u00F1a:");
 		passwordLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		passwordLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -218,7 +231,7 @@ public class Register {
 		gbc_passwordLabel.gridx = 0;
 		gbc_passwordLabel.gridy = 6;
 		registerPanel.add(passwordLabel, gbc_passwordLabel);
-		
+
 		passwordField = new JPasswordField();
 		passwordField.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		passwordField.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -229,7 +242,7 @@ public class Register {
 		gbc_passwordField.gridx = 1;
 		gbc_passwordField.gridy = 6;
 		registerPanel.add(passwordField, gbc_passwordField);
-		
+
 		JLabel repeatLabel = new JLabel("Confirmar contraseña:");
 		repeatLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 		repeatLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -240,7 +253,7 @@ public class Register {
 		gbc_repeatLabel.gridx = 0;
 		gbc_repeatLabel.gridy = 7;
 		registerPanel.add(repeatLabel, gbc_repeatLabel);
-		
+
 		repeatField = new JPasswordField();
 		repeatField.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		repeatField.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -251,12 +264,23 @@ public class Register {
 		gbc_repeatField.gridx = 1;
 		gbc_repeatField.gridy = 7;
 		registerPanel.add(repeatField, gbc_repeatField);
-		
+
+		JLabel passwordErrorLabel = new JLabel("* Las contraseñas deben coincidir");
+		passwordErrorLabel.setForeground(Color.RED);
+		passwordErrorLabel.setBackground(SystemColor.menu);
+		passwordErrorLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		GridBagConstraints gbc_passwordErrorLabel = new GridBagConstraints();
+		gbc_passwordErrorLabel.anchor = GridBagConstraints.WEST;
+		gbc_passwordErrorLabel.insets = new Insets(0, 0, 5, 0);
+		gbc_passwordErrorLabel.fill = GridBagConstraints.VERTICAL;
+		gbc_passwordErrorLabel.gridx = 1;
+		gbc_passwordErrorLabel.gridy = 9;
+		registerPanel.add(passwordErrorLabel, gbc_passwordErrorLabel);
+		passwordErrorLabel.setVisible(false);
+
 		JButton registerButton = new JButton("Registrarse");
-		registerButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
+		registerButton.setFocusPainted(false);
+
 		registerButton.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		registerButton.setBackground(new Color(178, 34, 34));
 		registerButton.setForeground(Color.WHITE);
@@ -267,17 +291,72 @@ public class Register {
 		gbc_registerButton.gridy = 8;
 		registerPanel.add(registerButton, gbc_registerButton);
 		registerButton.setFont(new Font("Tahoma", Font.BOLD, 13));
-		
+
+		JLabel userErrorLabel = new JLabel("* El usuario ya existe");
+		userErrorLabel.setForeground(SystemColor.menu);
+		userErrorLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		GridBagConstraints gbc_userErrorLabel = new GridBagConstraints();
+		gbc_userErrorLabel.anchor = GridBagConstraints.WEST;
+		gbc_userErrorLabel.insets = new Insets(0, 0, 5, 0);
+		gbc_userErrorLabel.gridx = 1;
+		gbc_userErrorLabel.gridy = 10;
+		registerPanel.add(userErrorLabel, gbc_userErrorLabel);
+		registerButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String pass1 = String.valueOf(passwordField.getPassword());
+				String pass2 = String.valueOf(repeatField.getPassword());
+				String email = String.valueOf(emailField.getText());
+				String user = String.valueOf(userField.getText());
+				boolean ok = true;
+				if (!(pass1.equals(pass2))) {
+					passwordErrorLabel.setVisible(true);
+					ok = false;
+				} else {
+					passwordErrorLabel.setVisible(false);
+				}
+
+				if (email.equals("LuisGregorio@gmail.com") || user.equals("Luis_Gregorio")) {
+					userErrorLabel.setForeground(Color.RED);
+					ok = false;
+				} else {
+					userErrorLabel.setForeground(SystemColor.menu);
+				}
+
+				if (ok) {
+					String[] opt1 = {"Aceptar"};
+					JOptionPane.showOptionDialog(RegisterFrame, 
+							"Te acabas de registrar en AppMusic.", 
+							"Éxito", 
+							JOptionPane.OK_OPTION, 
+							JOptionPane.INFORMATION_MESSAGE, 
+							null, opt1, opt1[0]);
+					
+					RegisterFrame.setVisible(false);
+					Login LoginFrame = new Login();
+					LoginFrame.setVisible(true);
+				}
+
+			}
+		});
+
 		JPanel bottomPanel = new JPanel();
 		bottomPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		RegisterFrame.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
-		
+
 		JLabel message2Label = new JLabel("¿Ya tienes cuenta?");
 		message2Label.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		bottomPanel.add(message2Label);
-		
 
-		JButton loginButton = new JButton("<html><p><span style=\"color: rgb(178, 34, 34)\"><u>Inicia sesión</u></span>.</p></html>");
+		JButton loginButton = new JButton(
+				"<html><p><span style=\"color: rgb(178, 34, 34)\"><u>Inicia sesión</u></span></p></html>");
+		loginButton.setFocusPainted(false);
+		loginButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				RegisterFrame.setVisible(false);
+				Login LoginFrame = new Login();
+				LoginFrame.setVisible(true);
+			}
+		});
 		loginButton.setMargin(new Insets(2, 0, 2, 14));
 		loginButton.setIconTextGap(0);
 		loginButton.setFont(new Font("Tahoma", Font.PLAIN, 17));
