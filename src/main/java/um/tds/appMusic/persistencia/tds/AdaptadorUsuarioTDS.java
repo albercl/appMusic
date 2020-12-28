@@ -127,39 +127,36 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
         //Si no recuperar de la base de datos
         Entidad entidadUsuario = servicioPersistencia.recuperarEntidad(codigo);
+        String nombreReal;
+        Date fechaU = new Date();
+        String emailU;
+        String nombreU;
+        String passwordU;
 
-        Usuario usuario = new Usuario();
         //Recuperar entidades que no son objetos
         //Fecha
         try {
-            usuario.setFechaNacimiento(dateFormat.parse(
+            fechaU = dateFormat.parse(
                     servicioPersistencia
-                            .recuperarPropiedadEntidad(entidadUsuario, "fechaNacimiento")));
+                            .recuperarPropiedadEntidad(entidadUsuario, "fechaNacimiento"));
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        //Premium
-        usuario.setPremium(
-                Boolean.parseBoolean(
-                        servicioPersistencia.recuperarPropiedadEntidad(entidadUsuario, "premium")));
-
         //Nombre
-        usuario.setNombre(
-                servicioPersistencia.recuperarPropiedadEntidad(entidadUsuario, "nombre"));
+        nombreReal = servicioPersistencia.recuperarPropiedadEntidad(entidadUsuario, "nombre");
 
         //Email
-        usuario.setEmail(
-                servicioPersistencia.recuperarPropiedadEntidad(entidadUsuario, "email"));
+        emailU = servicioPersistencia.recuperarPropiedadEntidad(entidadUsuario, "email");
 
         //Usuario
-        usuario.setUsuario(
-                servicioPersistencia.recuperarPropiedadEntidad(entidadUsuario, "usuario"));
+        nombreU = servicioPersistencia.recuperarPropiedadEntidad(entidadUsuario, "usuario");
 
         //Contraseña
-        usuario.setContrasena(
-                servicioPersistencia.recuperarPropiedadEntidad(entidadUsuario, "contrasena"));
-
+        passwordU = servicioPersistencia.recuperarPropiedadEntidad(entidadUsuario, "contrasena");
+        
+        
+        Usuario usuario = new Usuario(nombreReal, fechaU, emailU, nombreU, passwordU);
         PoolDAO.getInstanciaUnica().addObjeto(codigo, usuario);
 
         //Recuperar entidades que son objetos
@@ -168,11 +165,12 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
                 recuperarPlaylistsDesdeCodigos(
                         servicioPersistencia.recuperarPropiedadEntidad(entidadUsuario, "playlists")));
 
+        
         return usuario;
     }
 
     @Override
-    public List<Usuario> recuperarTodasUsuarios() {
+    public List<Usuario> recuperarTodosUsuarios() {
         List<Usuario> usuarios = new LinkedList<>();
         List<Entidad> entidadesUsuario = servicioPersistencia.recuperarEntidades("usuario");
 
