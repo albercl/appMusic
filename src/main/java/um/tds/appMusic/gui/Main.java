@@ -150,17 +150,20 @@ public class Main {
 		upgradeButton.setFocusPainted(false);
 		upgradeButton.setForeground(Color.YELLOW);
 		upgradeButton.setBackground(new Color(0, 0, 0));
-		upgradeButton.addActionListener(arg0 -> {
+		upgradeButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {}
 		});
 		upgradeButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		topPanel.add(upgradeButton);
 
 		JButton logoutButton = new JButton("Cerrar sesión");
 		logoutButton.setFocusPainted(false);
-		logoutButton.addActionListener(arg0 -> {
-			MainFrame.setVisible(false);
-			Login LoginFrame = new Login();
-			LoginFrame.setVisible(true);
+		logoutButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				MainFrame.setVisible(false);
+				Login LoginFrame = new Login();
+				LoginFrame.setVisible(true);
+			}
 		});
 		
 		DefaultListModel<String> modelList = new DefaultListModel<>();
@@ -209,23 +212,24 @@ public class Main {
 		btnNewButton.setFocusPainted(false);
 		btnNewButton.setForeground(new Color(0, 128, 128));
 		btnNewButton.setBackground(SystemColor.inactiveCaption);
-		btnNewButton.addActionListener(arg0 -> {
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
 				boolean ok = true;
-				
+
 				String nombreLista = txtNewList.getText();
-				
+
 				String[] options = {"Si", "No"};
-				int reply = JOptionPane.showOptionDialog(null, 
-						"¿Deseas crear una nueva lista?", 
-						"Nueva lista", 
-						JOptionPane.YES_NO_OPTION, 
-						JOptionPane.QUESTION_MESSAGE, 
+				int reply = JOptionPane.showOptionDialog(null,
+						"¿Deseas crear una nueva lista?",
+						"Nueva lista",
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE,
 						null, options, options[0]);
-				
+
 				if (reply == JOptionPane.YES_OPTION) {
 					if(nombreLista.isEmpty())
 						ok = false;
-					
+
 					for(int i = 0; i < list.getModel().getSize() && ok; i++) {
 						if(list.getModel().getElementAt(i).equals(nombreLista)) {
 							String[] opt1 = {"Aceptar"};
@@ -235,24 +239,24 @@ public class Main {
 								JOptionPane.OK_OPTION,
 								JOptionPane.WARNING_MESSAGE,
 								null, opt1, opt1[0]);
-							
+
 							ok = false;
 						}
-							
+
 					}
-					String[] opt1 = {"Aceptar"};	
+					String[] opt1 = {"Aceptar"};
 					if(ok) {
 						JOptionPane.showOptionDialog(null, "Creada lista: " + nombreLista,
-								"Éxito", 
-								JOptionPane.OK_OPTION, 
-								JOptionPane.INFORMATION_MESSAGE, 
+								"Éxito",
+								JOptionPane.OK_OPTION,
+								JOptionPane.INFORMATION_MESSAGE,
 								null, opt1, opt1[0]);
 						modelList.addElement(nombreLista);
 						setVisibleListModificationPanels(true);
 					}
 				}
 			}
-		);
+		});
 		
 		JButton invisibleButton2 = new JButton("");
 		invisibleButton2.setOpaque(false);
@@ -325,14 +329,14 @@ public class Main {
 		
 		JButton btnNewButton_1 = new JButton("Buscar");
 		btnNewButton_1.setFocusPainted(false);
-		btnNewButton_1.addActionListener(arg0 -> {
-			if (modifyPlaylistPanel.isVisible() == true) {
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (modifyPlaylistPanel.isVisible() == true) {
+				} else {
+					tableScrollPane.setVisible(true);
+					playerPanel.setVisible(true);
+				}
 			}
-			else {
-				tableScrollPane.setVisible(true); 
-				playerPanel.setVisible(true);
-			}
-
 		});
 		searchPanel2.add(btnNewButton_1);
 		btnNewButton_1.setForeground(new Color(0, 128, 128));
@@ -468,7 +472,7 @@ public class Main {
 		        // check for selected row first
 		        if (modSearchTable.getSelectedRow() != -1) {
 		            // remove selected row from the model
-		        	Vector<String> selectedRow = ((DefaultTableModel) modSearchTable.getModel()).getDataVector().elementAt(modSearchTable.getSelectedRow());
+		        	Vector<String> selectedRow = (Vector<String>) ((DefaultTableModel) modSearchTable.getModel()).getDataVector().elementAt(modSearchTable.getSelectedRow());
 		        	DefaultTableModel modelTable = (DefaultTableModel)modPlaylistTable.getModel(); 
 		        	modelTable.addRow(selectedRow);
 		        }    
@@ -594,7 +598,8 @@ public class Main {
 
 		ImageIcon imageIcon6 = new ImageIcon(GuiUtils.loadImage("icons/iconoBack.png"));
 		backButton.setIcon(imageIcon6);
-		backButton.addActionListener(arg0 -> {
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {}
 
 		});
 		playerPanel.add(backButton);
@@ -633,7 +638,8 @@ public class Main {
 		
 		ImageIcon imageIcon8 = new ImageIcon(GuiUtils.loadImage("icons/iconoForward.png"));
 		forwardButton.setIcon(imageIcon8);
-		forwardButton.addActionListener(arg0 -> {
+		forwardButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {}
 		});
 		playerPanel.add(forwardButton);
 		
@@ -655,20 +661,22 @@ public class Main {
 		JButton searchButton = new JButton("Buscar");
 		searchButton.setFocusPainted(false);
 		searchButton.setIconTextGap(5);
-		searchButton.addActionListener(arg0 -> {
-			txtInterprete.setText("Intérprete");
-			txtTitulo.setText("Título");
-			songsListPanel.setBorder(
-					new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Buscar canciones", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		searchButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				txtInterprete.setText("Intérprete");
+				txtTitulo.setText("Título");
+				songsListPanel.setBorder(
+						new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Buscar canciones", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
-			tableScrollPane.setVisible(false);
-			playerPanel.setVisible(false);
-			scrollPane.setVisible(false);
-			tableFavouritesScrollPane.setVisible(false);
-			newListPanel.setVisible(false);
-			searchPanel.setVisible(true);
-			searchPanel2.setVisible(true);
-			modifyPlaylistPanel.setVisible(false);
+				tableScrollPane.setVisible(false);
+				playerPanel.setVisible(false);
+				scrollPane.setVisible(false);
+				tableFavouritesScrollPane.setVisible(false);
+				newListPanel.setVisible(false);
+				searchPanel.setVisible(true);
+				searchPanel2.setVisible(true);
+				modifyPlaylistPanel.setVisible(false);
+			}
 		});
 		searchButton.setOpaque(false);
 		searchButton.setContentAreaFilled(false);
@@ -689,19 +697,21 @@ public class Main {
 		JButton newListButton = new JButton("Nueva lista");
 		newListButton.setFocusPainted(false);
 		newListButton.setMargin(new Insets(2, 14, 5, 2));
-		newListButton.addActionListener(arg0 -> {
-			txtInterprete.setText("Intérprete");
-			txtTitulo.setText("Título");
-			txtNewList.setText("");
-			songsListPanel.setBorder(
-					new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Crear playlist", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			scrollPane.setVisible(true);
-			tableScrollPane.setVisible(false);
-			searchPanel.setVisible(false);
-			searchPanel2.setVisible(false);
-			playerPanel.setVisible(false);
-			tableFavouritesScrollPane.setVisible(false);
-			newListPanel.setVisible(true);
+		newListButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				txtInterprete.setText("Intérprete");
+				txtTitulo.setText("Título");
+				txtNewList.setText("");
+				songsListPanel.setBorder(
+						new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Crear playlist", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+				scrollPane.setVisible(true);
+				tableScrollPane.setVisible(false);
+				searchPanel.setVisible(false);
+				searchPanel2.setVisible(false);
+				playerPanel.setVisible(false);
+				tableFavouritesScrollPane.setVisible(false);
+				newListPanel.setVisible(true);
+			}
 		});
 		newListButton.setIconTextGap(5);
 		newListButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -721,16 +731,18 @@ public class Main {
 		navigationPanel.add(newListButton, gbc_newListButton);
 		
 		JButton recentsButton = new JButton("Recientes");
-		recentsButton.addActionListener(arg0 -> {
-			tableScrollPane.setVisible(true);
-			songsListPanel.setBorder(
-					new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Canciones recientes", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			scrollPane.setVisible(false);
-			playerPanel.setVisible(true);
-			searchPanel.setVisible(false);
-			newListPanel.setVisible(false);
-			searchPanel2.setVisible(false);
-			modifyPlaylistPanel.setVisible(false);
+		recentsButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				tableScrollPane.setVisible(true);
+				songsListPanel.setBorder(
+						new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Canciones recientes", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+				scrollPane.setVisible(false);
+				playerPanel.setVisible(true);
+				searchPanel.setVisible(false);
+				newListPanel.setVisible(false);
+				searchPanel2.setVisible(false);
+				modifyPlaylistPanel.setVisible(false);
+			}
 		});
 		recentsButton.setFocusPainted(false);
 		recentsButton.setBackground(SystemColor.activeCaption);
@@ -753,16 +765,18 @@ public class Main {
 
 		
 		JButton myListsButton = new JButton("Mis listas");
-		myListsButton.addActionListener(arg0 -> {
-			songsListPanel.setBorder(
-					new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Mis listas", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			scrollPane.setVisible(true);
-			tableScrollPane.setVisible(true);
-			playerPanel.setVisible(true);
-			searchPanel.setVisible(false);
-			newListPanel.setVisible(false);
-			searchPanel2.setVisible(false);
-			modifyPlaylistPanel.setVisible(false);
+		myListsButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				songsListPanel.setBorder(
+						new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Mis listas", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+				scrollPane.setVisible(true);
+				tableScrollPane.setVisible(true);
+				playerPanel.setVisible(true);
+				searchPanel.setVisible(false);
+				newListPanel.setVisible(false);
+				searchPanel2.setVisible(false);
+				modifyPlaylistPanel.setVisible(false);
+			}
 		});
 		myListsButton.setFocusPainted(false);
 		myListsButton.setBounds(new Rectangle(3, 0, 0, 0));
@@ -831,18 +845,20 @@ public class Main {
 		tableFavouritesScrollPane.setViewportView(favouritesSongsTable);
 		
 		JButton favouritesButton = new JButton("Favoritas");
-		favouritesButton.addActionListener(arg0 -> {
-			tableScrollPane.setVisible(false);
-			songsListPanel.setBorder(
-					new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Canciones más escuchadas", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			tableFavouritesScrollPane.setVisible(true);
-			favouritesSongsTable.setVisible(true);
-			scrollPane.setVisible(false);
-			playerPanel.setVisible(true);
-			searchPanel.setVisible(false);
-			newListPanel.setVisible(false);
-			searchPanel2.setVisible(false);
-			modifyPlaylistPanel.setVisible(false);
+		favouritesButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				tableScrollPane.setVisible(false);
+				songsListPanel.setBorder(
+						new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Canciones más escuchadas", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+				tableFavouritesScrollPane.setVisible(true);
+				favouritesSongsTable.setVisible(true);
+				scrollPane.setVisible(false);
+				playerPanel.setVisible(true);
+				searchPanel.setVisible(false);
+				newListPanel.setVisible(false);
+				searchPanel2.setVisible(false);
+				modifyPlaylistPanel.setVisible(false);
+			}
 		});
 		favouritesButton.setFocusPainted(false);
 		favouritesButton.setFont(new Font("Tahoma", Font.PLAIN, 13));

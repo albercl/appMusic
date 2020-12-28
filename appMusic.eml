@@ -5,8 +5,12 @@
 		<testFolder url="file://$MODULE_DIR$/src/test/java"/>
 		<excludeFolder url="file://$MODULE_DIR$/target"/>
 	</contentEntry>
+	<lib name="DriverPersistencia.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/DriverPersistencia.jar!/"/>
+	</lib>
 	<lib name="Maven: junit:junit:3.8.1" scope="TEST"/>
 	<levels>
+		<level name="h2-1.4.200" value="project"/>
 		<level name="Maven: junit:junit:3.8.1" value="project"/>
 		<level name="Maven: org.eclipse.persistence:eclipselink:2.7.7" value="project"/>
 		<level name="Maven: org.eclipse.persistence:jakarta.persistence:2.2.3" value="project"/>
