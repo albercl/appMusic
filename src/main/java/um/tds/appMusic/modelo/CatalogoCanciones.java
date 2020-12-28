@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 import um.tds.appMusic.modelo.util.Filter;
 
 public class CatalogoCanciones {
-    List<Cancion> canciones;
+    private List<Cancion> canciones;
     
     public CatalogoCanciones() {
     	canciones = new LinkedList<>();
