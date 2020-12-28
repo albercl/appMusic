@@ -859,7 +859,7 @@ public class Main {
 	
 	private void setViewNewList() {
 		resetView();
-
+		scrollPane.setVisible(true);
 		newListPanel.setVisible(true);
 	}
 
