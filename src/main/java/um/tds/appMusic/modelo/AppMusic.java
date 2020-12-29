@@ -19,23 +19,25 @@ public class AppMusic {
 	private Usuario usuarioLogged;
 
 	public static AppMusic getInstanciaUnica() {
-		if(instanciaUnica == null)
+		if (instanciaUnica == null)
 			instanciaUnica = new AppMusic();
 
 		return instanciaUnica;
 	}
 
 	public boolean login(String user, String password) {
-		//if logged update logged user
-		usuarioLogged = null;
-		return false;
+		// if logged update logged user
+		Usuario loggedU = usuarios.login(user, password);
+		if (loggedU != null) {
+			return true;
+		} else
+			return false;
 	}
 
 	public boolean register(String nombreReal, Date fechaU, String emailU, String nombreU, String passwordU) {
-		//a catalogo de usuarios
-
-		//falla cuando nombre o correo ya registrados
-		return false;
+		// a catalogo de usuarios
+		return usuarios.register(nombreReal, fechaU, emailU, nombreU, passwordU);
+		// falla cuando nombre o correo ya registrados
 	}
 
 	public void addPlaylist(Playlist playlist) {
@@ -46,7 +48,7 @@ public class AppMusic {
 		playlist.addSong(song);
 	}
 
-	//Obtención de canciones y listas
+	// Obtención de canciones y listas
 	public List<Playlist> getPlaylists() {
 		return usuarioLogged.getPlaylists();
 	}
@@ -71,13 +73,13 @@ public class AppMusic {
 		return usuarioLogged.getHistorial();
 	}
 
-	//Controles de reproducción
+	// Controles de reproducción
 	public void playSong(Cancion song) {
 		reproductor.play(song);
 		usuarioLogged.playedSong(song);
 	}
 
-	//Obtener datos del usuario
+	// Obtener datos del usuario
 	public String getName() {
 		return usuarioLogged.getName();
 	}
