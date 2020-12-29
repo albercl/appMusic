@@ -25,6 +25,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.border.BevelBorder;
 
+import um.tds.appMusic.modelo.AppMusic;
 import um.tds.appMusic.modelo.Cancion;
 import um.tds.appMusic.modelo.Reproductor;
 
@@ -37,6 +38,8 @@ public class Login {
 	private JFrame LoginFrame;
 	private JTextField userField;
 	private JPasswordField passwordField;
+
+	private AppMusic controlador;
 
 	/**
 	 * Launch the application.
@@ -73,6 +76,7 @@ public class Login {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		controlador = AppMusic.getInstanciaUnica();
         
 		LoginFrame = new JFrame();
 		LoginFrame.setTitle("AppMusic");
@@ -164,7 +168,7 @@ public class Login {
 			public void actionPerformed(ActionEvent arg0) {
 		        String user = userField.getText();
 		        String password = String.valueOf(passwordField.getPassword());
-				if(user.equals("Luis_Gregorio")&& password.equals("wsl2")) {
+				if(controlador.login(user, password)) {
 					LoginFrame.setVisible(false);
 			        Main MainFrame = new Main();
 			        MainFrame.setVisible(true);

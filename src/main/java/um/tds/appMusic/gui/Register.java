@@ -21,12 +21,16 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.Color;
 import com.toedter.calendar.JDateChooser;
+import um.tds.appMusic.modelo.AppMusic;
+
 import javax.swing.border.BevelBorder;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.border.EtchedBorder;
 import java.awt.SystemColor;
+import java.util.Arrays;
+import java.util.Date;
 
 public class Register {
 
@@ -37,6 +41,8 @@ public class Register {
 	private JTextField surnameField;
 	private JTextField emailField;
 	private JPasswordField repeatField;
+
+	private AppMusic controlador;
 
 	/**
 	 * Launch the application.
@@ -73,6 +79,8 @@ public class Register {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		controlador = AppMusic.getInstanciaUnica();
+
 		RegisterFrame = new JFrame();
 		RegisterFrame.setTitle("Registro AppMusic");
 		RegisterFrame.setBounds(675, 235, 475, 500);
@@ -99,9 +107,9 @@ public class Register {
 		RegisterFrame.getContentPane().add(registerPanel, BorderLayout.CENTER);
 		GridBagLayout gbl_registerPanel = new GridBagLayout();
 		gbl_registerPanel.columnWidths = new int[] { 100, 0 };
-		gbl_registerPanel.rowHeights = new int[] { 0, 0, 0, 30, 30, 30, 30, 30, 30, 30, 0, 0 };
+		gbl_registerPanel.rowHeights = new int[] {0, 0, 0, 30, 30, 30, 30, 30, 30, 30, 30, 30};
 		gbl_registerPanel.columnWeights = new double[] { 0.0, 0.0 };
-		gbl_registerPanel.rowWeights = new double[] { 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
+		gbl_registerPanel.rowWeights = new double[] { 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 		registerPanel.setLayout(gbl_registerPanel);
 
 		JLabel messageLabel = new JLabel(
@@ -267,7 +275,7 @@ public class Register {
 
 		JLabel passwordErrorLabel = new JLabel("* Las contraseñas deben coincidir");
 		passwordErrorLabel.setForeground(Color.RED);
-		passwordErrorLabel.setBackground(SystemColor.menu);
+		passwordErrorLabel.setVisible(false);
 		passwordErrorLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		GridBagConstraints gbc_passwordErrorLabel = new GridBagConstraints();
 		gbc_passwordErrorLabel.anchor = GridBagConstraints.WEST;
@@ -293,7 +301,8 @@ public class Register {
 		registerButton.setFont(new Font("Tahoma", Font.BOLD, 13));
 
 		JLabel userErrorLabel = new JLabel("* El usuario ya existe");
-		userErrorLabel.setForeground(SystemColor.menu);
+		userErrorLabel.setForeground(Color.RED);
+		userErrorLabel.setVisible(false);
 		userErrorLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		GridBagConstraints gbc_userErrorLabel = new GridBagConstraints();
 		gbc_userErrorLabel.anchor = GridBagConstraints.WEST;
@@ -301,13 +310,34 @@ public class Register {
 		gbc_userErrorLabel.gridx = 1;
 		gbc_userErrorLabel.gridy = 10;
 		registerPanel.add(userErrorLabel, gbc_userErrorLabel);
+		
+		JLabel emptyFieldsLabel = new JLabel("* No deben haber campos vacíos");
+		emptyFieldsLabel.setVisible(false);
+		emptyFieldsLabel.setForeground(Color.RED);
+		emptyFieldsLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		GridBagConstraints gbc_emptyFieldsLabel = new GridBagConstraints();
+		gbc_emptyFieldsLabel.anchor = GridBagConstraints.WEST;
+		gbc_emptyFieldsLabel.gridx = 1;
+		gbc_emptyFieldsLabel.gridy = 11;
+		registerPanel.add(emptyFieldsLabel, gbc_emptyFieldsLabel);
 		registerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String pass1 = String.valueOf(passwordField.getPassword());
-				String pass2 = String.valueOf(repeatField.getPassword());
+				String name = String.valueOf(nameField.getText());
+				String surname = String.valueOf(nameField.getText());
+				Date birthdate = dateChooser.getDate();
 				String email = String.valueOf(emailField.getText());
 				String user = String.valueOf(userField.getText());
+				String pass1 = String.valueOf(passwordField.getPassword());
+				String pass2 = String.valueOf(repeatField.getPassword());
+
 				boolean ok = true;
+				if(anyEmptyField(name, surname, email, user, pass1, pass2) || birthdate == null) {
+					emptyFieldsLabel.setVisible(true);
+					ok = false;
+				} else {
+					emptyFieldsLabel.setVisible(false);
+				}
+
 				if (!(pass1.equals(pass2))) {
 					passwordErrorLabel.setVisible(true);
 					ok = false;
@@ -315,22 +345,22 @@ public class Register {
 					passwordErrorLabel.setVisible(false);
 				}
 
-				if (email.equals("LuisGregorio@gmail.com") || user.equals("Luis_Gregorio")) {
-					userErrorLabel.setForeground(Color.RED);
+				if (!controlador.checkUsername(user)) {
+					userErrorLabel.setVisible(true);
 					ok = false;
-				} else {
-					userErrorLabel.setForeground(SystemColor.menu);
-				}
+				} else
+					userErrorLabel.setVisible(false);
 
 				if (ok) {
+					controlador.register(name + " " + surname, birthdate, email, user, pass1);
 					String[] opt1 = {"Aceptar"};
-					JOptionPane.showOptionDialog(RegisterFrame, 
-							"Te acabas de registrar en AppMusic.", 
-							"Éxito", 
-							JOptionPane.OK_OPTION, 
-							JOptionPane.INFORMATION_MESSAGE, 
+					JOptionPane.showOptionDialog(RegisterFrame,
+							"Te acabas de registrar en AppMusic.",
+							"Éxito",
+							JOptionPane.OK_OPTION,
+							JOptionPane.INFORMATION_MESSAGE,
 							null, opt1, opt1[0]);
-					
+
 					RegisterFrame.setVisible(false);
 					Login LoginFrame = new Login();
 					LoginFrame.setVisible(true);
@@ -366,4 +396,7 @@ public class Register {
 		bottomPanel.add(loginButton);
 	}
 
+	private boolean anyEmptyField(String... fields) {
+		return Arrays.stream(fields).anyMatch(s -> s.isEmpty());
+	}
 }

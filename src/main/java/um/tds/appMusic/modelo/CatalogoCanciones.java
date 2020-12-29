@@ -1,5 +1,9 @@
 package um.tds.appMusic.modelo;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,10 +12,13 @@ import java.util.stream.Stream;
 import um.tds.appMusic.modelo.util.Filter;
 
 public class CatalogoCanciones {
+	private final static String SONGS_PATH = "C:\\tds\\canciones";
+
     private List<Cancion> canciones;
     
-    public CatalogoCanciones() {
+    public CatalogoCanciones() throws Exception {
     	canciones = new LinkedList<>();
+    	cargarCanciones();
     }
 
     public List<Cancion> getCanciones() {
@@ -43,5 +50,31 @@ public class CatalogoCanciones {
     	return canciones.stream()
 				.sorted()
 				.collect(Collectors.toList());
+	}
+
+	private void cargarCanciones() throws Exception {
+		File rootDir = new File(SONGS_PATH);
+		if(!rootDir.isDirectory())
+			throw new Exception("No se ha podido abrir el directorio de canciones");
+
+		File[] estilos = rootDir.listFiles();
+		for(File f : estilos) {
+			File[] canciones = f.listFiles();
+			for(File c : canciones) {
+				String ruta = f.getName() + "\\" + c.getName();
+
+				String[] parts = c.getName().split("-");
+
+				String interpretesString = parts[0];
+				String[] interpretes = interpretesString.split("&");
+				for(String s : interpretes)
+					s.trim();
+
+				String name = parts[1].trim();
+
+
+				this.canciones.add(new Cancion(name, ruta, interpretes));
+			}
+		}
 	}
 }

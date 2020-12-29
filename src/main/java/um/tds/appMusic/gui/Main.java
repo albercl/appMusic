@@ -1,5 +1,7 @@
 package um.tds.appMusic.gui;
 
+import um.tds.appMusic.modelo.AppMusic;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -51,6 +53,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.border.SoftBevelBorder;
 
 public class Main {
+	private AppMusic controlador;
 
 	private JFrame MainFrame;
 	private JTable recentSongsTable;
@@ -116,6 +119,8 @@ public class Main {
 	 * @wbp.parser.entryPoint
 	 */
 	private void initialize() {
+		controlador = AppMusic.getInstanciaUnica();
+
 		MainFrame = new JFrame();
 		MainFrame.setTitle("AppMusic");
 		MainFrame.setBounds(375, 75, 1050, 950);
@@ -143,7 +148,7 @@ public class Main {
 		GuiUtils.showTime(horaLabel);
 
 		JLabel welcomeMessageLabel = new JLabel(
-				"<html><p><b><span style=\"color: rgb(178, 34, 34)\">Bienvenido, </span>Luis_Gregorio</b>.</p></html>");
+				"<html><p><b><span style=\"color: rgb(178, 34, 34)\">Bienvenido, </span>" + controlador.getUsername() + "</b> </p></html>");
 		welcomeMessageLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		topPanel.add(welcomeMessageLabel);
 
@@ -165,6 +170,8 @@ public class Main {
 				MainFrame.setVisible(false);
 				Login LoginFrame = new Login();
 				LoginFrame.setVisible(true);
+
+				controlador.logout();
 			}
 		});
 		

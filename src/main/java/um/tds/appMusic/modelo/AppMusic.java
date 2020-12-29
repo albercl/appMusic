@@ -9,14 +9,12 @@ import java.util.List;
 public class AppMusic {
 	private static AppMusic instanciaUnica;
 
-	@SuppressWarnings("unused")
-	private CatalogoCanciones canciones;
-	@SuppressWarnings("unused")
-	private CatalogoUsuarios usuarios;
-	@SuppressWarnings("unused")
-	private Reproductor reproductor;
 
-	private Usuario usuarioLogged;
+	private CatalogoCanciones songs;
+	private CatalogoUsuarios users;
+	private Reproductor player;
+
+	private Usuario loggedUser;
 
 	public static AppMusic getInstanciaUnica() {
 		if (instanciaUnica == null)
@@ -25,23 +23,47 @@ public class AppMusic {
 		return instanciaUnica;
 	}
 
+	private AppMusic() {
+		users = CatalogoUsuarios.getUnicaInstancia();
+		player = new Reproductor();
+
+		//TODO: Aplicar singleton
+		try {
+			songs = new CatalogoCanciones();
+		} catch (Exception e) {
+			System.err.println("Algo ha ocurrido al intentar cargar las canciones");
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
+
 	public boolean login(String user, String password) {
 		// if logged update logged user
-		Usuario loggedU = usuarios.login(user, password);
-		if (loggedU != null) {
+		loggedUser = users.login(user, password);
+		if (loggedUser != null) {
+			player.setCurrentUser(loggedUser);
 			return true;
 		} else
 			return false;
 	}
 
+	public void logout() {
+		loggedUser = null;
+		player.setCurrentUser(null);
+	}
+
 	public boolean register(String nombreReal, Date fechaU, String emailU, String nombreU, String passwordU) {
 		// a catalogo de usuarios
-		return usuarios.register(nombreReal, fechaU, emailU, nombreU, passwordU);
+		return users.register(nombreReal, fechaU, emailU, nombreU, passwordU);
 		// falla cuando nombre o correo ya registrados
 	}
 
+	public boolean checkUsername(String username) {
+		return users.checkUsername(username);
+	}
+
 	public void addPlaylist(Playlist playlist) {
-		usuarioLogged.addPlaylist(playlist);
+		loggedUser.addPlaylist(playlist);
 	}
 
 	public void addSongToPlaylist(Playlist playlist, Cancion song) {
@@ -50,7 +72,7 @@ public class AppMusic {
 
 	// Obtención de canciones y listas
 	public List<Playlist> getPlaylists() {
-		return usuarioLogged.getPlaylists();
+		return loggedUser.getPlaylists();
 	}
 
 	public Playlist getPlaylist(String name) {
@@ -62,30 +84,30 @@ public class AppMusic {
 	}
 
 	public List<Cancion> searchSongs(Filter filter) {
-		return canciones.getCancionesFiltradas(filter);
+		return songs.getCancionesFiltradas(filter);
 	}
 
 	public List<Cancion> getMostPlayedSongs() {
-		return canciones.getMostPlayedSongs();
+		return songs.getMostPlayedSongs();
 	}
 
 	public List<Cancion> getUserHistory() {
-		return usuarioLogged.getHistory();
+		return loggedUser.getHistory();
 	}
 
 	// Controles de reproducción
 	// TODO: Añadir controles reproductor
 	public void playSong(Cancion song) {
-		reproductor.play(song);
-		usuarioLogged.playedSong(song);
+		player.play(song);
+		loggedUser.playedSong(song);
 	}
 
 	// Obtener datos del usuario
 	public String getUsername() {
-		return usuarioLogged.getUsername();
+		return loggedUser.getUsername();
 	}
 
 	public boolean isPremium() {
-		return usuarioLogged.isPremium();
+		return loggedUser.isPremium();
 	}
 }

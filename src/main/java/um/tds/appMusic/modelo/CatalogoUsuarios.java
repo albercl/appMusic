@@ -25,6 +25,10 @@ public class CatalogoUsuarios {
 			 */
 			usersByUsername = new HashMap<String, Usuario>();
 			usersByEmail = new HashMap<String, Usuario>();
+
+			addUsuario(new Usuario("Luis Gregorio Martinez", null, "luisgreg77@gmail.com", "luisgrego_", "wsl2"));
+			addUsuario(new Usuario("alber", null, "alber@gmail.com", "albercl", "vivafli"));
+
 			//this.cargarCatalogoUsers();
 	}
 
@@ -54,10 +58,12 @@ public class CatalogoUsuarios {
 
 	public void addUsuario(Usuario user) {
 		usersByUsername.put(user.getUsername(), user);
+		usersByEmail.put(user.getEmail(), user);
 	}
 
 	public void removeUsuario(Usuario user) {
 		usersByUsername.remove(user.getUsername());
+		usersByEmail.remove(user.getEmail());
 	}
 
 	/* Recupera todos los usuarios para trabajar con ellos en memoria */
@@ -70,7 +76,8 @@ public class CatalogoUsuarios {
 	 */
 
 	public Usuario login(String nameU, String passU) {
-		if (usersByUsername.get(nameU).checkPassword(passU))
+		Usuario logged = usersByUsername.get(nameU);
+		if(logged != null && logged.checkPassword(passU))
 			return usersByUsername.get(nameU);
 		else
 			return null;
@@ -83,6 +90,10 @@ public class CatalogoUsuarios {
 		} else
 			addUsuario(user1);
 		return true;
+	}
+
+	public boolean checkUsername(String username) {
+		return !usersByUsername.containsKey(username);
 	}
 
 }
