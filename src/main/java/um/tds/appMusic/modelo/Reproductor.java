@@ -13,7 +13,7 @@ public class Reproductor {
 	private MediaPlayer currentPlayer;
 	private Cancion currentSong;
 
-	private Usuario applicant;
+	private Usuario currentUser;
 	private List<Cancion> queue;
 
 	private Runnable backupEndOfMedia;
@@ -30,8 +30,8 @@ public class Reproductor {
 		queue = new LinkedList<>();
 	}
 
-    public void setApplicant(Usuario applicant) {
-        this.applicant = applicant;
+    public void setCurrentUser(Usuario currentUser) {
+        this.currentUser = currentUser;
     }
 
     public void play(Playlist playlist) {
@@ -121,12 +121,12 @@ public class Reproductor {
                 currentSong = nextSong;
                 currentPlayer = nextPlayer;
                 currentPlayer.play();
-                applicant.playedSong(nextSong);
+                currentUser.playedSong(nextSong);
             } else
                 currentPlayer = null;
         });
 
-        applicant.playedSong(song);
+        currentUser.playedSong(song);
 
         return player;
     }
