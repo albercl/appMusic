@@ -23,7 +23,7 @@ public class Playlist {
 	/**
 	 * @param cancion Añade una canción al final de la playlist
 	 */
-	public void addCancion(Cancion cancion) {
+	public void addSong(Cancion cancion) {
 		canciones.add(cancion);
 	}
 	

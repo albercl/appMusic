@@ -52,16 +52,16 @@ public class CatalogoUsuarios {
 	}
 	
 	public void addCliente(Usuario user) {
-		usuarios.put(user.getNombre(), user);
+		usuarios.put(user.getName(), user);
 	}
 	public void removeCliente (Usuario user) {
-		usuarios.remove(user.getNombre());
+		usuarios.remove(user.getName());
 	}
 	
 	/*Recupera todos los usuarios para trabajar con ellos en memoria*/
 	private void cargarCatalogo() throws DAOException {
 		 List<Usuario> usuariosBD = adaptadorUsuarios.recuperarTodosUsuarios();
 		 for (Usuario user: usuariosBD) 
-			     usuarios.put(user.getNombre(), user);
+			     usuarios.put(user.getName(), user);
 	}
 }

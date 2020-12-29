@@ -54,7 +54,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
         entidadUsuario = new Entidad();
         entidadUsuario.setNombre("usuario");
         entidadUsuario.setPropiedades(new ArrayList<>(
-                Arrays.asList(new Propiedad("nombre", usuario.getNombre()),
+                Arrays.asList(new Propiedad("nombre", usuario.getName()),
                         new Propiedad("fechaNacimiento", dateFormat.format(usuario.getFechaNacimiento())),
                         new Propiedad("email", usuario.getEmail()),
                         new Propiedad("usuario", usuario.getUsuario()),
@@ -92,7 +92,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
         //Actualizar todas las propiedades del usuario
         servicioPersistencia.eliminarPropiedadEntidad(entidadUsuario, "nombre");
         servicioPersistencia.anadirPropiedadEntidad(entidadUsuario, "nombre",
-                                                    usuario.getNombre());
+                                                    usuario.getName());
 
         servicioPersistencia.eliminarPropiedadEntidad(entidadUsuario, "fechaNacimiento");
         servicioPersistencia.anadirPropiedadEntidad(entidadUsuario, "fechaNacimiento",

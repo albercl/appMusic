@@ -11,7 +11,6 @@ public class Cancion {
 	private List<String> interpretes;
 	private String estilo;
 	private String ruta;
-	private int numReproducciones;
 	
 	//Constructores
 	public Cancion(String titulo, String ruta, String... interpretes) {
@@ -63,13 +62,5 @@ public class Cancion {
 
 	public int getId() {
 		return id;
-	}
-
-	public int getNumReproducciones() {
-		return numReproducciones;
-	}
-
-	public void setNumReproducciones(int numReproducciones) {
-		this.numReproducciones = numReproducciones;
 	}
 }

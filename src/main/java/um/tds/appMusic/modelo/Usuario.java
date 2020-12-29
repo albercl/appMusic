@@ -1,8 +1,6 @@
 package um.tds.appMusic.modelo;
 
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class Usuario {
 	
@@ -20,7 +18,9 @@ public class Usuario {
 	
 	//Datos de la cuenta
 	private boolean premium;
-	private List<Playlist> playlists;      
+	private List<Playlist> playlists;
+	private Map<Cancion, Integer> reproducciones;
+	private List<Cancion> historial;
 	
 	//Constructores
 	public Usuario(String nombreReal, Date fechaU, String emailU, String nombreU, String passwordU) {
@@ -31,7 +31,10 @@ public class Usuario {
 		this.usuario = nombreU;
 		this.contrasena = passwordU;
 		this.premium = false;
-		this.playlists = new LinkedList<Playlist>();
+
+		this.playlists = new LinkedList<>();
+		historial = new LinkedList<>();
+		reproducciones = new HashMap<>();
 	}
 	
 	//Funciones
@@ -48,7 +51,7 @@ public class Usuario {
 		return false;
 	}
 
-	public String getNombre() {
+	public String getName() {
 		return nombre;
 	}
 
@@ -114,5 +117,25 @@ public class Usuario {
 	
 	public void addPlaylist(Playlist pl) {
 		playlists.add(pl);
+	}
+
+	public List<Cancion> getHistorial() {
+		return historial;
+	}
+
+	public void setHistorial(List<Cancion> historial) {
+		this.historial = historial;
+	}
+
+	public int getSongReproductions(Cancion song) {
+		return reproducciones.get(song);
+	}
+
+	public void playedSong(Cancion song) {
+		historial.add(song);
+		//TODO: Comprobar suma objeto integer
+		Integer timesPlayed = reproducciones.get(song);
+		timesPlayed += 1;
+		reproducciones.put(song, timesPlayed);
 	}
 }

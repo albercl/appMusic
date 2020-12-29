@@ -38,4 +38,10 @@ public class CatalogoCanciones {
     	
     	return stream.collect(Collectors.toList());
     }
+
+    public List<Cancion> getMostPlayedSongs() {
+    	return canciones.stream()
+				.sorted()
+				.collect(Collectors.toList());
+	}
 }

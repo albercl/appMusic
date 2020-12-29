@@ -16,7 +16,7 @@ public class AppMusic {
 	@SuppressWarnings("unused")
 	private Reproductor reproductor;
 
-	private Usuario loggedUser;
+	private Usuario usuarioLogged;
 
 	public static AppMusic getInstanciaUnica() {
 		if(instanciaUnica == null)
@@ -27,7 +27,7 @@ public class AppMusic {
 
 	public boolean login(String user, String password) {
 		//if logged update logged user
-		loggedUser = null;
+		usuarioLogged = null;
 		return false;
 	}
 
@@ -39,16 +39,16 @@ public class AppMusic {
 	}
 
 	public void addPlaylist(Playlist playlist) {
-
+		usuarioLogged.addPlaylist(playlist);
 	}
 
 	public void addSongToPlaylist(Playlist playlist, Cancion song) {
-
+		playlist.addSong(song);
 	}
 
 	//Obtención de canciones y listas
 	public List<Playlist> getPlaylists() {
-		return loggedUser.getPlaylists();
+		return usuarioLogged.getPlaylists();
 	}
 
 	public Playlist getPlaylist(String name) {
@@ -64,24 +64,25 @@ public class AppMusic {
 	}
 
 	public List<Cancion> getMostPlayedSongs() {
-		return null;
+		return canciones.getMostPlayedSongs();
 	}
 
-	public List<Cancion> getLast10PlayedSongs() {
-		return null;
+	public List<Cancion> getUserHistory() {
+		return usuarioLogged.getHistorial();
 	}
 
 	//Controles de reproducción
 	public void playSong(Cancion song) {
 		reproductor.play(song);
+		usuarioLogged.playedSong(song);
 	}
 
 	//Obtener datos del usuario
 	public String getName() {
-		return loggedUser.getNombre();
+		return usuarioLogged.getName();
 	}
 
 	public boolean isPremium() {
-		return loggedUser.isPremium();
+		return usuarioLogged.isPremium();
 	}
 }

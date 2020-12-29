@@ -48,7 +48,8 @@ public class AdaptadorCancionTDS implements IAdaptadorCancionDAO {
         entidadCancion.setNombre("cancion");
         entidadCancion.setPropiedades(new ArrayList<>(
                 Arrays.asList(new Propiedad("titulo", cancion.getTitulo()),
-                		new Propiedad("interprete", cancion.getInterprete()),
+                		//TODO: Actualizar para varios interpretes
+                		new Propiedad("interprete", cancion.getInterpretes().get(0)),
                 		new Propiedad("estilo", cancion.getEstilo()),
                 		new Propiedad("ruta", cancion.getRuta())
                 		)));
@@ -82,7 +83,8 @@ public class AdaptadorCancionTDS implements IAdaptadorCancionDAO {
 
         servicioPersistencia.eliminarPropiedadEntidad(entidadCancion, "interprete");
         servicioPersistencia.anadirPropiedadEntidad(entidadCancion, "interprete",
-                                                    cancion.getInterprete());
+                                                    //TODO: Actualizar para varios interpretes
+                                                    cancion.getInterpretes().get(0));
 
         servicioPersistencia.eliminarPropiedadEntidad(entidadCancion, "estilo");
         servicioPersistencia.anadirPropiedadEntidad(entidadCancion, "estilo",
@@ -101,24 +103,26 @@ public class AdaptadorCancionTDS implements IAdaptadorCancionDAO {
 
         //Si no recuperar de la base de datos
         Entidad entidadCancion = servicioPersistencia.recuperarEntidad(codigo);
-
-        Cancion cancion = new Cancion();
         
         //Nombre
-        cancion.setTitulo(
-                servicioPersistencia.recuperarPropiedadEntidad(entidadCancion, "titulo"));
+        String titulo =
+                servicioPersistencia.recuperarPropiedadEntidad(entidadCancion, "titulo");
 
         //Email
-        cancion.setInterprete(
-                servicioPersistencia.recuperarPropiedadEntidad(entidadCancion, "interprete"));
+        //TODO: Actualizar para varios interpretes
+        String interprete =
+                servicioPersistencia.recuperarPropiedadEntidad(entidadCancion, "interprete");
 
         //Usuario
-        cancion.setEstilo(
-                servicioPersistencia.recuperarPropiedadEntidad(entidadCancion, "estilo"));
+        String estilo =
+                servicioPersistencia.recuperarPropiedadEntidad(entidadCancion, "estilo");
 
         //Contraseña
-        cancion.setRuta(
-                servicioPersistencia.recuperarPropiedadEntidad(entidadCancion, "ruta"));
+        String ruta =
+                servicioPersistencia.recuperarPropiedadEntidad(entidadCancion, "ruta");
+
+        //TODO: Actualizar para soporte de varios interpretes
+        Cancion cancion = new Cancion(titulo, ruta, interprete);
 
         PoolDAO.getInstanciaUnica().addObjeto(codigo, cancion);
 
