@@ -8,33 +8,33 @@ public class Usuario {
 	private int id;
 
 	//Datos personales
-	private String nombre;
-	private Date fechaNacimiento;
+	private String name;
+	private Date birthdate;
 	private String email;
 	
 	//Credenciales
-	private String usuario;
-	private String contrasena;
+	private String username;
+	private String password;
 	
 	//Datos de la cuenta
 	private boolean premium;
 	private List<Playlist> playlists;
-	private Map<Cancion, Integer> reproducciones;
-	private List<Cancion> historial;
+	private Map<Cancion, Integer> reproductions;
+	private List<Cancion> history;
 	
 	//Constructores
 	public Usuario(String nombreReal, Date fechaU, String emailU, String nombreU, String passwordU) {
 		this.id = 0;
-		this.nombre = nombreReal;
-		this.fechaNacimiento = fechaU;
+		this.name = nombreReal;
+		this.birthdate = fechaU;
 		this.email = emailU;
-		this.usuario = nombreU;
-		this.contrasena = passwordU;
+		this.username = nombreU;
+		this.password = passwordU;
 		this.premium = false;
 
 		this.playlists = new LinkedList<>();
-		historial = new LinkedList<>();
-		reproducciones = new HashMap<>();
+		history = new LinkedList<>();
+		reproductions = new HashMap<>();
 	}
 	
 	//Funciones
@@ -52,11 +52,11 @@ public class Usuario {
 	}
 
 	public String getName() {
-		return nombre;
+		return name;
 	}
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public int getId() {
@@ -75,12 +75,12 @@ public class Usuario {
 		this.premium = premium;
 	}
 
-	public Date getFechaNacimiento() {
-		return fechaNacimiento;
+	public Date getBirthdate() {
+		return birthdate;
 	}
 
-	public void setFechaNacimiento(Date fechaNacimiento) {
-		this.fechaNacimiento = fechaNacimiento;
+	public void setBirthdate(Date birthdate) {
+		this.birthdate = birthdate;
 	}
 
 	public List<Playlist> getPlaylists() {
@@ -91,12 +91,8 @@ public class Usuario {
 		this.playlists = playlists;
 	}
 
-	public String getContrasena() {
-		return contrasena;
-	}
-
-	public void setContrasena(String contrasena) {
-		this.contrasena = contrasena;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getEmail() {
@@ -107,35 +103,39 @@ public class Usuario {
 		this.email = email;
 	}
 
-	public String getUsuario() {
-		return usuario;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUsuario(String usuario) {
-		this.usuario = usuario;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	
 	public void addPlaylist(Playlist pl) {
 		playlists.add(pl);
 	}
 
-	public List<Cancion> getHistorial() {
-		return historial;
+	public List<Cancion> getHistory() {
+		return history;
 	}
 
-	public void setHistorial(List<Cancion> historial) {
-		this.historial = historial;
+	public void setHistory(List<Cancion> history) {
+		this.history = history;
 	}
 
 	public int getSongReproductions(Cancion song) {
-		return reproducciones.get(song);
+		return reproductions.get(song);
 	}
 
 	public void playedSong(Cancion song) {
-		historial.add(song);
+		history.add(song);
 		//TODO: Comprobar suma objeto integer
-		Integer timesPlayed = reproducciones.get(song);
+		Integer timesPlayed = reproductions.get(song);
 		timesPlayed += 1;
-		reproducciones.put(song, timesPlayed);
+		reproductions.put(song, timesPlayed);
+	}
+
+	public boolean checkPassword(String password) {
+		return this.password.equals(password);
 	}
 }

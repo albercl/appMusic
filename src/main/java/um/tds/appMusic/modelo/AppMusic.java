@@ -70,18 +70,19 @@ public class AppMusic {
 	}
 
 	public List<Cancion> getUserHistory() {
-		return usuarioLogged.getHistorial();
+		return usuarioLogged.getHistory();
 	}
 
 	// Controles de reproducción
+	// TODO: Añadir controles reproductor
 	public void playSong(Cancion song) {
 		reproductor.play(song);
 		usuarioLogged.playedSong(song);
 	}
 
 	// Obtener datos del usuario
-	public String getName() {
-		return usuarioLogged.getName();
+	public String getUsername() {
+		return usuarioLogged.getUsername();
 	}
 
 	public boolean isPremium() {

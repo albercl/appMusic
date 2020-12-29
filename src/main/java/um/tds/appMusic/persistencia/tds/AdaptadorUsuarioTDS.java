@@ -55,10 +55,10 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
         entidadUsuario.setNombre("usuario");
         entidadUsuario.setPropiedades(new ArrayList<>(
                 Arrays.asList(new Propiedad("nombre", usuario.getName()),
-                        new Propiedad("fechaNacimiento", dateFormat.format(usuario.getFechaNacimiento())),
+                        new Propiedad("fechaNacimiento", dateFormat.format(usuario.getBirthdate())),
                         new Propiedad("email", usuario.getEmail()),
-                        new Propiedad("usuario", usuario.getUsuario()),
-                        new Propiedad("contrasena", usuario.getContrasena()),
+                        new Propiedad("usuario", usuario.getUsername()),
+                        new Propiedad("contrasena", usuario.getPassword()),
                         new Propiedad("premium", String.valueOf(usuario.isPremium())),
                         new Propiedad("playlists", obtenerCodigosPlaylists(usuario.getPlaylists()))
         )));
@@ -96,7 +96,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
         servicioPersistencia.eliminarPropiedadEntidad(entidadUsuario, "fechaNacimiento");
         servicioPersistencia.anadirPropiedadEntidad(entidadUsuario, "fechaNacimiento",
-                                                    dateFormat.format(usuario.getFechaNacimiento()));
+                                                    dateFormat.format(usuario.getBirthdate()));
 
         servicioPersistencia.eliminarPropiedadEntidad(entidadUsuario, "email");
         servicioPersistencia.anadirPropiedadEntidad(entidadUsuario, "email",
@@ -104,11 +104,11 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
         servicioPersistencia.eliminarPropiedadEntidad(entidadUsuario, "usuario");
         servicioPersistencia.anadirPropiedadEntidad(entidadUsuario, "usuario",
-                                                    usuario.getUsuario());
+                                                    usuario.getUsername());
 
         servicioPersistencia.eliminarPropiedadEntidad(entidadUsuario, "contrasena");
         servicioPersistencia.anadirPropiedadEntidad(entidadUsuario, "contrasena",
-                                                    usuario.getContrasena());
+                                                    usuario.getPassword());
 
         servicioPersistencia.eliminarPropiedadEntidad(entidadUsuario, "premium");
         servicioPersistencia.anadirPropiedadEntidad(entidadUsuario, "premium",

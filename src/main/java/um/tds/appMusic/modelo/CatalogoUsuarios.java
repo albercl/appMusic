@@ -15,19 +15,17 @@ public class CatalogoUsuarios {
 	private Map<String, Usuario> usersByUsername;
 	private Map<String, Usuario> usersByEmail;
 	private static CatalogoUsuarios unicaInstancia = new CatalogoUsuarios();
-	private FactoriaDAO dao;
+	//private FactoriaDAO dao;
 	private IAdaptadorUsuarioDAO adaptadorUsuarios;
 
 	private CatalogoUsuarios() {
-		try {
+			/*
 			dao = FactoriaDAO.getInstancia(FactoriaDAO.DAO_TDS);
 			adaptadorUsuarios = dao.getUsuarioDAO();
+			 */
 			usersByUsername = new HashMap<String, Usuario>();
 			usersByEmail = new HashMap<String, Usuario>();
-			this.cargarCatalogoUsers();
-		} catch (DAOException eDAO) {
-			eDAO.printStackTrace();
-		}
+			//this.cargarCatalogoUsers();
 	}
 
 	public static CatalogoUsuarios getUnicaInstancia() {
@@ -55,22 +53,24 @@ public class CatalogoUsuarios {
 	}
 
 	public void addUsuario(Usuario user) {
-		usersByUsername.put(user.getName(), user);
+		usersByUsername.put(user.getUsername(), user);
 	}
 
 	public void removeUsuario(Usuario user) {
-		usersByUsername.remove(user.getName());
+		usersByUsername.remove(user.getUsername());
 	}
 
 	/* Recupera todos los usuarios para trabajar con ellos en memoria */
+	/*
 	private void cargarCatalogoUsers() throws DAOException {
 		List<Usuario> usuariosBD = adaptadorUsuarios.recuperarTodosUsuarios();
 		for (Usuario user : usuariosBD)
-			usersByEmail.put(user.getName(), user);
+			usersByUsername.put(user.getUsername(), user);
 	}
+	 */
 
 	public Usuario login(String nameU, String passU) {
-		if (usersByUsername.get(nameU).getContrasena().equals(passU))
+		if (usersByUsername.get(nameU).checkPassword(passU))
 			return usersByUsername.get(nameU);
 		else
 			return null;
