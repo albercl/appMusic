@@ -26,8 +26,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.border.BevelBorder;
 
 import um.tds.appMusic.modelo.AppMusic;
-import um.tds.appMusic.modelo.Cancion;
-import um.tds.appMusic.modelo.Reproductor;
 
 import java.awt.Component;
 import java.awt.SystemColor;

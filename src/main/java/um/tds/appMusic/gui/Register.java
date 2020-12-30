@@ -28,7 +28,6 @@ import javax.swing.border.BevelBorder;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.border.EtchedBorder;
-import java.awt.SystemColor;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -83,7 +82,7 @@ public class Register {
 
 		RegisterFrame = new JFrame();
 		RegisterFrame.setTitle("Registro AppMusic");
-		RegisterFrame.setBounds(675, 235, 475, 500);
+		RegisterFrame.setBounds(675, 235, 475, 520);
 		RegisterFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		ImageIcon iconoAppMusic = new ImageIcon(GuiUtils.loadAppIcon("icons/iconoAppMusic.png"));

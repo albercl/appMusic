@@ -288,6 +288,25 @@ public class Main {
 		gbc_searchPanel.gridy = 1;
 		songsListPanel.add(searchPanel, gbc_searchPanel);
 		
+		txtTitulo = new JTextField();
+		txtTitulo.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		txtTitulo.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				txtTitulo.setText("");
+			}
+		});
+		txtTitulo.setText("Título");
+		searchPanel.add(txtTitulo);
+		txtTitulo.setColumns(10);
+		
+		JButton invisibleButton2_1 = new JButton("");
+		invisibleButton2_1.setOpaque(false);
+		invisibleButton2_1.setMargin(new Insets(2, 15, 2, 15));
+		invisibleButton2_1.setContentAreaFilled(false);
+		invisibleButton2_1.setBorderPainted(false);
+		searchPanel.add(invisibleButton2_1);
+		
 		txtInterprete = new JTextField();
 		txtInterprete.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		txtInterprete.addMouseListener(new MouseAdapter() {
@@ -300,25 +319,6 @@ public class Main {
 		searchPanel.add(txtInterprete);
 		txtInterprete.setColumns(10);
 		
-		txtTitulo = new JTextField();
-		txtTitulo.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		txtTitulo.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				txtTitulo.setText("");
-			}
-		});
-		
-		JButton invisibleButton2_1 = new JButton("");
-		invisibleButton2_1.setOpaque(false);
-		invisibleButton2_1.setMargin(new Insets(2, 15, 2, 15));
-		invisibleButton2_1.setContentAreaFilled(false);
-		invisibleButton2_1.setBorderPainted(false);
-		searchPanel.add(invisibleButton2_1);
-		txtTitulo.setText("Título");
-		searchPanel.add(txtTitulo);
-		txtTitulo.setColumns(10);
-		
 		JButton invisibleButton2_2 = new JButton("");
 		invisibleButton2_2.setOpaque(false);
 		invisibleButton2_2.setMargin(new Insets(2, 15, 2, 15));
@@ -327,7 +327,7 @@ public class Main {
 		searchPanel.add(invisibleButton2_2);
 		
 		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"POP", "ROCK", "ROMANTICA", "OPERA", "JAZZ", "FLAMENCO", "CLASICA", "CANTAUTOR", "BOLERO"}));
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Cualquiera","POP", "ROCK", "ROMANTICA", "OPERA", "JAZZ", "FLAMENCO", "CLASICA", "CANTAUTOR", "BOLERO"}));
 		searchPanel.add(comboBox);
 		
 		searchPanel2 = new JPanel();
@@ -346,10 +346,13 @@ public class Main {
 				String titulo = txtTitulo.getText();
 				String interprete = txtInterprete.getText();
 				String estilo = String.valueOf(comboBox.getSelectedItem());
+				titulo = titulo.equals("Título") ? "" : titulo;
+				interprete = interprete.equals("Intérprete") ? "" : interprete;
+				estilo = estilo.equals("Cualquiera") ? "" : estilo;
 				Filter filtro = new Filter(titulo,interprete,estilo);
 				recentSongsTable.setModel(createSongsModel(filtro));
+				GuiUtils.centerTable(recentSongsTable, centerRenderer);
 				enableSearchResultPanel();
-
 			}
 		});
 		searchPanel2.add(btnNewButton_1);
