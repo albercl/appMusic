@@ -3,6 +3,7 @@ package um.tds.appMusic.gui;
 import um.tds.appMusic.modelo.AppMusic;
 import um.tds.appMusic.modelo.Cancion;
 import um.tds.appMusic.modelo.util.Filter;
+import um.tds.appMusic.modelo.util.ReproductorListener;
 
 import java.awt.EventQueue;
 
@@ -22,9 +23,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 import java.awt.event.ActionEvent;
 import java.awt.Component;
 import java.awt.SystemColor;
@@ -86,6 +85,14 @@ public class Main {
 	private DefaultTableCellRenderer centerRenderer;
 
 	private List<Cancion> shownSongs;
+	private boolean isPlaying = false;
+	private boolean isRandom = false;
+	private boolean isRepeating = false;
+
+	private JButton replayButton;
+
+	private ImageIcon imageIcon12;
+	private ImageIcon imageIcon13;
 
 	/**
 	 * Launch the application.
@@ -546,9 +553,10 @@ public class Main {
 		};
 		recentSongsTable.setEnabled(true);
 		recentSongsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		recentSongsTable.setModel(createSongsModel(new Filter()));
 
-		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+		shownSongs = controlador.getUserHistory();
+		Collections.reverse(shownSongs);
+		recentSongsTable.setModel(createSongsModel(shownSongs));
 
 		GuiUtils.centerTable(recentSongsTable, centerRenderer);
 
@@ -580,12 +588,9 @@ public class Main {
 		randomButton.setIcon(imageIcon5);
 		ImageIcon imageIcon10 = new ImageIcon(GuiUtils.loadImage("icons/iconoDefault.png"));
 		randomButton.addActionListener(new ActionListener() {
-			private boolean flag = true;
-
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				randomButton.setIcon(flag ? imageIcon10 : imageIcon5);
-				flag = !flag;
+				controlador.alternateRandom();
 			}
 		});
 		
@@ -602,7 +607,10 @@ public class Main {
 		ImageIcon imageIcon6 = new ImageIcon(GuiUtils.loadImage("icons/iconoBack.png"));
 		backButton.setIcon(imageIcon6);
 		backButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {}
+			public void actionPerformed(ActionEvent arg0) {
+
+				Cancion previousSong = controlador.goBack();
+			}
 
 		});
 		playerPanel.add(backButton);
@@ -619,21 +627,60 @@ public class Main {
 		playButton.setIcon(imageIcon7);
 		ImageIcon imageIcon9 = new ImageIcon(GuiUtils.loadImage("icons/iconoPause.png", 45, 45));
 		playButton.addActionListener(new ActionListener() {
-			private boolean flag = true;
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				int row = recentSongsTable.getSelectedRow();
 				if(row != -1) {
-					playButton.setIcon(flag ? imageIcon9 : imageIcon7);
-					if(flag) {
-						controlador.play(shownSongs.get(row));
+					if(!isPlaying) {
+						controlador.play(shownSongs, row);
 					} else {
+						playButton.setIcon(imageIcon7);
 						controlador.pause();
+						isPlaying = false;
 					}
-					flag = !flag;
+				}
+			}
+		});
+
+		controlador.addListenerToPlayer(new ReproductorListener() {
+			@Override
+			public void onEmptyQueue() {
+				isPlaying = false;
+				playButton.setIcon(imageIcon7);
+			}
+
+			@Override
+			public void onStartedSong(Cancion c) {
+				int index = shownSongs.indexOf(c);
+				if(index != -1) {
+					recentSongsTable.changeSelection(index, 0, false, false);
 				}
 
+				isPlaying = true;
+				playButton.setIcon(imageIcon9);
+			}
+
+			@Override
+			public void onAlternatedRandom() {
+				if(isRandom) {
+					isRandom = false;
+					randomButton.setIcon(imageIcon5);
+				} else {
+					isRandom = true;
+					randomButton.setIcon(imageIcon10);
+				}
+			}
+
+			@Override
+			public void onAlternatedRepeat() {
+				if(isRepeating) {
+					isRepeating = false;
+					replayButton.setIcon(imageIcon12);
+				} else {
+					isRepeating = true;
+					replayButton.setIcon(imageIcon13);
+				}
 			}
 		});
 
@@ -651,11 +698,13 @@ public class Main {
 		ImageIcon imageIcon8 = new ImageIcon(GuiUtils.loadImage("icons/iconoForward.png"));
 		forwardButton.setIcon(imageIcon8);
 		forwardButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {}
+			public void actionPerformed(ActionEvent arg0) {
+				Cancion nextSong = controlador.goNext();
+			}
 		});
 		playerPanel.add(forwardButton);
 		
-		JButton replayButton = new JButton("");
+		replayButton = new JButton("");
 		replayButton.setOpaque(false);
 		replayButton.setMargin(new Insets(2, 0, 2, 0));
 		replayButton.setIconTextGap(0);
@@ -665,16 +714,13 @@ public class Main {
 		replayButton.setContentAreaFilled(false);
 		replayButton.setBorderPainted(false);
 		
-		ImageIcon imageIcon12 = new ImageIcon(GuiUtils.loadImage("icons/iconoReplay.png"));
+		imageIcon12 = new ImageIcon(GuiUtils.loadImage("icons/iconoReplay.png"));
 		replayButton.setIcon(imageIcon12);
-		ImageIcon imageIcon13 = new ImageIcon(GuiUtils.loadImage("icons/iconoReplay2.png"));
+		imageIcon13 = new ImageIcon(GuiUtils.loadImage("icons/iconoReplay2.png"));
 		replayButton.addActionListener(new ActionListener() {
-			private boolean flag = true;
-
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				replayButton.setIcon(flag ? imageIcon13 : imageIcon12);
-				flag = !flag;
+				controlador.alternateRepeat();
 			}
 		});
 		
@@ -756,9 +802,14 @@ public class Main {
 		recentsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setMainPanelBorderTitle("Canciones recientes");
+				shownSongs = controlador.getUserHistory();
+				Collections.reverse(shownSongs);
+				recentSongsTable.setModel(createSongsModel(shownSongs));
+				GuiUtils.centerTable(recentSongsTable, centerRenderer);
 				setViewRecent();
 			}
 		});
+
 		recentsButton.setFocusPainted(false);
 		recentsButton.setBackground(SystemColor.activeCaption);
 		recentsButton.setMargin(new Insets(2, 14, 2, 7));
@@ -971,7 +1022,11 @@ public class Main {
 	}
 
 	private DefaultTableModel createSongsModel(Filter filter) {
-		shownSongs = controlador.searchSongs(filter);
+		return createSongsModel(controlador.searchSongs(filter));
+	}
+
+	private DefaultTableModel createSongsModel(List<Cancion> songs) {
+		shownSongs = songs;
 		Object[][] matrix = new Object[shownSongs.size()][2];
 		for(int i = 0; i < shownSongs.size(); i++) {
 			Cancion s = shownSongs.get(i);
@@ -983,6 +1038,6 @@ public class Main {
 		return new DefaultTableModel(
 				matrix,
 				new String[] {"Canci\u00F3n", "Intérpretes"}
-				);
+		);
 	}
 }

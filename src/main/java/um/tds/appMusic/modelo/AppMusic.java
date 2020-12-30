@@ -1,6 +1,7 @@
 package um.tds.appMusic.modelo;
 
 import um.tds.appMusic.modelo.util.Filter;
+import um.tds.appMusic.modelo.util.ReproductorListener;
 
 import java.util.Date;
 import java.util.List;
@@ -99,23 +100,42 @@ public class AppMusic {
 	// TODO: Añadir controles reproductor
 	public void play(Cancion song) {
 		player.play(song);
-		loggedUser.playedSong(song);
+	}
+
+	public void play(Playlist playlist, int index) {
+		player.play(playlist, index);
+	}
+
+	public void play(List<Cancion> songs, int index) {
+		player.play(songs, index);
+	}
+
+	public void resume() {
+		player.resume();
 	}
 
 	public void pause() {
 		player.pause();
 	}
 
-	public void goNext() {
-		player.goNext();
+	public Cancion goNext() {
+		return player.goNext();
 	}
 
-	public void goBack() {
-		player.goBack();
+	public Cancion goBack() {
+		return player.goBack();
 	}
 
-	public void randomize() {
-		player.randomize();
+	public void alternateRandom() {
+		player.alternateRandom();
+	}
+
+	public void alternateRepeat() {
+		player.alternateRepeat();
+	}
+
+	public void addListenerToPlayer(ReproductorListener listener) {
+		player.addListener(listener);
 	}
 
 	// Obtener datos del usuario

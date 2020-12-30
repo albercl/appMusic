@@ -120,7 +120,7 @@ public class Usuario {
 	}
 
 	public List<Cancion> getHistory() {
-		return history;
+		return new LinkedList<>(history);
 	}
 
 	public void setHistory(List<Cancion> history) {
