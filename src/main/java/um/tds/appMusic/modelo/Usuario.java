@@ -127,8 +127,8 @@ public class Usuario {
 		this.history = history;
 	}
 
-	public int getSongReproductions(Cancion song) {
-		return reproductions.get(song);
+	public Map<Cancion, Integer> getReproductions() {
+		return new HashMap<>(reproductions);
 	}
 
 	public void playedSong(Cancion song) {

@@ -51,10 +51,13 @@ import javax.swing.DefaultListModel;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.stream.Collectors;
 import javax.swing.border.SoftBevelBorder;
 
 public class Main {
 	private AppMusic controlador;
+
+	private DefaultTableCellRenderer centerRenderer;
 
 	private JFrame MainFrame;
 
@@ -68,7 +71,7 @@ public class Main {
 	
 	private JScrollPane tableScrollPane;
 	private JTable recentSongsTable;
-	private DefaultTableModel recentSongsModel;
+	private JTable favouritesSongsTable;
 
 	private JList<String> list;
 	private JTable modSearchTable;
@@ -81,8 +84,6 @@ public class Main {
 	private JScrollPane tableFavouritesScrollPane;
 
 	private JScrollPane searchScrollPanel;
-
-	private DefaultTableCellRenderer centerRenderer;
 
 	private List<Cancion> shownSongs;
 	private boolean isPlaying = false;
@@ -131,6 +132,9 @@ public class Main {
 	 */
 	private void initialize() {
 		controlador = AppMusic.getInstanciaUnica();
+
+		centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 
 		MainFrame = new JFrame();
 		MainFrame.setTitle("AppMusic");
@@ -187,7 +191,6 @@ public class Main {
 		});
 		
 		DefaultListModel<String> modelList = new DefaultListModel<>();
-		centerRenderer = new DefaultTableCellRenderer();
 		logoutButton.setForeground(Color.WHITE);
 		logoutButton.setBackground(new Color(178, 34, 34));
 		logoutButton.setFont(new Font("Tahoma", Font.BOLD, 16));
@@ -360,9 +363,15 @@ public class Main {
 				estilo = estilo.equals("Cualquiera") ? "" : estilo;
 
 				Filter filtro = new Filter(titulo,interprete,estilo);
-				recentSongsTable.setModel(createSongsModel(filtro));
-				GuiUtils.centerTable(recentSongsTable, centerRenderer);
-				enableSearchResultPanel();
+
+				if(!newListPanel.isVisible()) {
+					recentSongsTable.setModel(createSongsModel(filtro));
+					GuiUtils.centerTable(recentSongsTable, centerRenderer);
+					enableSearchResultPanel();
+				} else {
+					modSearchTable.setModel(createSongsModel(filtro));
+					GuiUtils.centerTable(modSearchTable, centerRenderer);
+				}
 			}
 		});
 		searchPanel2.add(btnNewButton_1);
@@ -377,10 +386,12 @@ public class Main {
 					playerPanel.setVisible(false);
 					txtInterprete.setText("Intérprete");
 					txtTitulo.setText("Título");
+					comboBox.setSelectedIndex(0);
 				}
 				else {
 					txtInterprete.setText("Intérprete");
 					txtTitulo.setText("Título");
+					comboBox.setSelectedIndex(0);
 				}
 			}
 		});
@@ -434,11 +445,7 @@ public class Main {
 		modSearchTable.setBackground(Color.WHITE);
 		modSearchTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		modSearchTable.setModel(new DefaultTableModel(
-			new Object[][] {
-				{"Megalovania.mp3", "Sans"},
-				{"Wsl2.mp3", "Luis Gregorio"},
-				{"xd.mp3", "xd"},
-			},
+			new Object[][] {},
 			new String[] {
 				"T\u00EDtulo", "Int\u00E9rpretes"
 			}
@@ -631,13 +638,26 @@ public class Main {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				int row = recentSongsTable.getSelectedRow();
-				if(row != -1) {
-					if(!isPlaying) {
+
+				if(controlador.getPlayingSong() == null) {
+					if(row != -1) {
+						playButton.setIcon(imageIcon9);
 						controlador.play(shownSongs, row);
-					} else {
-						playButton.setIcon(imageIcon7);
+					}
+				} else {
+					if(isPlaying) {
 						controlador.pause();
+						playButton.setIcon(imageIcon7);
 						isPlaying = false;
+					} else {
+						if(row == -1) {
+							controlador.resume();
+							playButton.setIcon(imageIcon9);
+							isPlaying = true;
+						} else {
+							playButton.setIcon(imageIcon9);
+							controlador.play(shownSongs, row);
+						}
 					}
 				}
 			}
@@ -864,7 +884,7 @@ public class Main {
 		gbc_tableFavouritesScrollPane.gridy = 3;
 		songsListPanel.add(tableFavouritesScrollPane, gbc_tableFavouritesScrollPane);
 
-		JTable favouritesSongsTable = new JTable() {
+		favouritesSongsTable = new JTable() {
 	         public boolean editCellAt(int row, int column, java.util.EventObject e) {
 	             return false;
 	          }
@@ -872,28 +892,6 @@ public class Main {
 		favouritesSongsTable.setEnabled(true);
 		
 		favouritesSongsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		favouritesSongsTable.setModel(new DefaultTableModel(
-			new Object[][] {
-				{"Soy Peor.mp3", "Bad Bunny", "300"},
-				{"Cara al Sol.mp3", "Francisco Franco & Adolf Hitler", "200"},
-				{"Vodovorot.mp3", "Vladimir Putin & Donald Trump", "150"},
-				{"Doble Excavadora.mp3", "Elminion & Xixauxas", "100"},
-				{"We dont talk anymore.mp3", "Charlie Puth & Selena G\u00F3mez", "50"},
-				{"Play Hard.mp3", "David Guetta & Akon & Ne-Yo", "40"},
-				{"MORE.mp3", "K/DA", "30"},
-				{"Somebody that I used to know.mp3", "Goyte & Kimbra", "20"},
-				{"Blinding Lights.mp3", "The Weekend", "10"},
-				{"Watermelon sugar.mp3", "Harry Styles", "5"},
-			},
-			new String[] {
-				"Canci\u00F3n", "Intérpretes", "N\u00BA veces"
-			}));
-
-		favouritesSongsTable.getColumnModel().getColumn(0).setPreferredWidth(180);
-		favouritesSongsTable.getColumnModel().getColumn(1).setPreferredWidth(180);
-		favouritesSongsTable.getColumnModel().getColumn(2).setPreferredWidth(54);
-		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-		GuiUtils.centerTable(favouritesSongsTable, centerRenderer);
 
 	    JTableHeader headerFavouritesSongsTable = favouritesSongsTable.getTableHeader();
 	    headerFavouritesSongsTable.setForeground(new Color(0, 128, 128));
@@ -904,9 +902,13 @@ public class Main {
 		JButton favouritesButton = new JButton("Favoritas");
 		favouritesButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				tableScrollPane.setVisible(false);
-				songsListPanel.setBorder(
-						new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Canciones más escuchadas", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+				setMainPanelBorderTitle("Canciones más escuchadas");
+
+				favouritesSongsTable.setModel(createFavouriteSongsModel(controlador.getUserReproductions()));
+				favouritesSongsTable.getColumnModel().getColumn(0).setPreferredWidth(180);
+				favouritesSongsTable.getColumnModel().getColumn(1).setPreferredWidth(180);
+				favouritesSongsTable.getColumnModel().getColumn(2).setPreferredWidth(54);
+				GuiUtils.centerTable(favouritesSongsTable, centerRenderer);
 				setViewFavourites();
 			}
 		});
@@ -991,8 +993,6 @@ public class Main {
 		resetView();
 
 		tableFavouritesScrollPane.setVisible(true);
-
-		playerPanel.setVisible(true);
 	}
 
 	private void resetView() {
@@ -1038,6 +1038,38 @@ public class Main {
 		return new DefaultTableModel(
 				matrix,
 				new String[] {"Canci\u00F3n", "Intérpretes"}
+		);
+	}
+
+	private DefaultTableModel createFavouriteSongsModel(Map<Cancion, Integer> songs) {
+		Object[][] matrix = new Object[songs.size()][3];
+		Comparator<Cancion> comparator = (s1, s2) -> {
+			int r1 = songs.get(s1);
+			int r2 = songs.get(s2);
+
+			if(r1 > r2)
+				return 1;
+			else if(r1 == r2)
+				return 0;
+			else
+				return -1;
+		};
+
+		List<Cancion> songsList = songs.keySet().stream()
+				.sorted(comparator.reversed())
+				.collect(Collectors.toList());
+
+		for(int i = 0; i < songsList.size(); i++) {
+			Cancion s = songsList.get(i);
+
+			matrix[i][0] = s.getTitulo();
+			matrix[i][1] = s.getInterpretesString();
+			matrix[i][2] = songs.get(s);
+		}
+
+		return new DefaultTableModel(
+				matrix,
+				new String[] {"Canci\u00F3n", "Intérpretes", "N\u00BA veces"}
 		);
 	}
 }

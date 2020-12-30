@@ -5,6 +5,7 @@ import um.tds.appMusic.modelo.util.ReproductorListener;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 //Controlador
 public class AppMusic {
@@ -76,25 +77,15 @@ public class AppMusic {
 		return loggedUser.getPlaylists();
 	}
 
-	public Playlist getPlaylist(String name) {
-		return null;
-	}
-
-	public Cancion getSong(String name) {
-		return null;
-	}
-
 	public List<Cancion> searchSongs(Filter filter) {
 		return songs.getCancionesFiltradas(filter);
-	}
-
-	public List<Cancion> getMostPlayedSongs() {
-		return songs.getMostPlayedSongs();
 	}
 
 	public List<Cancion> getUserHistory() {
 		return loggedUser.getHistory();
 	}
+
+	public Map<Cancion, Integer> getUserReproductions() { return loggedUser.getReproductions(); }
 
 	// Controles de reproducción
 	// TODO: Añadir controles reproductor
@@ -137,6 +128,8 @@ public class AppMusic {
 	public void addListenerToPlayer(ReproductorListener listener) {
 		player.addListener(listener);
 	}
+
+	public Cancion getPlayingSong() { return player.getCurrentSong(); }
 
 	// Obtener datos del usuario
 	public String getUsername() {
