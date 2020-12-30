@@ -26,7 +26,6 @@ public class Reproductor {
             e.printStackTrace();
             System.exit(1);
         }
-
 		queue = new LinkedList<>();
 	}
 
@@ -116,7 +115,8 @@ public class Reproductor {
         File f = new File("C:\\tds\\canciones\\"+fileName);
         Media hit = new Media(f.toURI().toString());
         MediaPlayer player = new MediaPlayer(hit);
-
+        player.setVolume(0.35);
+        
         player.setOnEndOfMedia(() -> {
             int position = queue.indexOf(player);
 
