@@ -229,6 +229,8 @@ public class Login {
 		registerButton.setFont(new Font("Tahoma", Font.BOLD, 13));
 		
 
+		userField.setText("luisgrego_");
+		passwordField.setText("wsl2");
 	}
 
 }

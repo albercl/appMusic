@@ -97,9 +97,25 @@ public class AppMusic {
 
 	// Controles de reproducción
 	// TODO: Añadir controles reproductor
-	public void playSong(Cancion song) {
+	public void play(Cancion song) {
 		player.play(song);
 		loggedUser.playedSong(song);
+	}
+
+	public void pause() {
+		player.pause();
+	}
+
+	public void goNext() {
+		player.goNext();
+	}
+
+	public void goBack() {
+		player.goBack();
+	}
+
+	public void randomize() {
+		player.randomize();
 	}
 
 	// Obtener datos del usuario

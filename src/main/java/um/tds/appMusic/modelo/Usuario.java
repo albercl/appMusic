@@ -134,8 +134,8 @@ public class Usuario {
 	public void playedSong(Cancion song) {
 		history.add(song);
 		//TODO: Comprobar suma objeto integer
-		Integer timesPlayed = reproductions.get(song);
-		timesPlayed += 1;
+		Integer timesPlayed = reproductions.computeIfAbsent(song, k -> new Integer(0));
+		timesPlayed = timesPlayed + 1;
 		reproductions.put(song, timesPlayed);
 	}
 

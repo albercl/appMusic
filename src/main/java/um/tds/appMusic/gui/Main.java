@@ -63,7 +63,6 @@ public class Main {
 	private JPanel playerPanel;
 	private JPanel songsListPanel;
 	
-	
 	private JTextField txtNewList;
 	private JTextField txtInterprete;
 	private JTextField txtTitulo;
@@ -85,6 +84,8 @@ public class Main {
 	private JScrollPane searchScrollPanel;
 
 	private DefaultTableCellRenderer centerRenderer;
+
+	private List<Cancion> shownSongs;
 
 	/**
 	 * Launch the application.
@@ -346,9 +347,11 @@ public class Main {
 				String titulo = txtTitulo.getText();
 				String interprete = txtInterprete.getText();
 				String estilo = String.valueOf(comboBox.getSelectedItem());
+
 				titulo = titulo.equals("Título") ? "" : titulo;
 				interprete = interprete.equals("Intérprete") ? "" : interprete;
 				estilo = estilo.equals("Cualquiera") ? "" : estilo;
+
 				Filter filtro = new Filter(titulo,interprete,estilo);
 				recentSongsTable.setModel(createSongsModel(filtro));
 				GuiUtils.centerTable(recentSongsTable, centerRenderer);
@@ -620,8 +623,17 @@ public class Main {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				playButton.setIcon(flag ? imageIcon9 : imageIcon7);
-				flag = !flag;
+				int row = recentSongsTable.getSelectedRow();
+				if(row != -1) {
+					playButton.setIcon(flag ? imageIcon9 : imageIcon7);
+					if(flag) {
+						controlador.play(shownSongs.get(row));
+					} else {
+						controlador.pause();
+					}
+					flag = !flag;
+				}
+
 			}
 		});
 
@@ -959,10 +971,10 @@ public class Main {
 	}
 
 	private DefaultTableModel createSongsModel(Filter filter) {
-		List<Cancion> songs = controlador.searchSongs(filter);
-		Object[][] matrix = new Object[songs.size()][2];
-		for(int i = 0; i < songs.size(); i++) {
-			Cancion s = songs.get(i);
+		shownSongs = controlador.searchSongs(filter);
+		Object[][] matrix = new Object[shownSongs.size()][2];
+		for(int i = 0; i < shownSongs.size(); i++) {
+			Cancion s = shownSongs.get(i);
 
 			matrix[i][0] = s.getTitulo();
 			matrix[i][1] = s.getInterpretesString();

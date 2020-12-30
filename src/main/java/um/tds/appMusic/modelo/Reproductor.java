@@ -40,18 +40,24 @@ public class Reproductor {
 
         currentSong = queue.get(0);
         currentPlayer = createPlayer(currentSong);
+        currentPlayer.play();
 
         isRepeating = false;
 	}
 	
     public void play(Cancion song) {
-	    queue.clear();
-	    queue.add(song);
+	    if(currentSong == song) {
+	        currentPlayer.play();
+        } else {
+            queue.clear();
+            queue.add(song);
 
-	    currentSong = song;
-        currentPlayer = createPlayer(currentSong);
+            currentSong = song;
+            currentPlayer = createPlayer(currentSong);
+            currentPlayer.play();
 
-        isRepeating = false;
+            isRepeating = false;
+        }
     }
     
     public void pause() {
