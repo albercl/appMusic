@@ -67,10 +67,10 @@ public class CatalogoCanciones {
 
 				String interpretesString = parts[0];
 				String[] interpretes = interpretesString.split("&");
-				for(String s : interpretes)
-					s.trim();
+				for(int i = 0; i < interpretes.length; i++)
+					interpretes[i] = interpretes[i].trim();
 
-				String name = parts[1].trim();
+				String name = parts[1].substring(0, parts[1].length() - 4).trim();
 
 				Cancion song = new Cancion(name, ruta, interpretes);
 				song.setEstilo(f.getName());

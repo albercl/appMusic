@@ -8,9 +8,9 @@ public class Filter {
 	public Filter() {}
 
 	public Filter(String titulo, String interprete, String estilo) {
-		this.titulo = titulo == "" ? null : titulo;
-		this.interprete = interprete == "" ? null : interprete;
-		this.estilo = estilo == "" ? null : estilo;
+		this.titulo = titulo.isEmpty() ? null : titulo;
+		this.interprete = interprete.isEmpty() ? null : interprete;
+		this.estilo = estilo.isEmpty() ? null : estilo;
 	}
 	
 	public String getEstilo() {
