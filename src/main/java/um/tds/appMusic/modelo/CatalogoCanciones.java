@@ -33,15 +33,15 @@ public class CatalogoCanciones {
     	Stream<Cancion> stream = canciones.stream();
     	
     	if(titulo != null)
-    		stream.filter(c -> titulo.equalsIgnoreCase(c.getTitulo()));
+    		stream = stream.filter(c -> titulo.equalsIgnoreCase(c.getTitulo()));
     	
     	if(interprete != null)
-    		stream.filter(c -> c.getInterpretes()
+    		stream = stream.filter(c -> c.getInterpretes()
     				.stream()
     				.anyMatch(i -> interprete.equalsIgnoreCase(i)));
     	
     	if(estilo != null)
-    		stream.filter(c -> estilo.equals(c.getEstilo()));
+    		stream = stream.filter(c -> estilo.equals(c.getEstilo()));
     	
     	return stream.collect(Collectors.toList());
     }
@@ -72,8 +72,10 @@ public class CatalogoCanciones {
 
 				String name = parts[1].trim();
 
-
-				this.canciones.add(new Cancion(name, ruta, interpretes));
+				Cancion song = new Cancion(name, ruta, interpretes);
+				song.setEstilo(f.getName());
+				this.canciones.add(song);
+				
 			}
 		}
 	}

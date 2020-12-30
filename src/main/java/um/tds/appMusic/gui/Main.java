@@ -327,7 +327,7 @@ public class Main {
 		searchPanel.add(invisibleButton2_2);
 		
 		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Pop", "Rock", "Metal", "Jazz", "Blues", "Clásica", "Rap", "Reggaeton", "House", "Funk", "Hip Hop"}));
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"POP", "ROCK", "ROMANTICA", "OPERA", "JAZZ", "FLAMENCO", "CLASICA", "CANTAUTOR", "BOLERO"}));
 		searchPanel.add(comboBox);
 		
 		searchPanel2 = new JPanel();
@@ -343,11 +343,13 @@ public class Main {
 		btnNewButton_1.setFocusPainted(false);
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String cancion = "";
-				if (modifyPlaylistPanel.isVisible() == true) {
-				} else {
-					enableSearchResultPanel();
-				}
+				String titulo = txtTitulo.getText();
+				String interprete = txtInterprete.getText();
+				String estilo = String.valueOf(comboBox.getSelectedItem());
+				Filter filtro = new Filter(titulo,interprete,estilo);
+				recentSongsTable.setModel(createSongsModel(filtro));
+				enableSearchResultPanel();
+
 			}
 		});
 		searchPanel2.add(btnNewButton_1);
