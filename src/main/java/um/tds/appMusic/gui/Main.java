@@ -1,6 +1,8 @@
 package um.tds.appMusic.gui;
 
 import um.tds.appMusic.modelo.AppMusic;
+import um.tds.appMusic.modelo.Cancion;
+import um.tds.appMusic.modelo.util.Filter;
 
 import java.awt.EventQueue;
 
@@ -21,6 +23,7 @@ import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
 import java.awt.Component;
@@ -37,7 +40,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
-import javax.swing.Timer;
 import java.awt.Dimension;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -56,7 +58,6 @@ public class Main {
 	private AppMusic controlador;
 
 	private JFrame MainFrame;
-	private JTable recentSongsTable;
 
 	//Paneles a cambiar en la ventana para cada funcion
 	private JPanel playerPanel;
@@ -68,6 +69,8 @@ public class Main {
 	private JTextField txtTitulo;
 	
 	private JScrollPane tableScrollPane;
+	private JTable recentSongsTable;
+	private DefaultTableModel recentSongsModel;
 
 	private JList<String> list;
 	private JTable modSearchTable;
@@ -340,6 +343,7 @@ public class Main {
 		btnNewButton_1.setFocusPainted(false);
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				String cancion = "";
 				if (modifyPlaylistPanel.isVisible() == true) {
 				} else {
 					enableSearchResultPanel();
@@ -534,23 +538,7 @@ public class Main {
 		};
 		recentSongsTable.setEnabled(true);
 		recentSongsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		recentSongsTable.setModel(new DefaultTableModel(
-			new Object[][] {
-				{"Cara al Sol.mp3", "Francisco Franco & Adolf Hitler"},
-				{"Doble Excavadora.mp3", "Elminion & Xixauxas"},
-				{"Play Hard.mp3", "David Guetta & Akon & Ne-Yo"},
-				{"Soy Peor.mp3", "Bad Bunny"},
-				{"We dont talk anymore.mp3", "Charlie Puth & Selena G\u00F3mez"},
-				{"Vodovorot.mp3", "Vladimir Putin & Donald Trump"},
-				{"MORE.mp3", "K/DA"},
-				{"Somebody that I used to know.mp3", "Goyte & Kimbra"},
-				{"Blinding Lights.mp3", "The Weekend"},
-				{"Watermelon sugar.mp3", "Harry Styles"},
-			},
-			new String[] {
-				"Canci\u00F3n", "Intérpretes"
-			}
-		));
+		recentSongsTable.setModel(createSongsModel(new Filter()));
 
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 
@@ -963,5 +951,21 @@ public class Main {
 						null,
 						null));
 
+	}
+
+	private DefaultTableModel createSongsModel(Filter filter) {
+		List<Cancion> songs = controlador.searchSongs(filter);
+		Object[][] matrix = new Object[songs.size()][2];
+		for(int i = 0; i < songs.size(); i++) {
+			Cancion s = songs.get(i);
+
+			matrix[i][0] = s.getTitulo();
+			matrix[i][1] = s.getInterpretesString();
+		}
+
+		return new DefaultTableModel(
+				matrix,
+				new String[] {"Canci\u00F3n", "Intérpretes"}
+				);
 	}
 }

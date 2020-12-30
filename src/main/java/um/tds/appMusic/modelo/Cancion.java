@@ -63,4 +63,18 @@ public class Cancion {
 	public int getId() {
 		return id;
 	}
+
+	public String getInterpretesString() {
+		if(interpretes.size() == 1) {
+			return interpretes.get(0);
+		} else {
+			String result = "";
+			for(int i = 0; i < interpretes.size() - 1; i++)
+				result += interpretes.get(i) + " & ";
+
+			result += interpretes.get(interpretes.size() - 1);
+
+			return result;
+		}
+	}
 }

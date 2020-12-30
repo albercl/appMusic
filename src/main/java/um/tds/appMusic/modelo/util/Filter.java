@@ -4,7 +4,9 @@ public class Filter {
 	private String titulo;
 	private String interprete;
 	private String estilo;
-	
+
+	public Filter() {}
+
 	public Filter(String titulo, String interprete, String estilo) {
 		this.titulo = titulo;
 		this.interprete = interprete;
