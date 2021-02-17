@@ -1,58 +1,27 @@
-package um.tds.appMusic.gui;
+package um.tds.appMusic.oldgui;
 
 import um.tds.appMusic.modelo.AppMusic;
 import um.tds.appMusic.modelo.Cancion;
 import um.tds.appMusic.modelo.util.Filter;
 import um.tds.appMusic.modelo.util.ReproductorListener;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
-
-import javax.swing.JLabel;
-import java.awt.Font;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.awt.event.ActionEvent;
-import java.awt.Component;
-import java.awt.SystemColor;
-import java.awt.Rectangle;
+import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
-import javax.swing.JTable;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import javax.swing.border.TitledBorder;
-import javax.swing.ListSelectionModel;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingConstants;
-import java.awt.Dimension;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-
-import java.awt.GridLayout;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
-
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
-import javax.swing.border.SoftBevelBorder;
 
 public class Main {
 	private AppMusic controlador;
@@ -146,7 +115,7 @@ public class Main {
 
 		JPanel topPanel = new JPanel();
 		topPanel.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
-		topPanel.setBackground(SystemColor.activeCaption);
+		topPanel.setBackground(UIManager.getColor("EditorPane.background"));
 		MainFrame.getContentPane().add(topPanel, BorderLayout.NORTH);
 		topPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		Date date1 = new Date();
@@ -438,7 +407,7 @@ public class Main {
 		modifyPlaylistPanel.add(playlistPanel, gbc_playlistPanel);
 		
 		modSearchTable = new JTable() {       
-			public boolean editCellAt(int row, int column, java.util.EventObject e) {
+			public boolean editCellAt(int row, int column, EventObject e) {
 	            return false;
 				}
 		};
@@ -460,7 +429,7 @@ public class Main {
 		searchScrollPanel.setViewportView(modSearchTable);
 		
 		modPlaylistTable = new JTable() {       
-			public boolean editCellAt(int row, int column, java.util.EventObject e) {
+			public boolean editCellAt(int row, int column, EventObject e) {
 	            return false;
 				}
 		};
@@ -554,7 +523,7 @@ public class Main {
 		songsListPanel.add(tableScrollPane, gbc_tableScrollPane);
 
 		recentSongsTable = new JTable() {       
-			public boolean editCellAt(int row, int column, java.util.EventObject e) {
+			public boolean editCellAt(int row, int column, EventObject e) {
             return false;
 			}
 		};
@@ -752,7 +721,7 @@ public class Main {
 		scrollPane.setVisible(false);
 		JPanel navigationPanel = new JPanel();
 		navigationPanel.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
-		navigationPanel.setBackground(SystemColor.activeCaption);
+		navigationPanel.setBackground(UIManager.getColor("EditorPane.background"));
 		MainFrame.getContentPane().add(navigationPanel, BorderLayout.WEST);
 		GridBagLayout gbl_navigationPanel = new GridBagLayout();
 		gbl_navigationPanel.columnWidths = new int[] { 110, 0 };
@@ -885,7 +854,7 @@ public class Main {
 		songsListPanel.add(tableFavouritesScrollPane, gbc_tableFavouritesScrollPane);
 
 		favouritesSongsTable = new JTable() {
-	         public boolean editCellAt(int row, int column, java.util.EventObject e) {
+	         public boolean editCellAt(int row, int column, EventObject e) {
 	             return false;
 	          }
 	       };

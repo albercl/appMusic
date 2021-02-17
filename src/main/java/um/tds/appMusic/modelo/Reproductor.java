@@ -26,12 +26,6 @@ public class Reproductor {
     private List<ReproductorListener> listeners;
 	
 	public Reproductor() {
-		try {
-            com.sun.javafx.application.PlatformImpl.startup(()->{});
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
 		queue = new LinkedList<>();
 		listeners = new LinkedList<>();
 	}
