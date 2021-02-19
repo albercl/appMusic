@@ -31,7 +31,7 @@ public class SearchTable extends JPanel {
 	 */
 	public SearchTable() {
 		setLayout(new BorderLayout(0, 0));
-		setPreferredSize(new Dimension(300, 0));
+		setPreferredSize(new Dimension(300, 400));
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -39,7 +39,7 @@ public class SearchTable extends JPanel {
 		add(scrollPane);
 		
 		table = new JTable();
-		table.setPreferredScrollableViewportSize(new Dimension(350, 400));
+		table.setPreferredScrollableViewportSize(new Dimension(450, 400));
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		table.setFillsViewportHeight(true);
 		table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);

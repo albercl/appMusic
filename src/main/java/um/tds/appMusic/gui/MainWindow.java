@@ -199,7 +199,10 @@ public class MainWindow {
 					if(selection == -1) {
 						controlador.resume();
 					} else {
-						controlador.play(songs, selection);
+						if(controlador.getPlayingSong().equals(songs.get(selection)))
+							controlador.resume();
+						else
+							controlador.play(songs, selection);
 					}
 
 					isPlaying = true;
@@ -264,8 +267,6 @@ public class MainWindow {
 				playerPanel.alternateReplay();
 			}
 		});
-		
-		ThemeSettings.showSettingsDialog(frmAppmusic);
 	}
 	
 	public void setVisible(boolean value) {

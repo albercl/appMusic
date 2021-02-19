@@ -125,6 +125,10 @@ public class MainPanel extends JPanel {
 		favouritesPanel.setVisible(true);
 	}
 
+	public void showMyLists() {
+
+	}
+
 	public List<Cancion> getSongs() {
 		switch (state) {
 		case SEARCH:
@@ -134,9 +138,9 @@ public class MainPanel extends JPanel {
 		case RECENTS:
 			return recentsPanel.getSongs();
 		case FAVOURITES:
-
+			return favouritesPanel.getSongs();
 			default:
-				return searchPanel.getSongsList();
+				return null;
 		}
 	}
 
@@ -149,8 +153,9 @@ public class MainPanel extends JPanel {
 		case RECENTS:
 			return recentsPanel.getSelection();
 		case FAVOURITES:
+			return favouritesPanel.getSelection();
 			default:
-				return searchPanel.getSelection();
+				return -1;
 		}
 	}
 
@@ -163,8 +168,9 @@ public class MainPanel extends JPanel {
 		case RECENTS:
 			return recentsPanel.getTable();
 		case FAVOURITES:
+			return favouritesPanel.getTable();
 			default:
-				return searchPanel.getTable();
+				return null;
 		}
 	}
 }

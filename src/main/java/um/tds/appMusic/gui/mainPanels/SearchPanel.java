@@ -19,7 +19,7 @@ public class SearchPanel extends JPanel {
 	 */
 	public SearchPanel() {
 		setLayout(new BorderLayout(0, 10));
-		setPreferredSize(new Dimension(500, 0));
+		setPreferredSize(new Dimension(500, 400));
 		
 		searchTable = new SearchTable();
 		add(searchTable, BorderLayout.CENTER);
