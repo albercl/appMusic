@@ -1,13 +1,13 @@
 package um.tds.appMusic.gui.mainPanels;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import um.tds.appMusic.gui.auxiliarPanels.SearchControls;
 import um.tds.appMusic.gui.auxiliarPanels.SearchTable;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.BorderLayout;
+import um.tds.appMusic.modelo.Cancion;
+
+import java.awt.*;
+import java.util.List;
 
 public class SearchPanel extends JPanel {
 
@@ -19,6 +19,7 @@ public class SearchPanel extends JPanel {
 	 */
 	public SearchPanel() {
 		setLayout(new BorderLayout(0, 10));
+		setPreferredSize(new Dimension(500, 0));
 		
 		searchTable = new SearchTable();
 		add(searchTable, BorderLayout.CENTER);
@@ -27,4 +28,15 @@ public class SearchPanel extends JPanel {
 		add(searchControls, BorderLayout.NORTH);
 	}
 
+	public List<Cancion> getSongsList() {
+		return searchTable.getSongs();
+	}
+
+	public int getSelection() {
+		return searchTable.getSelection();
+	}
+
+	public JTable getTable() {
+		return searchTable.getTable();
+	}
 }

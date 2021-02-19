@@ -139,4 +139,6 @@ public class AppMusic {
 	public boolean isPremium() {
 		return loggedUser.isPremium();
 	}
+
+	public void setVolume(float volume) { player.setVolume(volume); }
 }

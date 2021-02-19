@@ -9,9 +9,13 @@ import javax.swing.table.DefaultTableModel;
 import um.tds.appMusic.modelo.AppMusic;
 import um.tds.appMusic.modelo.util.Filter;
 import um.tds.appMusic.modelo.Cancion;
+import um.tds.appMusic.modelo.util.ReproductorListener;
 
 import javax.swing.JButton;
 import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JComboBox;
@@ -22,6 +26,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.Dimension;
+import javax.swing.UIManager;
 
 public class SearchControls extends JPanel {
 	private AppMusic controlador = AppMusic.getInstanciaUnica();
@@ -72,6 +77,13 @@ public class SearchControls extends JPanel {
 		titleField.setText("Título");
 		titleField.setColumns(10);
 		titleField.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		titleField.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent mouseEvent) {
+				super.mouseClicked(mouseEvent);
+				titleField.setText("");
+			}
+		});
 		GridBagConstraints gbc_titleField = new GridBagConstraints();
 		gbc_titleField.anchor = GridBagConstraints.WEST;
 		gbc_titleField.insets = new Insets(0, 0, 0, 5);
@@ -91,6 +103,13 @@ public class SearchControls extends JPanel {
 		artistField.setText("Intérprete");
 		artistField.setColumns(10);
 		artistField.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		artistField.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent mouseEvent) {
+				super.mouseClicked(mouseEvent);
+				artistField.setText("");
+			}
+		});
 		GridBagConstraints gbc_artistField = new GridBagConstraints();
 		gbc_artistField.anchor = GridBagConstraints.WEST;
 		gbc_artistField.insets = new Insets(0, 0, 0, 5);
@@ -128,6 +147,7 @@ public class SearchControls extends JPanel {
 		searchButtonsPanel.setLayout(gbl_searchButtonsPanel);
 
 		searchButton = new JButton("Buscar");
+		searchButton.setBackground(UIManager.getColor("Button.shadow"));
 		searchButton.setPreferredSize(new Dimension(100, 25));
 		searchButton.setFocusPainted(false);
 		GridBagConstraints gbc_searchButton = new GridBagConstraints();
@@ -175,9 +195,11 @@ public class SearchControls extends JPanel {
 			List<Cancion> canciones = controlador.searchSongs(new Filter(song, artist, genre));
 			tablePanel.setSongs(canciones);
 		});
-	}
 
-	public void setTable(SearchTable tablePanel)  {
-		this.tablePanel = tablePanel;
+		cancelButton.addActionListener(e -> {
+			titleField.setText("Título");
+			artistField.setText("Intérprete");
+			tablePanel.setSongs(null);
+		});
 	}
 }

@@ -55,7 +55,7 @@ public class CatalogoCanciones {
 	private void cargarCanciones() throws Exception {
 		File rootDir = new File(SONGS_PATH);
 		if(System.getProperty("os.name").equals("Linux"))
-			rootDir = new File("/home/alber/tds/canciones");
+			rootDir = new File(System.getProperty("user.home") + "/tds/canciones");
 		
 		if(!rootDir.isDirectory())
 			throw new Exception("No se ha podido abrir el directorio de canciones");

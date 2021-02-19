@@ -23,6 +23,8 @@ import um.tds.appMusic.gui.mainPanels.NavigationPanel;
 import um.tds.appMusic.gui.mainPanels.PlayerPanel;
 import um.tds.appMusic.gui.mainPanels.PlaylistsPanel;
 import um.tds.appMusic.modelo.AppMusic;
+import um.tds.appMusic.modelo.Cancion;
+import um.tds.appMusic.modelo.util.ReproductorListener;
 
 import java.awt.FlowLayout;
 import javax.swing.JLabel;
@@ -33,6 +35,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class MainWindow {
 	private AppMusic controlador = AppMusic.getInstanciaUnica();
@@ -52,6 +55,9 @@ public class MainWindow {
 	private GridBagConstraints gbc_playlistsPanel;
 	private MainPanel mainPanel;
 	private PlayerPanel playerPanel;
+
+	//Player control
+	private boolean isPlaying = false;
 
 	/**
 	 * Launch the application.
@@ -152,9 +158,9 @@ public class MainWindow {
 			mainPanel.setSearchPanelView()
 		);
 		
-		navigationPanel.addNewListActionListener(e -> 
-			mainPanel.setPlaylistPanelView()
-		);
+		navigationPanel.addNewListActionListener(e -> {
+			mainPanel.setPlaylistPanelView();
+		});
 		
 		navigationPanel.addRecentsActionListener(e -> 
 			mainPanel.setRecentsView()
@@ -175,6 +181,91 @@ public class MainWindow {
 		//Panel inferior (reproductor)
 		playerPanel = new PlayerPanel();
 		frmAppmusic.getContentPane().add(playerPanel, BorderLayout.SOUTH);
+
+		playerPanel.getPlayButton().addActionListener(a -> {
+			int selection = mainPanel.getSelection();
+			List<Cancion> songs = mainPanel.getSongs();
+
+			if(controlador.getPlayingSong() == null) {
+				if(selection != -1) {
+					controlador.play(songs, selection);
+					isPlaying = true;
+				}
+			} else {
+				if(isPlaying) {
+					controlador.pause();
+					isPlaying = false;
+				} else {
+					if(selection == -1) {
+						controlador.resume();
+					} else {
+						controlador.play(songs, selection);
+					}
+
+					isPlaying = true;
+				}
+			}
+		});
+
+		playerPanel.getBackButton().addActionListener(a -> {
+			controlador.goBack();
+		});
+
+		playerPanel.getForwardButton().addActionListener(a -> {
+			controlador.goNext();
+		});
+
+		playerPanel.getRandomButton().addActionListener(a -> {
+			controlador.alternateRandom();
+		});
+
+		playerPanel.getReplayButton().addActionListener(a -> {
+			controlador.alternateRepeat();
+		});
+
+		controlador.addListenerToPlayer(new ReproductorListener() {
+			@Override
+			public void onEmptyQueue() {
+				isPlaying = false;
+				playerPanel.setPlaying(false);
+			}
+
+			@Override
+			public void onStartedSong(Cancion c) {
+				isPlaying = true;
+				playerPanel.setPlaying(true);
+			}
+
+			@Override
+			public void onFinishedSong(Cancion c) {
+				isPlaying = false;
+				playerPanel.setPlaying(false);
+			}
+
+			@Override
+			public void onPausedSong(Cancion c) {
+				isPlaying = false;
+				playerPanel.setPlaying(false);
+			}
+
+			@Override
+			public void onResumedSong(Cancion c) {
+				isPlaying = true;
+				playerPanel.setPlaying(true);
+			}
+
+			@Override
+			public void onAlternatedRandom() {
+				playerPanel.alternateRandom();
+			}
+
+			@Override
+			public void onAlternatedRepeat() {
+				playerPanel.alternateReplay();
+			}
+		});
+		
+		ThemeSettings.showSettingsDialog(frmAppmusic);
 	}
 	
 	public void setVisible(boolean value) {

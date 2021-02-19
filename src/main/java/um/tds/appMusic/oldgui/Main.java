@@ -585,7 +585,7 @@ public class Main {
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
-				Cancion previousSong = controlador.goBack();
+				controlador.goBack();
 			}
 
 		});

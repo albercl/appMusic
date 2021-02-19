@@ -13,6 +13,7 @@ import java.awt.Component;
 import javax.swing.Box;
 import java.awt.Insets;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.awt.Dimension;
 
@@ -23,14 +24,17 @@ public class SearchTable extends JPanel {
 	
 	private JTable table;
 
+	private List<Cancion> songs = new LinkedList<>();
+
 	/**
 	 * Create the panel.
 	 */
 	public SearchTable() {
 		setLayout(new BorderLayout(0, 0));
+		setPreferredSize(new Dimension(300, 0));
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		add(scrollPane);
 		
@@ -46,20 +50,32 @@ public class SearchTable extends JPanel {
 	}
 	
 	public void setSongs(List<Cancion> songs) {
-		String[][] newTable = new String[songs.size()][2];
-		Iterator<Cancion> iterator = songs.iterator();
-		
-		for(int i = 0; iterator.hasNext(); i++) {
-			Cancion song = iterator.next();
-			newTable[i][0] = song.getTitulo();
-			newTable[i][1] = song.getInterpretesString();
+		if(songs != null) {
+			String[][] newTable = new String[songs.size()][2];
+			Iterator<Cancion> iterator = songs.iterator();
+
+			for (int i = 0; iterator.hasNext(); i++) {
+				Cancion song = iterator.next();
+				newTable[i][0] = song.getTitulo();
+				newTable[i][1] = song.getInterpretesString();
+			}
+
+			table.setModel(new DefaultTableModel(newTable, TABLE_IDENTIFIERS));
+			this.songs = songs;
+		} else {
+			table.setModel(new DefaultTableModel(new Object[][] {}, TABLE_IDENTIFIERS));
 		}
-		
-		table.setModel(new DefaultTableModel(newTable, TABLE_IDENTIFIERS));
 	}
 	
 	public JTable getTable() {
 		return table;
 	}
 
+	public List<Cancion> getSongs() {
+		return new LinkedList<>(songs);
+	}
+
+	public int getSelection() {
+		return table.getSelectedRow();
+	}
 }

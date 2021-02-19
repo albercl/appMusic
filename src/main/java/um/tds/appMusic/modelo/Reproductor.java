@@ -1,5 +1,6 @@
 package um.tds.appMusic.modelo;
 
+import java.awt.*;
 import java.io.File;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -22,10 +23,13 @@ public class Reproductor {
 	private Runnable backupEndOfMedia;
 	private boolean isRepeating;
     private boolean isRandomized;
+    private float volume = 1f;
 
     private List<ReproductorListener> listeners;
 	
 	public Reproductor() {
+        com.sun.javafx.application.PlatformImpl.startup(()->{});
+
 		queue = new LinkedList<>();
 		listeners = new LinkedList<>();
 	}
@@ -69,13 +73,17 @@ public class Reproductor {
     }
     
     public void pause() {
-	    if(currentSong != null)
-    	    currentPlayer.pause();
+	    if(currentSong != null) {
+            currentPlayer.pause();
+            listeners.stream().forEach(l -> l.onPausedSong(currentSong));
+        }
     }
     
     public void resume() {
-        if(currentSong != null)
-    	    currentPlayer.play();
+        if(currentSong != null) {
+            currentPlayer.play();
+            listeners.stream().forEach(l -> l.onResumedSong(currentSong));
+        }
     }
 
     public Cancion goNext() {
@@ -152,9 +160,16 @@ public class Reproductor {
 
     private MediaPlayer createPlayer(Cancion song) {
         String fileName = song.getRuta();
-        File f = new File("C:\\tds\\canciones\\"+fileName);
+        String route;
+        if(System.getProperty("os.name").equals("Linux"))
+        	route = System.getProperty("user.home") + "/tds/canciones/" + fileName.replace("\\", "/");
+        else
+        	route = "C:\\tds\\canciones\\" + fileName;
+        
+        File f = new File(route);
         Media hit = new Media(f.toURI().toString());
         MediaPlayer player = new MediaPlayer(hit);
+        player.setVolume(volume);
         
         player.setOnEndOfMedia(() -> {
             int position = queue.indexOf(song);
@@ -189,5 +204,11 @@ public class Reproductor {
 	        isRepeating = false;
 	        listeners.stream().forEach(l -> l.onAlternatedRepeat());
         }
+    }
+
+    public void setVolume(float volume) {
+	    this.volume = volume;
+	    if(currentPlayer != null)
+	        currentPlayer.setVolume(volume);
     }
 }
