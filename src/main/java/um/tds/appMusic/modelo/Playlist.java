@@ -19,6 +19,16 @@ public class Playlist {
 	public Playlist() {
 		canciones = new LinkedList<>();
 	}
+
+	public Playlist(String nombre) {
+		this();
+		this.nombre = nombre;
+	}
+
+	public Playlist(String nombre, List<Cancion> canciones) {
+		this(nombre);
+		this.canciones = canciones;
+	}
 	
 	/**
 	 * @param cancion Añade una canción al final de la playlist

@@ -78,4 +78,22 @@ public class SearchTable extends JPanel {
 	public int getSelection() {
 		return table.getSelectedRow();
 	}
+
+	public Cancion getSelectedSong() {
+		int selection = getSelection();
+		if(selection != -1)
+			return songs.get(selection);
+		else
+			return null;
+	}
+
+	public void addSong(Cancion song) {
+		songs.add(song);
+		setSongs(songs);
+	}
+
+	public void removeSong(Cancion song) {
+		songs.remove(song);
+		setSongs(songs);
+	}
 }

@@ -1,6 +1,6 @@
 package um.tds.appMusic.gui.mainPanels;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import java.awt.GridBagLayout;
@@ -8,20 +8,39 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import um.tds.appMusic.gui.auxiliarPanels.SearchControls;
 import um.tds.appMusic.gui.auxiliarPanels.SearchTable;
-import java.awt.Color;
-import javax.swing.JButton;
+import um.tds.appMusic.modelo.AppMusic;
+import um.tds.appMusic.modelo.Cancion;
+import um.tds.appMusic.modelo.Playlist;
+
 import java.awt.Component;
-import javax.swing.Box;
-import javax.swing.JTextField;
 import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.LinkedList;
+import java.util.List;
 
 public class PlaylistModificationPanel extends JPanel {
+	private AppMusic controlador = AppMusic.getInstanciaUnica();
+
 	private JTextField playlistNameField;
+
+	private final JButton createButton;
+	private final JButton deleteButton;
+	private final JButton addSongButton;
+	private final JButton removeSongButton;
+
+	private final SearchTable playlistTable;
+	private final SearchTable searchTable;
+
+	private Playlist selectedPlaylist;
+	private JList<String> playlistList;
 
 	/**
 	 * Create the panel.
 	 */
-	public PlaylistModificationPanel() {
+	public PlaylistModificationPanel(JList<String> playlistList) {
+		this.playlistList = playlistList;
+
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] {500};
 		gridBagLayout.rowHeights = new int[] {0, 0, 300};
@@ -38,20 +57,21 @@ public class PlaylistModificationPanel extends JPanel {
 		add(playlistCreationPanel, gbc_playlistCreationPanel);
 		
 		playlistNameField = new JTextField();
+		playlistNameField.setText("Playlist");
 		playlistCreationPanel.add(playlistNameField);
 		playlistNameField.setColumns(10);
 		
 		Component horizontalStrut = Box.createHorizontalStrut(20);
 		playlistCreationPanel.add(horizontalStrut);
-		
-		JButton createButton = new JButton("Crear");
+
+		createButton = new JButton("Crear");
 		createButton.setPreferredSize(new Dimension(100, 25));
 		playlistCreationPanel.add(createButton);
 		
 		Component horizontalStrut_1 = Box.createHorizontalStrut(20);
 		playlistCreationPanel.add(horizontalStrut_1);
-		
-		JButton deleteButton = new JButton("Eliminar");
+
+		deleteButton = new JButton("Eliminar");
 		deleteButton.setPreferredSize(new Dimension(100, 25));
 		playlistCreationPanel.add(deleteButton);
 		
@@ -67,16 +87,16 @@ public class PlaylistModificationPanel extends JPanel {
 		gbl_playlistModificationPanel.columnWeights = new double[]{0.0, 0.0, 0.0};
 		gbl_playlistModificationPanel.rowWeights = new double[]{1.0};
 		playlistModificationPanel.setLayout(gbl_playlistModificationPanel);
-		
-		SearchTable searchTable = new SearchTable();
+
+		searchTable = new SearchTable();
 		searchTable.getTable().setModel(new DefaultTableModel(new Object[][] {}, new Object[] {"Título", "Intérprete"}));
 		GridBagConstraints gbc_searchTable = new GridBagConstraints();
 		gbc_searchTable.fill = GridBagConstraints.BOTH;
 		gbc_searchTable.gridx = 0;
 		gbc_searchTable.gridy = 0;
 		playlistModificationPanel.add(searchTable, gbc_searchTable);
-		
-		SearchTable playlistTable = new SearchTable();
+
+		playlistTable = new SearchTable();
 		playlistTable.getTable().setModel(new DefaultTableModel(new Object[][] {}, new Object[] {"Título", "Intérprete"}));
 		GridBagConstraints gbc_playlistTable = new GridBagConstraints();
 		gbc_playlistTable.fill = GridBagConstraints.BOTH;
@@ -96,8 +116,8 @@ public class PlaylistModificationPanel extends JPanel {
 		gbl_modificationControlsPanel.columnWeights = new double[]{0.0};
 		gbl_modificationControlsPanel.rowWeights = new double[]{0.0, 0.0, 0.0};
 		modificationControlsPanel.setLayout(gbl_modificationControlsPanel);
-		
-		JButton addSongButton = new JButton("Añadir");
+
+		addSongButton = new JButton("Añadir");
 		addSongButton.setPreferredSize(new Dimension(100, 25));
 		GridBagConstraints gbc_addSongButton = new GridBagConstraints();
 		gbc_addSongButton.fill = GridBagConstraints.BOTH;
@@ -105,14 +125,14 @@ public class PlaylistModificationPanel extends JPanel {
 		gbc_addSongButton.gridx = 0;
 		gbc_addSongButton.gridy = 1;
 		modificationControlsPanel.add(addSongButton, gbc_addSongButton);
-		
-		JButton romoveSongButton = new JButton("Eliminar");
-		romoveSongButton.setPreferredSize(new Dimension(100, 25));
+
+		removeSongButton = new JButton("Eliminar");
+		removeSongButton.setPreferredSize(new Dimension(100, 25));
 		GridBagConstraints gbc_romoveSongButton = new GridBagConstraints();
 		gbc_romoveSongButton.fill = GridBagConstraints.BOTH;
 		gbc_romoveSongButton.gridx = 0;
 		gbc_romoveSongButton.gridy = 2;
-		modificationControlsPanel.add(romoveSongButton, gbc_romoveSongButton);
+		modificationControlsPanel.add(removeSongButton, gbc_romoveSongButton);
 		
 		SearchControls searchControls = new SearchControls(searchTable);
 		GridBagConstraints gbc_searchControls = new GridBagConstraints();
@@ -122,6 +142,82 @@ public class PlaylistModificationPanel extends JPanel {
 		gbc_searchControls.gridy = 1;
 		add(searchControls, gbc_searchControls);
 
+		installListeners();
 	}
 
+	private void installListeners() {
+		//TODO: Hacer que no se pueda reproducir la playlist
+		//TODO: Evitar que se puedan hacer 2 playlist con el mismo nombre
+		//TODO: Hacer que se ponga un borde con nombre al seleccionar una playlist
+		addSongButton.addActionListener(e -> {
+			Cancion song = searchTable.getSelectedSong();
+			if(song != null && selectedPlaylist != null) {
+				playlistTable.addSong(song);
+				selectedPlaylist.addSong(song);
+			}
+		});
+
+		removeSongButton.addActionListener(e -> {
+			Cancion song = playlistTable.getSelectedSong();
+			assert selectedPlaylist != null;
+			if(song != null) {
+				playlistTable.removeSong(song);
+				selectedPlaylist.removeCancion(song);
+			}
+		});
+
+		createButton.addActionListener(e -> {
+			String playlistName = playlistNameField.getText();
+			if(!playlistName.isEmpty() && !playlistName.equals("Playlist")) {
+				selectedPlaylist = new Playlist(playlistNameField.getText());
+				playlistTable.setSongs(selectedPlaylist.getCanciones());
+
+				controlador.addPlaylist(selectedPlaylist);
+
+				DefaultListModel<String> model = new DefaultListModel<>();
+				controlador.getPlaylists()
+						.forEach(p -> model.addElement(p.getNombre()));
+				playlistList.clearSelection();
+				playlistList.setModel(model);
+			}
+		});
+
+		deleteButton.addActionListener(e -> {
+			if(selectedPlaylist != null) {
+				controlador.removePlaylist(selectedPlaylist);
+				playlistTable.setSongs(new LinkedList<>());
+
+				DefaultListModel<String> model = new DefaultListModel<>();
+				controlador.getPlaylists()
+						.forEach(p -> model.addElement(p.getNombre()));
+				playlistList.clearSelection();
+				playlistList.setModel(model);
+			}
+		});
+
+		playlistNameField.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent mouseEvent) {
+				playlistNameField.setText("");
+			}
+		});
+	}
+
+	public void setPlaylist(Playlist playlist) {
+		selectedPlaylist = playlist;
+		playlistTable.setSongs(playlistTable.getSongs());
+		playlistNameField.setText(playlist.getNombre());
+	}
+
+	public List<Cancion> getSongs() {
+		return selectedPlaylist.getCanciones();
+	}
+
+	public int getSelection() {
+		return playlistTable.getSelection();
+	}
+
+	public JTable getTable() {
+		return playlistTable.getTable();
+	}
 }

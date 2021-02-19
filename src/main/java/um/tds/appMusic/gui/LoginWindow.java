@@ -240,6 +240,8 @@ public class LoginWindow {
 		gbc_verticalStrut.gridx = 0;
 		gbc_verticalStrut.gridy = 5;
 		loginPanel.add(verticalStrut, gbc_verticalStrut);
+
+		loginButton.doClick();
 	}
 
 }

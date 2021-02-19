@@ -119,6 +119,8 @@ public class Usuario {
 		playlists.add(pl);
 	}
 
+	public void removePlaylist(Playlist playlist) { playlists.remove(playlist); }
+
 	public List<Cancion> getHistory() {
 		return new LinkedList<>(history);
 	}

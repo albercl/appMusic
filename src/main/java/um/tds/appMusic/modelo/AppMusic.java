@@ -68,6 +68,8 @@ public class AppMusic {
 		loggedUser.addPlaylist(playlist);
 	}
 
+	public void removePlaylist(Playlist playlist) { loggedUser.removePlaylist(playlist); }
+
 	public void addSongToPlaylist(Playlist playlist, Cancion song) {
 		playlist.addSong(song);
 	}

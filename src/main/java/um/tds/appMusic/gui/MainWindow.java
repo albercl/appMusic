@@ -2,40 +2,29 @@ package um.tds.appMusic.gui;
 
 import java.awt.EventQueue;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.*;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 
-import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
-
-import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.settings.ThemeSettings;
-import com.github.weisj.darklaf.theme.DarculaTheme;
-import com.github.weisj.darklaf.theme.IntelliJTheme;
+import javax.swing.border.TitledBorder;
 
 import um.tds.appMusic.gui.mainPanels.MainPanel;
 import um.tds.appMusic.gui.mainPanels.NavigationPanel;
 import um.tds.appMusic.gui.mainPanels.PlayerPanel;
-import um.tds.appMusic.gui.mainPanels.PlaylistsPanel;
 import um.tds.appMusic.modelo.AppMusic;
 import um.tds.appMusic.modelo.Cancion;
+import um.tds.appMusic.modelo.Playlist;
 import um.tds.appMusic.modelo.util.ReproductorListener;
 
 import java.awt.FlowLayout;
-import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.JButton;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Optional;
 
 public class MainWindow {
 	private AppMusic controlador = AppMusic.getInstanciaUnica();
@@ -51,7 +40,7 @@ public class MainWindow {
 	private GridBagLayout gbl_leftPanel;
 	private NavigationPanel navigationPanel;
 	private GridBagConstraints gbc_navigationPanel;
-	private PlaylistsPanel playlistsPanel;
+	private JList<String> playlistsPanel;
 	private GridBagConstraints gbc_playlistsPanel;
 	private MainPanel mainPanel;
 	private PlayerPanel playerPanel;
@@ -127,14 +116,14 @@ public class MainWindow {
 		logoutButton.setBackground(new Color(178, 34, 34));
 		topPanel.add(logoutButton);
 		
-		//Panel izquierdo (playlist y botones de navegacion)
+		//Panel izquierdo (playlists y botones de navegacion)
 		leftPanel = new JPanel();
 		leftPanel.setBorder(new EtchedBorder());
 		
 		frmAppmusic.getContentPane().add(leftPanel, BorderLayout.WEST);
 		gbl_leftPanel = new GridBagLayout();
 		gbl_leftPanel.columnWidths = new int[] {0};
-		gbl_leftPanel.rowHeights = new int[] {0};
+		gbl_leftPanel.rowHeights = new int[] {0, 0};
 		gbl_leftPanel.columnWeights = new double[]{0.0};
 		gbl_leftPanel.rowWeights = new double[]{0.0, 1.0};
 		leftPanel.setLayout(gbl_leftPanel);
@@ -147,35 +136,51 @@ public class MainWindow {
 		gbc_navigationPanel.gridy = 0;
 		leftPanel.add(navigationPanel, gbc_navigationPanel);
 		
-		playlistsPanel = new PlaylistsPanel();
+		playlistsPanel = new JList<>();
+		playlistsPanel.setBorder(new TitledBorder("Mis listas"));
+		DefaultListModel<String> playlistsListModel = new DefaultListModel<>();
+		controlador.getPlaylists().forEach(p -> playlistsListModel.addElement(p.getNombre()));
+		playlistsPanel.setModel(playlistsListModel);
 		gbc_playlistsPanel = new GridBagConstraints();
-		gbc_playlistsPanel.anchor = GridBagConstraints.WEST;
+		gbc_playlistsPanel.anchor = GridBagConstraints.NORTHWEST;
 		gbc_playlistsPanel.gridx = 0;
 		gbc_playlistsPanel.gridy = 1;
+		gbc_playlistsPanel.fill = GridBagConstraints.BOTH;
+		playlistsPanel.setVisible(false);
 		leftPanel.add(playlistsPanel, gbc_playlistsPanel);
+
+		playlistsPanel.addListSelectionListener(e -> {
+			if(playlistsPanel.getSelectedValue() != null) {
+				Optional<Playlist> playlist = controlador.getPlaylists().stream()
+						.filter(p -> playlistsPanel.getSelectedValue().equals(p.getNombre()))
+						.findFirst();
+
+				playlist.ifPresent(value -> mainPanel.setSelectedPlaylistView(value));
+			}
+		});
 		
-		navigationPanel.addSearchActionListener(e -> 
-			mainPanel.setSearchPanelView()
-		);
+		navigationPanel.addSearchActionListener(e -> {
+			mainPanel.setSearchPanelView();
+		});
 		
 		navigationPanel.addNewListActionListener(e -> {
-			mainPanel.setPlaylistPanelView();
+			mainPanel.setPlaylistModPanelView();
 		});
 		
-		navigationPanel.addRecentsActionListener(e -> 
-			mainPanel.setRecentsView()
-		);
+		navigationPanel.addRecentsActionListener(e -> {
+			mainPanel.setRecentsView();
+		});
 		
 		navigationPanel.addMyListsActionListener(e -> {
-			
+			playlistsPanel.setVisible(true);
 		});
 		
-		navigationPanel.addFavouritesActionListener(e ->
-			mainPanel.setFavouritesView()
-		);
+		navigationPanel.addFavouritesActionListener(e -> {
+			mainPanel.setFavouritesView();
+		});
 		
 		//Panel central
-		mainPanel = new MainPanel();
+		mainPanel = new MainPanel(playlistsPanel);
 		frmAppmusic.getContentPane().add(mainPanel, BorderLayout.CENTER);
 		
 		//Panel inferior (reproductor)
