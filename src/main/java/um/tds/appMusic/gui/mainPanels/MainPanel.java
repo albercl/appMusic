@@ -144,17 +144,14 @@ public class MainPanel extends JPanel {
 	}
 
 	public void setSelectedPlaylistView(Playlist playlist) {
-		switch (state) {
-			case PLAYLIST_MOD:
-				playlistPanel.setPlaylist(playlist);
-				break;
-			default:
-				state = PLAYLIST;
-				resetView();
-				playlistTable.setSongs(playlist.getCanciones());
-				playlistTable.setVisible(true);
-				playlistsList.setVisible(true);
-				break;
+		if (state == PLAYLIST_MOD) {
+			playlistPanel.setPlaylist(playlist);
+		} else {
+			state = PLAYLIST;
+			resetView();
+			playlistTable.setSongs(playlist.getSongs());
+			playlistTable.setVisible(true);
+			playlistsList.setVisible(true);
 		}
 	}
 
@@ -163,7 +160,7 @@ public class MainPanel extends JPanel {
 		case SEARCH:
 			return searchPanel.getSongsList();
 		case PLAYLIST_MOD:
-			return playlistPanel.getSongs();
+			return null;
 		case RECENTS:
 			return recentsPanel.getSongs();
 		case FAVOURITES:
@@ -180,7 +177,7 @@ public class MainPanel extends JPanel {
 		case SEARCH:
 			return searchPanel.getSelection();
 		case PLAYLIST_MOD:
-			return playlistPanel.getSelection();
+			return -1;
 		case RECENTS:
 			return recentsPanel.getSelection();
 		case FAVOURITES:
@@ -197,7 +194,7 @@ public class MainPanel extends JPanel {
 		case SEARCH:
 			return searchPanel.getTable();
 		case PLAYLIST_MOD:
-			return playlistPanel.getTable();
+			return null;
 		case RECENTS:
 			return recentsPanel.getTable();
 		case FAVOURITES:

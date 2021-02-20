@@ -1,6 +1,5 @@
 package um.tds.appMusic.modelo;
 
-import java.awt.*;
 import java.io.File;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -43,7 +42,7 @@ public class Reproductor {
     }
 
     public void play(Playlist playlist, int index) {
-        play(playlist.getCanciones(), index);
+        play(playlist.getSongs(), index);
 	}
 
     public void play(List<Cancion> songs, int index) {
@@ -75,14 +74,14 @@ public class Reproductor {
     public void pause() {
 	    if(currentSong != null) {
             currentPlayer.pause();
-            listeners.stream().forEach(l -> l.onPausedSong(currentSong));
+            listeners.forEach(l -> l.onPausedSong(currentSong));
         }
     }
     
     public void resume() {
         if(currentSong != null) {
             currentPlayer.play();
-            listeners.stream().forEach(l -> l.onResumedSong(currentSong));
+            listeners.forEach(l -> l.onResumedSong(currentSong));
         }
     }
 
@@ -132,7 +131,7 @@ public class Reproductor {
                 isRandomized = false;
             }
 
-            listeners.stream().forEach(l -> l.onAlternatedRandom());
+            listeners.forEach(ReproductorListener::onAlternatedRandom);
         }
     }
 
@@ -150,7 +149,7 @@ public class Reproductor {
                 isRepeating = true;
             }
 
-            listeners.stream().forEach(l -> l.onAlternatedRepeat());
+            listeners.forEach(ReproductorListener::onAlternatedRepeat);
         }
     }
 
@@ -173,19 +172,18 @@ public class Reproductor {
         
         player.setOnEndOfMedia(() -> {
             int position = queue.indexOf(song);
-            listeners.stream().forEach(l -> l.onFinishedSong(currentSong));
+            listeners.forEach(l -> l.onFinishedSong(currentSong));
 
             if(position + 1 < queue.size()) {
                 Cancion nextSong = queue.get(position + 1);
                 currentSong = nextSong;
 
-                MediaPlayer nextPlayer = createPlayer(nextSong);
-                currentPlayer = nextPlayer;
+                currentPlayer = createPlayer(nextSong);
                 currentPlayer.play();
 
                 currentUser.playedSong(nextSong);
             } else {
-                listeners.stream().forEach(l -> l.onEmptyQueue());
+                listeners.forEach(ReproductorListener::onEmptyQueue);
                 currentPlayer = null;
                 currentSong = null;
             }
@@ -193,7 +191,7 @@ public class Reproductor {
 
         player.setVolume(0.35);
         player.play();
-        listeners.stream().forEach(l -> l.onStartedSong(currentSong));
+        listeners.forEach(l -> l.onStartedSong(currentSong));
         currentUser.playedSong(song);
 
         return player;
@@ -202,7 +200,7 @@ public class Reproductor {
     private void setRepeatToFalse() {
 	    if(isRepeating) {
 	        isRepeating = false;
-	        listeners.stream().forEach(l -> l.onAlternatedRepeat());
+	        listeners.forEach(ReproductorListener::onAlternatedRepeat);
         }
     }
 

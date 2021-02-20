@@ -87,6 +87,10 @@ public class Usuario {
 		return playlists;
 	}
 
+	public Playlist getPlaylist(String name) {
+		return playlists.stream().filter(p -> p.getNombre().equals(name)).findFirst().get();
+	}
+
 	public void setPlaylists(List<Playlist> playlists) {
 		this.playlists = playlists;
 	}
@@ -135,8 +139,7 @@ public class Usuario {
 
 	public void playedSong(Cancion song) {
 		history.add(song);
-		//TODO: Comprobar suma objeto integer
-		Integer timesPlayed = reproductions.computeIfAbsent(song, k -> new Integer(0));
+		int timesPlayed = reproductions.computeIfAbsent(song, k -> 0);
 		timesPlayed = timesPlayed + 1;
 		reproductions.put(song, timesPlayed);
 	}

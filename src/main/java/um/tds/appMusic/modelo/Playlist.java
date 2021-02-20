@@ -40,15 +40,19 @@ public class Playlist {
 	/**
 	 * @param cancion Elimina la canción.
 	 */
-	public void removeCancion(Cancion cancion) {
+	public void removeSong(Cancion cancion) {
 		canciones.remove(cancion);
 	}
 	
 	/**
 	 * @return copia de la lista de canciones
 	 */
-	public List<Cancion> getCanciones() {
+	public List<Cancion> getSongs() {
 		return new LinkedList<>(canciones);
+	}
+
+	public void setSongs(List<Cancion> songs) {
+		this.canciones = songs;
 	}
 
 	/**

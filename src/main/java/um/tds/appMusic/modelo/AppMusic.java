@@ -13,8 +13,8 @@ public class AppMusic {
 
 
 	private CatalogoCanciones songs;
-	private CatalogoUsuarios users;
-	private Reproductor player;
+	private final CatalogoUsuarios users;
+	private final Reproductor player;
 
 	private Usuario loggedUser;
 
@@ -79,6 +79,10 @@ public class AppMusic {
 		return loggedUser.getPlaylists();
 	}
 
+	public Playlist getPlaylist(String name) {
+		return loggedUser.getPlaylist(name);
+	}
+
 	public List<Cancion> searchSongs(Filter filter) {
 		return songs.getCancionesFiltradas(filter);
 	}
@@ -90,7 +94,6 @@ public class AppMusic {
 	public Map<Cancion, Integer> getUserReproductions() { return loggedUser.getReproductions(); }
 
 	// Controles de reproducción
-	// TODO: Añadir controles reproductor
 	public void play(Cancion song) {
 		player.play(song);
 	}

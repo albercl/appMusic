@@ -44,7 +44,7 @@ public class SearchTable extends JPanel {
 		table.setFillsViewportHeight(true);
 		table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		
-		table.setModel(new DefaultTableModel(new Object[][] {}, new Object[] {"Título", "Intérprete"}));
+		table.setModel(new DefaultTableModel(new Object[][] {}, TABLE_IDENTIFIERS));
 		scrollPane.setViewportView(table);
 
 	}
@@ -95,5 +95,9 @@ public class SearchTable extends JPanel {
 	public void removeSong(Cancion song) {
 		songs.remove(song);
 		setSongs(songs);
+	}
+
+	public void clear() {
+		table.setModel(new DefaultTableModel(new Object[][] {}, TABLE_IDENTIFIERS));
 	}
 }
