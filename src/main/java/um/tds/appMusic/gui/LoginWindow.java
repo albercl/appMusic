@@ -68,14 +68,12 @@ public class LoginWindow {
 		ThemeSettings.getInstance().setSystemPreferencesEnabled(true);
 		LafManager.install(new DarculaTheme());
 		
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LoginWindow window = new LoginWindow();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		EventQueue.invokeLater(() -> {
+			try {
+				LoginWindow window = new LoginWindow();
+				window.frame.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		});
 	}
@@ -174,26 +172,24 @@ public class LoginWindow {
 		loginButton.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		loginButton.setBackground(new Color(178, 34, 34));
 		loginButton.setForeground(new Color(255, 255, 255));
-		loginButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-		        String user = userField.getText();
-		        String password = String.valueOf(passwordField.getPassword());
-				if(controlador.login(user, password)) {
-					frame.setVisible(false);
-			        MainWindow MainFrame = new MainWindow();
-			        MainFrame.setVisible(true);
-				}
-				else {
-					String[] opt1 = {"Aceptar"};
-					JOptionPane.showOptionDialog(frame, 
-						"Nombre de usuario o contraseña no válido.", 
-						"Error", 
-						JOptionPane.OK_OPTION, 
-						JOptionPane.ERROR_MESSAGE, 
-						null, opt1, opt1[0]);
-				}
-
+		loginButton.addActionListener(arg0 -> {
+			String user = userField.getText();
+			String password = String.valueOf(passwordField.getPassword());
+			if(controlador.login(user, password)) {
+				frame.setVisible(false);
+				MainWindow MainFrame = new MainWindow();
+				MainFrame.setVisible(true);
 			}
+			else {
+				String[] opt1 = {"Aceptar"};
+				JOptionPane.showOptionDialog(frame,
+					"Nombre de usuario o contraseña no válido.",
+					"Error",
+						JOptionPane.YES_NO_OPTION,
+					JOptionPane.ERROR_MESSAGE,
+					null, opt1, opt1[0]);
+			}
+
 		});
 		gbc_loginButton = new GridBagConstraints();
 		gbc_loginButton.insets = new Insets(0, 0, 5, 0);
@@ -219,12 +215,10 @@ public class LoginWindow {
 
 		registerButton = new JButton("Reg\u00EDstrate");
 		registerButton.setFocusPainted(false);
-		registerButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				frame.setVisible(false);
-		        RegisterWindow RegisterFrame = new RegisterWindow();
-		        RegisterFrame.setVisible(true);
-			}
+		registerButton.addActionListener(arg0 -> {
+			frame.setVisible(false);
+			RegisterWindow RegisterFrame = new RegisterWindow();
+			RegisterFrame.setVisible(true);
 		});
 		registerButton.setBackground(Color.DARK_GRAY);
 		registerButton.setForeground(Color.WHITE);
@@ -240,8 +234,5 @@ public class LoginWindow {
 		gbc_verticalStrut.gridx = 0;
 		gbc_verticalStrut.gridy = 5;
 		loginPanel.add(verticalStrut, gbc_verticalStrut);
-
-		loginButton.doClick();
 	}
-
 }

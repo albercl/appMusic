@@ -28,14 +28,12 @@ public class Register {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Register window = new Register();
-					window.RegisterFrame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		EventQueue.invokeLater(() -> {
+			try {
+				Register window = new Register();
+				window.RegisterFrame.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		});
 	}
@@ -300,53 +298,51 @@ public class Register {
 		gbc_emptyFieldsLabel.gridx = 1;
 		gbc_emptyFieldsLabel.gridy = 11;
 		registerPanel.add(emptyFieldsLabel, gbc_emptyFieldsLabel);
-		registerButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				String name = String.valueOf(nameField.getText());
-				String surname = String.valueOf(nameField.getText());
-				Date birthdate = dateChooser.getDate();
-				String email = String.valueOf(emailField.getText());
-				String user = String.valueOf(userField.getText());
-				String pass1 = String.valueOf(passwordField.getPassword());
-				String pass2 = String.valueOf(repeatField.getPassword());
+		registerButton.addActionListener(arg0 -> {
+			String name = String.valueOf(nameField.getText());
+			String surname = String.valueOf(nameField.getText());
+			Date birthdate = dateChooser.getDate();
+			String email = String.valueOf(emailField.getText());
+			String user = String.valueOf(userField.getText());
+			String pass1 = String.valueOf(passwordField.getPassword());
+			String pass2 = String.valueOf(repeatField.getPassword());
 
-				boolean ok = true;
-				if(anyEmptyField(name, surname, email, user, pass1, pass2) || birthdate == null) {
-					emptyFieldsLabel.setVisible(true);
-					ok = false;
-				} else {
-					emptyFieldsLabel.setVisible(false);
-				}
-
-				if (!(pass1.equals(pass2))) {
-					passwordErrorLabel.setVisible(true);
-					ok = false;
-				} else {
-					passwordErrorLabel.setVisible(false);
-				}
-
-				if (!controlador.checkUsername(user)) {
-					userErrorLabel.setVisible(true);
-					ok = false;
-				} else
-					userErrorLabel.setVisible(false);
-
-				if (ok) {
-					controlador.register(name + " " + surname, birthdate, email, user, pass1);
-					String[] opt1 = {"Aceptar"};
-					JOptionPane.showOptionDialog(RegisterFrame,
-							"Te acabas de registrar en AppMusic.",
-							"Éxito",
-							JOptionPane.OK_OPTION,
-							JOptionPane.INFORMATION_MESSAGE,
-							null, opt1, opt1[0]);
-
-					RegisterFrame.setVisible(false);
-					Login LoginFrame = new Login();
-					LoginFrame.setVisible(true);
-				}
-
+			boolean ok = true;
+			if(anyEmptyField(name, surname, email, user, pass1, pass2) || birthdate == null) {
+				emptyFieldsLabel.setVisible(true);
+				ok = false;
+			} else {
+				emptyFieldsLabel.setVisible(false);
 			}
+
+			if (!(pass1.equals(pass2))) {
+				passwordErrorLabel.setVisible(true);
+				ok = false;
+			} else {
+				passwordErrorLabel.setVisible(false);
+			}
+
+			if (controlador.usernameExists(user)) {
+				userErrorLabel.setVisible(true);
+				ok = false;
+			} else
+				userErrorLabel.setVisible(false);
+
+			if (ok) {
+				controlador.register(name + " " + surname, birthdate, email, user, pass1);
+				String[] opt1 = {"Aceptar"};
+				JOptionPane.showOptionDialog(RegisterFrame,
+						"Te acabas de registrar en AppMusic.",
+						"Éxito",
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.INFORMATION_MESSAGE,
+						null, opt1, opt1[0]);
+
+				RegisterFrame.setVisible(false);
+				Login LoginFrame = new Login();
+				LoginFrame.setVisible(true);
+			}
+
 		});
 
 		JPanel bottomPanel = new JPanel();
@@ -360,12 +356,10 @@ public class Register {
 		JButton loginButton = new JButton(
 				"<html><p><span style=\"color: rgb(178, 34, 34)\"><u>Inicia sesión</u></span></p></html>");
 		loginButton.setFocusPainted(false);
-		loginButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				RegisterFrame.setVisible(false);
-				Login LoginFrame = new Login();
-				LoginFrame.setVisible(true);
-			}
+		loginButton.addActionListener(arg0 -> {
+			RegisterFrame.setVisible(false);
+			Login LoginFrame = new Login();
+			LoginFrame.setVisible(true);
 		});
 		loginButton.setMargin(new Insets(2, 0, 2, 14));
 		loginButton.setIconTextGap(0);
@@ -377,6 +371,6 @@ public class Register {
 	}
 
 	private boolean anyEmptyField(String... fields) {
-		return Arrays.stream(fields).anyMatch(s -> s.isEmpty());
+		return Arrays.stream(fields).anyMatch(String::isEmpty);
 	}
 }

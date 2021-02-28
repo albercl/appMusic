@@ -12,24 +12,21 @@ import um.tds.appMusic.persistencia.IAdaptadorUsuarioDAO;
 
 public class CatalogoUsuarios {
 
-	private Map<String, Usuario> usersByUsername;
-	private Map<String, Usuario> usersByEmail;
+	/*
+			dao = FactoriaDAO.getInstancia(FactoriaDAO.DAO_TDS);
+			adaptadorUsuarios = dao.getUsuarioDAO();
+			 */
+	private Map<String, Usuario> usersByUsername = new HashMap<>();
+	private Map<String, Usuario> usersByEmail = new HashMap<>();
 	private static CatalogoUsuarios unicaInstancia = new CatalogoUsuarios();
 	//private FactoriaDAO dao;
 	private IAdaptadorUsuarioDAO adaptadorUsuarios;
 
 	private CatalogoUsuarios() {
-			/*
-			dao = FactoriaDAO.getInstancia(FactoriaDAO.DAO_TDS);
-			adaptadorUsuarios = dao.getUsuarioDAO();
-			 */
-			usersByUsername = new HashMap<String, Usuario>();
-			usersByEmail = new HashMap<String, Usuario>();
+		addUsuario(new Usuario("Luis Gregorio Martinez", null, "luisgreg77@gmail.com", "luisgrego_", "wsl2"));
+		addUsuario(new Usuario("alber", null, "alber@gmail.com", "albercl", "vivafli"));
 
-			addUsuario(new Usuario("Luis Gregorio Martinez", null, "luisgreg77@gmail.com", "luisgrego_", "wsl2"));
-			addUsuario(new Usuario("alber", null, "alber@gmail.com", "albercl", "vivafli"));
-
-			//this.cargarCatalogoUsers();
+		//cargarCatalogoUsers();
 	}
 
 	public static CatalogoUsuarios getUnicaInstancia() {
@@ -38,10 +35,7 @@ public class CatalogoUsuarios {
 
 	/* Devuelve todos los usuarios */
 	public List<Usuario> getUsuarios() {
-		ArrayList<Usuario> lista = new ArrayList<Usuario>();
-		for (Usuario c : usersByUsername.values())
-			lista.add(c);
-		return lista;
+		return new ArrayList<>(usersByUsername.values());
 	}
 
 	public Usuario getUsuario(int id) {
@@ -92,8 +86,8 @@ public class CatalogoUsuarios {
 		return true;
 	}
 
-	public boolean checkUsername(String username) {
-		return !usersByUsername.containsKey(username);
+	public boolean usernameExists(String username) {
+		return usersByUsername.containsKey(username);
 	}
 
 }

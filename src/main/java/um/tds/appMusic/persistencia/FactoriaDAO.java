@@ -3,7 +3,7 @@ package um.tds.appMusic.persistencia;
 public abstract class FactoriaDAO {
     private static FactoriaDAO instanciaUnica;
 
-    public static final String DAO_TDS = "persistencia.TDSFactoriaDAO";
+    public static final String DAO_TDS = "um.tds.appMusic.persistencia.tds.TDSFactoriaDAO";
 
     public static FactoriaDAO getInstancia(String tipo) throws DAOException {
         if(instanciaUnica == null) {

@@ -2,6 +2,8 @@ package um.tds.appMusic.modelo;
 
 import um.tds.appMusic.modelo.util.Filter;
 import um.tds.appMusic.modelo.util.ReproductorListener;
+import um.tds.appMusic.persistencia.DAOException;
+import um.tds.appMusic.persistencia.FactoriaDAO;
 
 import java.util.Date;
 import java.util.List;
@@ -11,6 +13,7 @@ import java.util.Map;
 public class AppMusic {
 	private static AppMusic instanciaUnica;
 
+	private FactoriaDAO factoriaDAO;
 
 	private CatalogoCanciones songs;
 	private final CatalogoUsuarios users;
@@ -37,6 +40,13 @@ public class AppMusic {
 			e.printStackTrace();
 			System.exit(1);
 		}
+
+		try {
+			factoriaDAO = FactoriaDAO.getInstancia();
+		} catch (DAOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
 	}
 
 	public boolean login(String user, String password) {
@@ -60,8 +70,8 @@ public class AppMusic {
 		// falla cuando nombre o correo ya registrados
 	}
 
-	public boolean checkUsername(String username) {
-		return users.checkUsername(username);
+	public boolean usernameExists(String username) {
+		return users.usernameExists(username);
 	}
 
 	public void addPlaylist(Playlist playlist) {

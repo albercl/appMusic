@@ -142,9 +142,7 @@ public class Reproductor {
                 isRepeating = false;
             } else {
                 backupEndOfMedia = currentPlayer.getOnEndOfMedia();
-                currentPlayer.setOnEndOfMedia(() -> {
-                    currentPlayer.seek(Duration.ZERO);
-                });
+                currentPlayer.setOnEndOfMedia(() -> currentPlayer.seek(Duration.ZERO));
 
                 isRepeating = true;
             }
@@ -189,7 +187,6 @@ public class Reproductor {
             }
         });
 
-        player.setVolume(0.35);
         player.play();
         listeners.forEach(l -> l.onStartedSong(currentSong));
         currentUser.playedSong(song);

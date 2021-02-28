@@ -19,7 +19,7 @@ public class Usuario {
 	//Datos de la cuenta
 	private boolean premium;
 	private List<Playlist> playlists;
-	private Map<Cancion, Integer> reproductions;
+	private final Map<Cancion, Integer> reproductions;
 	private List<Cancion> history;
 	
 	//Constructores
@@ -88,7 +88,12 @@ public class Usuario {
 	}
 
 	public Playlist getPlaylist(String name) {
-		return playlists.stream().filter(p -> p.getNombre().equals(name)).findFirst().get();
+		for(Playlist pl : playlists) {
+			if(pl.getNombre().equals(name))
+				return pl;
+		}
+
+		return null;
 	}
 
 	public void setPlaylists(List<Playlist> playlists) {
