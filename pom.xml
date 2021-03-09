@@ -5,48 +5,19 @@
   <groupId>um.tds</groupId>
   <artifactId>appMusic</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
 
   <name>appMusic</name>
   <url>http://maven.apache.org</url>
+
+    <modules>
+        <module>app</module>
+        <module>cargadorCanciones</module>
+    </modules>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
-
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.eclipse.persistence/eclipselink -->
-    <dependency>
-      <groupId>org.eclipse.persistence</groupId>
-      <artifactId>eclipselink</artifactId>
-      <version>2.7.7</version>
-      <scope>compile</scope>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->
-    <dependency>
-      <groupId>javax.persistence</groupId>
-      <artifactId>javax.persistence-api</artifactId>
-      <version>2.2</version>
-      <scope>compile</scope>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/com.toedter/jcalendar -->
-	<dependency>
-	    <groupId>com.toedter</groupId>
-	    <artifactId>jcalendar</artifactId>
-	    <version>1.4</version>
-	</dependency>
-	<dependency>
-	  <groupId>com.github.weisj</groupId>
-	  <artifactId>darklaf-core</artifactId>
-	  <version>2.5.5</version>
-	</dependency>
-  </dependencies>
 </project>
