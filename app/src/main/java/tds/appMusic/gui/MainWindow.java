@@ -9,7 +9,9 @@ import java.awt.Color;
 
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileSystemView;
 
+import pulsador.Luz;
 import tds.appMusic.gui.mainPanels.MainPanel;
 import tds.appMusic.gui.mainPanels.NavigationPanel;
 import tds.appMusic.gui.mainPanels.PlayerPanel;
@@ -17,12 +19,19 @@ import tds.appMusic.modelo.AppMusic;
 import tds.appMusic.modelo.Cancion;
 import tds.appMusic.modelo.Playlist;
 import tds.appMusic.modelo.util.ReproductorListener;
+import tds.appMusic.oldgui.Login;
+import um.tds.componente.CargadorCanciones;
 
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +54,8 @@ public class MainWindow {
 	private MainPanel mainPanel;
 	private PlayerPanel playerPanel;
 
+	private final CargadorCanciones cargador = new CargadorCanciones();
+
 	//Player control
 	private boolean isPlaying = false;
 
@@ -64,16 +75,39 @@ public class MainWindow {
 		frmAppmusic.setBounds(100, 100, 996, 850);
 		frmAppmusic.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmAppmusic.getContentPane().setLayout(new BorderLayout(0, 0));
-		
+
+		ImageIcon iconoAppMusic = new ImageIcon(GuiUtils.loadAppIcon("icons/iconoAppMusic.png"));
+		frmAppmusic.setIconImage(iconoAppMusic.getImage());
 		
 		//Panel superior
 		topPanel = new JPanel();
 		topPanel.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
 		frmAppmusic.getContentPane().add(topPanel, BorderLayout.NORTH);
 		topPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+
+		JPanel pulsadorPanel = new JPanel();
+		pulsadorPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		Luz pulsadorBusqueda = new Luz();
+		pulsadorBusqueda.addEncendidoListener(e -> {
+			pulsadorBusqueda.repaint();
+
+			JFileChooser ventana = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+			int returnValue = ventana.showOpenDialog(frmAppmusic);
+
+			if(returnValue == JFileChooser.APPROVE_OPTION) {
+				File selected = ventana.getSelectedFile();
+				cargador.setArchivoCanciones(selected.getAbsolutePath());
+			}
+		});
+
+		pulsadorPanel.add(pulsadorBusqueda);
+		topPanel.add(pulsadorPanel);
 		
 		fechaLabel = new JLabel();
-		fechaLabel.setText("mié. 17/02/2021");
+		Date date = new Date();
+		String strDateFormat = "E dd/MM/yyyy"; // El formato de fecha está especificado
+		SimpleDateFormat objSDF = new SimpleDateFormat(strDateFormat);
+		fechaLabel.setText(objSDF.format(date));
 		fechaLabel.setFont(new Font("Dialog", Font.PLAIN, 16));
 		topPanel.add(fechaLabel);
 		
@@ -98,6 +132,13 @@ public class MainWindow {
 		logoutButton.setFont(new Font("Dialog", Font.BOLD, 16));
 		logoutButton.setFocusPainted(false);
 		logoutButton.setBackground(new Color(178, 34, 34));
+		logoutButton.addActionListener(arg0 -> {
+			frmAppmusic.setVisible(false);
+			Login LoginFrame = new Login();
+			LoginFrame.setVisible(true);
+
+			controlador.logout();
+		});
 		topPanel.add(logoutButton);
 		
 		//Panel izquierdo (playlists y botones de navegacion)

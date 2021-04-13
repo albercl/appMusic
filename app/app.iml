@@ -29,6 +29,6 @@
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.swinglabs:jxlayer:3.0.4" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: com.formdev:svgSalamander:1.1.2.3" level="project" />
     <orderEntry type="module" module-name="cargadorCanciones" />
-    <orderEntry type="module" module-name="appMusic" />
+    <orderEntry type="module" module-name="pulsador" />
   </component>
 </module>

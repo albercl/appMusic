@@ -8,6 +8,7 @@ import tds.appMusic.persistencia.FactoriaDAO;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 //Controlador
 public class AppMusic {
@@ -32,7 +33,6 @@ public class AppMusic {
 		users = CatalogoUsuarios.getUnicaInstancia();
 		player = new Reproductor();
 
-		//TODO: Aplicar singleton
 		try {
 			songs = new CatalogoCanciones();
 		} catch (Exception e) {
@@ -145,6 +145,8 @@ public class AppMusic {
 	}
 
 	public Cancion getPlayingSong() { return player.getCurrentSong(); }
+
+	public Set<String> getEstilos() { return songs.getEstilos(); }
 
 	// Obtener datos del usuario
 	public String getUsername() {

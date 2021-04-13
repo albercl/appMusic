@@ -1,28 +1,25 @@
 package tds.appMusic.gui.auxiliarPanels;
 
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.ListDataListener;
 
 import tds.appMusic.modelo.AppMusic;
 import tds.appMusic.modelo.util.Filter;
 import tds.appMusic.modelo.Cancion;
 
-import javax.swing.JButton;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.JComboBox;
 import java.awt.Component;
-import javax.swing.Box;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
-import javax.swing.DefaultComboBoxModel;
 import java.awt.Dimension;
-import javax.swing.UIManager;
+import java.util.stream.Collectors;
 
 public class SearchControls extends JPanel {
 	private AppMusic controlador = AppMusic.getInstanciaUnica();
@@ -122,7 +119,7 @@ public class SearchControls extends JPanel {
 		searchParamsPanel.add(horizontalStrut_1, gbc_horizontalStrut_1);
 		
 		JComboBox genreComboBox = new JComboBox();
-		genreComboBox.setModel(new DefaultComboBoxModel(new String[] {"TODOS", "BOLERO", "CANTAUTOR", "CLASICA", "FLAMENCO", "JAZZ"}));
+		genreComboBox.setModel(new ComboBox());
 		GridBagConstraints gbc_genreComboBox = new GridBagConstraints();
 		gbc_genreComboBox.anchor = GridBagConstraints.NORTHWEST;
 		gbc_genreComboBox.gridx = 4;
@@ -197,5 +194,68 @@ public class SearchControls extends JPanel {
 			artistField.setText("Intérprete");
 			tablePanel.setSongs(null);
 		});
+	}
+}
+
+class ComboBox implements MutableComboBoxModel<String> {
+
+	private final AppMusic controlador = AppMusic.getInstanciaUnica();
+
+	private List<String> estilos;
+	private String selected = null;
+
+	public ComboBox() {
+		estilos = new ArrayList<>(controlador.getEstilos());
+		estilos.add(0, "TODOS");
+	}
+
+	@Override
+	public void addElement(String s) {
+		estilos.add(s);
+	}
+
+	@Override
+	public void removeElement(Object o) {
+		estilos.remove(o);
+	}
+
+	@Override
+	public void insertElementAt(String s, int i) {
+		estilos.add(i, s);
+	}
+
+	@Override
+	public void removeElementAt(int i) {
+		estilos.remove(i);
+	}
+
+	@Override
+	public void setSelectedItem(Object o) {
+		selected = (String) o;
+	}
+
+	@Override
+	public Object getSelectedItem() {
+		return selected;
+	}
+
+	@Override
+	public int getSize() {
+		return estilos.size();
+	}
+
+	@Override
+	public String getElementAt(int i) {
+		return estilos.get(i);
+	}
+
+	@Override
+	public void addListDataListener(ListDataListener listDataListener) {
+
+	}
+
+	@Override
+	public void removeListDataListener(ListDataListener listDataListener) {
+
 	}
 }

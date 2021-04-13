@@ -6,4 +6,8 @@ public class CancionesEvent {
     public CancionesEvent(Canciones canciones) {
         this.canciones = canciones;
     }
+
+    public Canciones getCanciones() {
+        return canciones;
+    }
 }

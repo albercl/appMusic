@@ -10,17 +10,17 @@ public class TDSFactoriaDAO extends FactoriaDAO {
 
     @Override
     public IAdaptadorUsuarioDAO getUsuarioDAO() {
-        return null;
+        return AdaptadorUsuarioTDS.getInstanciaUnica();
     }
 
     @Override
     public IAdaptadorPlaylistDAO getPlaylistDAO() {
-        return null;
+        return AdaptadorPlaylistTDS.getInstanciaUnica();
     }
 
     @Override
     public IAdaptadorCancionDAO getCancionDAO() {
-        return null;
+        return AdaptadorCancionTDS.getInstanciaUnica();
     }
 
 

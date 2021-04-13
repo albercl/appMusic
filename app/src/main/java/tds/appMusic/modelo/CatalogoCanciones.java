@@ -1,8 +1,10 @@
 package tds.appMusic.modelo;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -75,8 +77,13 @@ public class CatalogoCanciones {
 				Cancion song = new Cancion(name, ruta, interpretes);
 				song.setEstilo(f.getName());
 				this.canciones.add(song);
-				
 			}
 		}
+	}
+
+	public Set<String> getEstilos() {
+		Set<String> estilos = new HashSet<>();
+		canciones.forEach(cancion -> estilos.add(cancion.getEstilo()));
+		return estilos;
 	}
 }
