@@ -2,13 +2,10 @@ package tds.appMusic.gui.auxiliarPanels;
 
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.ListSelectionModel;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.awt.Dimension;
 
@@ -18,8 +15,7 @@ public class SearchTable extends JPanel {
 	private static final Object[] TABLE_IDENTIFIERS = {"Título", "Intérprete"};
 	
 	private JTable table;
-
-	private List<Cancion> songs = new LinkedList<>();
+	private SongTable model = new SongTable();
 
 	/**
 	 * Create the panel.
@@ -39,27 +35,13 @@ public class SearchTable extends JPanel {
 		table.setFillsViewportHeight(true);
 		table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		
-		table.setModel(new DefaultTableModel(new Object[][] {}, TABLE_IDENTIFIERS));
+		table.setModel(model);
 		scrollPane.setViewportView(table);
 
 	}
 	
 	public void setSongs(List<Cancion> songs) {
-		if(songs != null) {
-			String[][] newTable = new String[songs.size()][2];
-			Iterator<Cancion> iterator = songs.iterator();
-
-			for (int i = 0; iterator.hasNext(); i++) {
-				Cancion song = iterator.next();
-				newTable[i][0] = song.getTitulo();
-				newTable[i][1] = song.getInterpretesString();
-			}
-
-			table.setModel(new DefaultTableModel(newTable, TABLE_IDENTIFIERS));
-			this.songs = songs;
-		} else {
-			table.setModel(new DefaultTableModel(new Object[][] {}, TABLE_IDENTIFIERS));
-		}
+		model.setCanciones(songs);
 	}
 	
 	public JTable getTable() {
@@ -67,7 +49,7 @@ public class SearchTable extends JPanel {
 	}
 
 	public List<Cancion> getSongs() {
-		return new LinkedList<>(songs);
+		return model.getCanciones();
 	}
 
 	public int getSelection() {
@@ -75,24 +57,18 @@ public class SearchTable extends JPanel {
 	}
 
 	public Cancion getSelectedSong() {
-		int selection = getSelection();
-		if(selection != -1)
-			return songs.get(selection);
-		else
-			return null;
+		return getSongs().get(table.getSelectedRow());
 	}
 
 	public void addSong(Cancion song) {
-		songs.add(song);
-		setSongs(songs);
+		model.removeSong(song);
 	}
 
 	public void removeSong(Cancion song) {
-		songs.remove(song);
-		setSongs(songs);
+		model.addSong(song);
 	}
 
 	public void clear() {
-		table.setModel(new DefaultTableModel(new Object[][] {}, TABLE_IDENTIFIERS));
+		model.clearTable();
 	}
 }

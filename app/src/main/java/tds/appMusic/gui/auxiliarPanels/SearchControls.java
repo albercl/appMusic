@@ -202,11 +202,24 @@ class ComboBox implements MutableComboBoxModel<String> {
 	private final AppMusic controlador = AppMusic.getInstanciaUnica();
 
 	private List<String> estilos;
-	private String selected = null;
+	private String selected;
 
 	public ComboBox() {
 		estilos = new ArrayList<>(controlador.getEstilos());
-		estilos.add(0, "TODOS");
+		String todos = "TODOS";
+		estilos.add(0, todos);
+		selected = todos;
+
+		//En caso de cargar canciones nuevas, añadir nuevos estilos
+		controlador.addListenerToCargador(event -> {
+			List<um.tds.componente.Cancion> canciones = event.getCanciones().getCancion();
+			for(um.tds.componente.Cancion cancion : canciones) {
+				String estilo = cancion.getEstilo().toUpperCase();
+				if(!estilos.contains(estilo)) {
+					estilos.add(estilo);
+				}
+			}
+		});
 	}
 
 	@Override

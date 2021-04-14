@@ -54,8 +54,6 @@ public class MainWindow {
 	private MainPanel mainPanel;
 	private PlayerPanel playerPanel;
 
-	private final CargadorCanciones cargador = new CargadorCanciones();
-
 	//Player control
 	private boolean isPlaying = false;
 
@@ -96,7 +94,8 @@ public class MainWindow {
 
 			if(returnValue == JFileChooser.APPROVE_OPTION) {
 				File selected = ventana.getSelectedFile();
-				cargador.setArchivoCanciones(selected.getAbsolutePath());
+
+				controlador.loadSongsFromFile(selected.getAbsolutePath());
 			}
 		});
 

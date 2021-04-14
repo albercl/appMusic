@@ -1,6 +1,10 @@
 package tds.appMusic.modelo;
 
 import java.io.File;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.*;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,13 +13,20 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import tds.appMusic.modelo.util.Filter;
+import um.tds.componente.Canciones;
 
 public class CatalogoCanciones {
 	private final static String SONGS_PATH = "C:\\tds\\canciones";
+	private String tempPath;
 
     private List<Cancion> canciones;
     
     public CatalogoCanciones() throws Exception {
+		String binPath = CatalogoCanciones.class.getClassLoader().getResource(".").getPath();
+		binPath = binPath.replaceFirst("/", "");
+		// quitar "/" añadida al inicio del path en plataforma Windows
+		tempPath = binPath.replace("/bin", "/temp");
+
     	canciones = new LinkedList<>();
     	cargarCanciones();
     }
@@ -85,5 +96,50 @@ public class CatalogoCanciones {
 		Set<String> estilos = new HashSet<>();
 		canciones.forEach(cancion -> estilos.add(cancion.getEstilo()));
 		return estilos;
+	}
+
+	public void cargarCancionesNuevas(Canciones canciones) {
+		File rootDir = new File(SONGS_PATH);
+		if(System.getProperty("os.name").equals("Linux"))
+			rootDir = new File(System.getProperty("user.home") + "/tds/canciones");
+
+		for(um.tds.componente.Cancion cancion : canciones.getCancion()) {
+			try {
+				//Comprobar estilo
+				String estilo = cancion.getEstilo().toUpperCase();
+				String stylePath = Paths.get(rootDir.getPath(), estilo).toString();
+
+				File targetDirectory = null;
+				File[] directories = rootDir.listFiles();
+				assert directories != null;
+				for (int i = 0; i < directories.length && targetDirectory == null; i++) {
+					File directory = directories[i];
+					if (directory.isDirectory() && directory.getName().equals(estilo)) {
+						targetDirectory = directory;
+					}
+				}
+
+				//Si no existe carpeta de estilo, crear una
+				if (targetDirectory == null) {
+					Files.createDirectory(Paths.get(stylePath));
+				}
+
+				//Descargar canción
+				URL uri = new URL(cancion.getURL());
+
+				Path song = Paths.get(stylePath, cancion.getInterprete() + " - " + cancion.getTitulo() + ".mp3");
+				System.out.println("Descargando: " + cancion.getTitulo());
+				Files.write(song, new byte[0], StandardOpenOption.CREATE_NEW);
+				System.out.println("Descarga terminada!");
+
+				try (InputStream stream = uri.openStream()) {
+					Files.copy(stream, song);
+				}
+
+				cargarCanciones();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

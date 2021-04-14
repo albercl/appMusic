@@ -4,6 +4,8 @@ import tds.appMusic.modelo.util.Filter;
 import tds.appMusic.modelo.util.ReproductorListener;
 import tds.appMusic.persistencia.DAOException;
 import tds.appMusic.persistencia.FactoriaDAO;
+import um.tds.componente.CancionesListener;
+import um.tds.componente.CargadorCanciones;
 
 import java.util.Date;
 import java.util.List;
@@ -19,6 +21,7 @@ public class AppMusic {
 	private CatalogoCanciones songs;
 	private final CatalogoUsuarios users;
 	private final Reproductor player;
+	private final CargadorCanciones cargadorCanciones = new CargadorCanciones();
 
 	private Usuario loggedUser;
 
@@ -47,6 +50,10 @@ public class AppMusic {
 			e.printStackTrace();
 			System.exit(1);
 		}
+
+		addListenerToCargador(event -> {
+			songs.cargarCancionesNuevas(event.getCanciones());
+		});
 	}
 
 	public boolean login(String user, String password) {
@@ -158,4 +165,12 @@ public class AppMusic {
 	}
 
 	public void setVolume(float volume) { player.setVolume(volume); }
+
+	public void loadSongsFromFile(String fileUrl) {
+		cargadorCanciones.setArchivoCanciones(fileUrl);
+	}
+
+	public void addListenerToCargador(CancionesListener listener) {
+		cargadorCanciones.addListener(listener);
+	}
 }
