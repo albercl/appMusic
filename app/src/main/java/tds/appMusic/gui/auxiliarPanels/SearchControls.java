@@ -19,14 +19,13 @@ import java.awt.Component;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Dimension;
-import java.util.stream.Collectors;
 
 public class SearchControls extends JPanel {
 	private AppMusic controlador = AppMusic.getInstanciaUnica();
 	
 	private JTextField titleField;
 	private JTextField artistField;
-	private SearchTable tablePanel;
+	private SongTable tablePanel;
 
 	private JButton cancelButton;
 	private JButton searchButton;
@@ -42,7 +41,7 @@ public class SearchControls extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public SearchControls(SearchTable tablePanel) {
+	public SearchControls(SongTable tablePanel) {
 		this.tablePanel = tablePanel;
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -118,7 +117,7 @@ public class SearchControls extends JPanel {
 		gbc_horizontalStrut_1.gridy = 0;
 		searchParamsPanel.add(horizontalStrut_1, gbc_horizontalStrut_1);
 		
-		JComboBox genreComboBox = new JComboBox();
+		JComboBox<String> genreComboBox = new JComboBox<>();
 		genreComboBox.setModel(new ComboBox());
 		GridBagConstraints gbc_genreComboBox = new GridBagConstraints();
 		gbc_genreComboBox.anchor = GridBagConstraints.NORTHWEST;
@@ -182,7 +181,7 @@ public class SearchControls extends JPanel {
 			
 			String genre = "";
 			text = (String) genreComboBox.getSelectedItem();
-			if(!text.equals("TODOS"))
+			if(text != null && !text.equals("TODOS"))
 				genre = text;
 				
 			List<Cancion> canciones = controlador.searchSongs(new Filter(song, artist, genre));
@@ -192,7 +191,7 @@ public class SearchControls extends JPanel {
 		cancelButton.addActionListener(e -> {
 			titleField.setText("Título");
 			artistField.setText("Intérprete");
-			tablePanel.setSongs(null);
+			tablePanel.setSongs(new LinkedList<>());
 		});
 	}
 }
@@ -229,7 +228,8 @@ class ComboBox implements MutableComboBoxModel<String> {
 
 	@Override
 	public void removeElement(Object o) {
-		estilos.remove(o);
+		String str = (String)o;
+		estilos.remove(str);
 	}
 
 	@Override

@@ -1,9 +1,11 @@
 package tds.appMusic.modelo;
 
 import tds.appMusic.modelo.util.Filter;
+import tds.appMusic.modelo.util.PlaylistListener;
 import tds.appMusic.modelo.util.ReproductorListener;
 import tds.appMusic.persistencia.DAOException;
 import tds.appMusic.persistencia.FactoriaDAO;
+import um.tds.componente.CancionesEvent;
 import um.tds.componente.CancionesListener;
 import um.tds.componente.CargadorCanciones;
 
@@ -51,9 +53,7 @@ public class AppMusic {
 			System.exit(1);
 		}
 
-		addListenerToCargador(event -> {
-			songs.cargarCancionesNuevas(event.getCanciones());
-		});
+		addListenerToCargador(this::nuevasCanciones);
 	}
 
 	public boolean login(String user, String password) {
@@ -81,12 +81,6 @@ public class AppMusic {
 		return users.usernameExists(username);
 	}
 
-	public void addPlaylist(Playlist playlist) {
-		loggedUser.addPlaylist(playlist);
-	}
-
-	public void removePlaylist(Playlist playlist) { loggedUser.removePlaylist(playlist); }
-
 	public void addSongToPlaylist(Playlist playlist, Cancion song) {
 		playlist.addSong(song);
 	}
@@ -98,6 +92,14 @@ public class AppMusic {
 
 	public Playlist getPlaylist(String name) {
 		return loggedUser.getPlaylist(name);
+	}
+
+	public Playlist addPlaylist(String name, List<Cancion> songs) {
+		return loggedUser.addPlaylist(name, songs);
+	}
+
+	public void removePlaylist(String name) {
+		loggedUser.removePlaylist(name);
 	}
 
 	public List<Cancion> searchSongs(Filter filter) {
@@ -172,5 +174,13 @@ public class AppMusic {
 
 	public void addListenerToCargador(CancionesListener listener) {
 		cargadorCanciones.addListener(listener);
+	}
+
+	public void addPlaylistListenerToUser(PlaylistListener listener) {
+		loggedUser.addPlaylistListener(listener);
+	}
+
+	private void nuevasCanciones(CancionesEvent event) {
+		songs.cargarCancionesNuevas(event.getCanciones());
 	}
 }

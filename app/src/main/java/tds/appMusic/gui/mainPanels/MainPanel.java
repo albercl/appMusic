@@ -6,7 +6,7 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
-import tds.appMusic.gui.auxiliarPanels.SearchTable;
+import tds.appMusic.gui.auxiliarPanels.SongTable;
 import tds.appMusic.modelo.AppMusic;
 import tds.appMusic.modelo.Cancion;
 import tds.appMusic.modelo.Playlist;
@@ -27,14 +27,14 @@ public class MainPanel extends JPanel {
 
 	private SearchPanel searchPanel;
 	private PlaylistModificationPanel playlistPanel;
-	private SearchTable recentsPanel;
+	private SongTable recentsPanel;
 	private FavouritesPanel favouritesPanel;
-	private SearchTable playlistTable;
+	private SongTable playlistTable;
 
-	private JList<String> playlistsList;
+	private JList<Playlist> playlistList;
 	
-	public MainPanel(JList<String> playlistList) {
-		this.playlistsList = playlistList;
+	public MainPanel(JList<Playlist> playlistList) {
+		this.playlistList = playlistList;
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] {0, 0, 0, 0};
@@ -56,7 +56,7 @@ public class MainPanel extends JPanel {
 		gbc_searchPanel.gridy = 0;
 		add(searchPanel, gbc_searchPanel);
 		
-		recentsPanel = new SearchTable();
+		recentsPanel = new SongTable();
 		recentsPanel.setPreferredSize(new Dimension(500, 0));
 		GridBagConstraints gbc_recentsPanel = new GridBagConstraints();
 		gbc_recentsPanel.fill = GridBagConstraints.BOTH;
@@ -71,7 +71,7 @@ public class MainPanel extends JPanel {
 		gbc_playlistPanel.gridy = 0;
 		add(playlistPanel, gbc_playlistPanel);
 
-		playlistTable = new SearchTable();
+		playlistTable = new SongTable();
 		playlistTable.setPreferredSize(new Dimension(450, 400));
 		GridBagConstraints gbc_playlistTable = new GridBagConstraints();
 		gbc_playlistTable.fill = GridBagConstraints.BOTH;
@@ -104,7 +104,7 @@ public class MainPanel extends JPanel {
 		favouritesPanel.setVisible(false);
 		playlistTable.setVisible(false);
 
-		playlistsList.clearSelection();
+		playlistList.clearSelection();
 		setBorder(null);
 	}
 	
@@ -122,7 +122,7 @@ public class MainPanel extends JPanel {
 		resetView();
 		this.setBorder(new TitledBorder("Modificación de playlist"));
 		playlistPanel.setVisible(true);
-		playlistsList.setVisible(true);
+		playlistList.setVisible(true);
 	}
 	
 	public void setRecentsView() {
@@ -151,7 +151,7 @@ public class MainPanel extends JPanel {
 			resetView();
 			playlistTable.setSongs(playlist.getSongs());
 			playlistTable.setVisible(true);
-			playlistsList.setVisible(true);
+			playlistList.setVisible(true);
 		}
 	}
 

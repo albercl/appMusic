@@ -1,6 +1,9 @@
 package tds.appMusic.modelo;
 
+import tds.appMusic.modelo.util.PlaylistListener;
+
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Usuario {
 	
@@ -18,7 +21,9 @@ public class Usuario {
 	
 	//Datos de la cuenta
 	private boolean premium;
-	private List<Playlist> playlists;
+	private final Map<String, Playlist> playlists;
+	private final List<PlaylistListener> playlistListeners;
+
 	private final Map<Cancion, Integer> reproductions;
 	private List<Cancion> history;
 	
@@ -32,9 +37,10 @@ public class Usuario {
 		this.password = passwordU;
 		this.premium = false;
 
-		this.playlists = new LinkedList<>();
+		playlists = new HashMap<>();
 		history = new LinkedList<>();
 		reproductions = new HashMap<>();
+		playlistListeners = new LinkedList<>();
 	}
 	
 	//Funciones
@@ -84,20 +90,26 @@ public class Usuario {
 	}
 
 	public List<Playlist> getPlaylists() {
-		return playlists;
+		return new ArrayList<>(playlists.values());
 	}
 
 	public Playlist getPlaylist(String name) {
-		for(Playlist pl : playlists) {
-			if(pl.getNombre().equals(name))
-				return pl;
-		}
-
-		return null;
+		return playlists.get(name);
 	}
 
-	public void setPlaylists(List<Playlist> playlists) {
-		this.playlists = playlists;
+	public Playlist addPlaylist(String name, List<Cancion> songs) {
+		Playlist pl = new Playlist(name, songs);
+		if(playlists.containsKey(name))
+			return null;
+
+		playlists.put(name, pl);
+		notifyListeners();
+		return pl;
+	}
+
+	public void removePlaylist(String name) {
+		playlists.remove(name);
+		notifyListeners();
 	}
 
 	public String getPassword() {
@@ -123,12 +135,6 @@ public class Usuario {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	
-	public void addPlaylist(Playlist pl) {
-		playlists.add(pl);
-	}
-
-	public void removePlaylist(Playlist playlist) { playlists.remove(playlist); }
 
 	public List<Cancion> getHistory() {
 		return new LinkedList<>(history);
@@ -151,5 +157,23 @@ public class Usuario {
 
 	public boolean checkPassword(String password) {
 		return this.password.equals(password);
+	}
+
+    public void setPlaylists(List<Playlist> playlists) {
+		playlists.forEach(p -> addPlaylist(p.getNombre(), p.getSongs()));
+    }
+
+    public void addPlaylistListener(PlaylistListener listener) {
+		playlistListeners.add(listener);
+	}
+
+	public void removePlaylistListener(PlaylistListener listener) {
+		playlistListeners.remove(listener);
+	}
+
+	private void notifyListeners() {
+		for (PlaylistListener l : playlistListeners) {
+			l.playlistListChanged(new ArrayList<>(playlists.values()));
+		}
 	}
 }

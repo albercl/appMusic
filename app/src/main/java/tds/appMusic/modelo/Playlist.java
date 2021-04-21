@@ -2,6 +2,7 @@ package tds.appMusic.modelo;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class Playlist {
 	
@@ -9,25 +10,21 @@ public class Playlist {
 	private int id;
 
 	//Datos
-	private String nombre;
+	private final String nombre;
 	
 	//Canciones
 	private List<Cancion> canciones;
 	
 	
 	//Constructor
-	public Playlist() {
+	public Playlist(String name) {
+		this.nombre = name;
 		canciones = new LinkedList<>();
 	}
 
-	public Playlist(String nombre) {
-		this();
-		this.nombre = nombre;
-	}
-
-	public Playlist(String nombre, List<Cancion> canciones) {
-		this(nombre);
-		this.canciones = canciones;
+	public Playlist(String name, List<Cancion> songs) {
+		this.nombre = name;
+		this.canciones = new LinkedList<>(songs);
 	}
 	
 	/**
@@ -69,6 +66,24 @@ public class Playlist {
 	}
 
 	public String getNombre() {
+		return nombre;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Playlist playlist = (Playlist) o;
+		return Objects.equals(nombre, playlist.nombre);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(nombre);
+	}
+
+	@Override
+	public String toString() {
 		return nombre;
 	}
 }

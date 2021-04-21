@@ -2,12 +2,12 @@ package tds.appMusic.modelo.util;
 
 import tds.appMusic.modelo.Cancion;
 
-abstract public class ReproductorListener {
-    public void onEmptyQueue() {}
-    public void onStartedSong(Cancion c) {}
-    public void onFinishedSong(Cancion c) {}
-    public void onAlternatedRandom() {}
-    public void onAlternatedRepeat() {}
-    public void onPausedSong(Cancion c) {}
-    public void onResumedSong(Cancion c) {}
+public interface ReproductorListener {
+    default void onEmptyQueue() {}
+    default void onStartedSong(Cancion c) {}
+    default void onFinishedSong(Cancion c) {}
+    default void onAlternatedRandom() {}
+    default void onAlternatedRepeat() {}
+    default void onPausedSong(Cancion c) {}
+    default void onResumedSong(Cancion c) {}
 }

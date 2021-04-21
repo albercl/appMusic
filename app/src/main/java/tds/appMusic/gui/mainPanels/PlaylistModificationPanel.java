@@ -8,8 +8,9 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import tds.appMusic.gui.auxiliarPanels.SearchControls;
-import tds.appMusic.gui.auxiliarPanels.SearchTable;
+import tds.appMusic.gui.auxiliarPanels.SongTable;
 import tds.appMusic.modelo.AppMusic;
+import tds.appMusic.modelo.Cancion;
 import tds.appMusic.modelo.Playlist;
 
 import java.awt.Component;
@@ -26,17 +27,17 @@ public class PlaylistModificationPanel extends JPanel {
 	private final JButton addSongButton;
 	private final JButton removeSongButton;
 
-	private final SearchTable playlistTable;
-	private final SearchTable searchTable;
+	private final SongTable playlistTable;
+	private final SongTable searchTable;
 
 	private Playlist selectedPlaylist = null;
-	private JList<String> playlistList;
+	private final JList<Playlist> playlistList;
 	private final SearchControls searchControls;
 
 	/**
 	 * Create the panel.
 	 */
-	public PlaylistModificationPanel(JList<String> playlistList) {
+	public PlaylistModificationPanel(JList<Playlist> playlistList) {
 		this.playlistList = playlistList;
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -86,17 +87,14 @@ public class PlaylistModificationPanel extends JPanel {
 		gbl_playlistModificationPanel.rowWeights = new double[]{1.0};
 		playlistModificationPanel.setLayout(gbl_playlistModificationPanel);
 
-		searchTable = new SearchTable();
-		searchTable.getTable().setModel(new DefaultTableModel(new Object[][] {}, new Object[] {"Título", "Intérprete"}));
-		searchTable.setBorder(new TitledBorder("Búsqueda"));
+		searchTable = new SongTable();
 		GridBagConstraints gbc_searchTable = new GridBagConstraints();
 		gbc_searchTable.fill = GridBagConstraints.BOTH;
 		gbc_searchTable.gridx = 0;
 		gbc_searchTable.gridy = 0;
 		playlistModificationPanel.add(searchTable, gbc_searchTable);
 
-		playlistTable = new SearchTable();
-		playlistTable.getTable().setModel(new DefaultTableModel(new Object[][] {}, new Object[] {"Título", "Intérprete"}));
+		playlistTable = new SongTable();
 		playlistTable.setBorder(new TitledBorder("Playlist"));
 		GridBagConstraints gbc_playlistTable = new GridBagConstraints();
 		gbc_playlistTable.fill = GridBagConstraints.BOTH;
@@ -147,80 +145,72 @@ public class PlaylistModificationPanel extends JPanel {
 
 	private void installListeners() {
 		addSongButton.addActionListener(e -> {
-			playlistTable.addSong(searchTable.getSelectedSong());
+			//Mover canciones de una tabla a otra
+			Cancion song = searchTable.getSelectedSong();
+			playlistTable.addSong(song);
 		});
 
 		removeSongButton.addActionListener(e -> {
-			playlistTable.removeSong(playlistTable.getSelectedSong());
+			//Eliminar canción seleccionada de la tabla de playlist
+			playlistTable.removeSelectedSong();
 		});
 
 		createButton.addActionListener(e -> {
-			if(selectedPlaylist != null) {
-				selectedPlaylist.setSongs(playlistTable.getSongs());
-			} else {
-				String name = playlistNameField.getText();
-				DefaultListModel<String> model = (DefaultListModel<String>) playlistList.getModel();
-				if(model.contains(name)) {
-					if (JOptionPane.showConfirmDialog(this,
-							"Ya hay una playlist con ese nombre, quieres sobreescribirla?",
-							"AppMusic",
-							JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
-						Playlist playlist = controlador.getPlaylist(name);
-						playlist.setSongs(playlistTable.getSongs());
-						controlador.addPlaylist(playlist);
+			String name = playlistNameField.getText();
+			List<Cancion> songs = playlistTable.getSongs();
+			int response;
+
+			if(selectedPlaylist == null) {
+				response = JOptionPane.showConfirmDialog(this,
+						"Se va a crear la playlist con nombre: '" + name + "'",
+						"Creación de playlist",
+						JOptionPane.YES_NO_OPTION);
+
+				//Comprobar si hay canciones en la tabla de nueva playlist y intentar crear playlist en controlador
+				if(response == JOptionPane.YES_OPTION) {
+					Playlist newPlaylist = controlador.addPlaylist(name, songs);
+					if(!name.isEmpty() && newPlaylist != null) {
+						//ok
+						JOptionPane.showMessageDialog(this, "Se ha creado la playlist: '" + name + "'");
+						setPlaylist(newPlaylist);
+					} else {
+						//error, playlist ya existe o nombre en blanco
+						JOptionPane.showMessageDialog(this, "No se ha podido crear la playlist. Ya existe o el nombre está en blanco");
 					}
-				} else {
-					Playlist playlist = new Playlist(name);
-					playlist.setSongs(playlistTable.getSongs());
-					controlador.addPlaylist(playlist);
 				}
+			} else {
+				//Sobreescribir playlist existente
+				JOptionPane.showConfirmDialog(this,
+						"Se va a sobreescribir la playlist con nombre: '" + name + "'",
+						"Creación de playlist",
+						JOptionPane.DEFAULT_OPTION);
+
+				controlador.removePlaylist(name);
+				controlador.addPlaylist(name, songs);
 			}
-
-			playlistNameField.setEnabled(true);
-			playlistNameField.setName("");
-			playlistTable.clear();
-			selectedPlaylist = null;
-
-			//Actualizar la lista
-			List<Playlist> playlists = controlador.getPlaylists();
-			DefaultListModel<String> model = new DefaultListModel<>();
-			for(Playlist pl : playlists)
-				model.addElement(pl.getNombre());
-
-			playlistList.setModel(model);
 		});
 
 		deleteButton.addActionListener(e -> {
-			playlistNameField.setEnabled(true);
-			playlistNameField.setText("");
-
-			playlistTable.clear();
-
-			if(selectedPlaylist != null) {
-				//Eliminar playlist seleccionada
-				controlador.removePlaylist(selectedPlaylist);
-
-				//Actualizar la lista
-				List<Playlist> playlists = controlador.getPlaylists();
-				DefaultListModel<String> model = new DefaultListModel<>();
-				for(Playlist pl : playlists)
-					model.addElement(pl.getNombre());
-
-				playlistList.setModel(model);
+			if(selectedPlaylist == null) {
+				//Limpiar tabla
+				playlistTable.clear();
+			} else {
+				//Eliminar playlist existente
+				controlador.removePlaylist(playlistNameField.getText());
 			}
 		});
 
 		searchControls.getCancelButton().addActionListener(e -> {
-			playlistTable.clear();
 			selectedPlaylist = null;
-			playlistNameField.setText("Playlist");
+			playlistTable.clear();
 			playlistNameField.setEnabled(true);
+			playlistNameField.setText("Playlist");
 		});
 	}
 
 	public void setPlaylist(Playlist playlist) {
 		selectedPlaylist = playlist;
-		playlistTable.setSongs(playlistTable.getSongs());
+		playlistTable.setSongs(playlist.getSongs());
 		playlistNameField.setText(playlist.getNombre());
 		playlistNameField.setEnabled(false);
 	}

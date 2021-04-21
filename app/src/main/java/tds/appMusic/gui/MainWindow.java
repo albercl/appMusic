@@ -49,7 +49,8 @@ public class MainWindow {
 	private GridBagLayout gbl_leftPanel;
 	private NavigationPanel navigationPanel;
 	private GridBagConstraints gbc_navigationPanel;
-	private JList<String> playlistsPanel;
+	private JList<Playlist> playlistsPanel;
+	private PlaylistListModel playlistsModel;
 	private GridBagConstraints gbc_playlistsPanel;
 	private MainPanel mainPanel;
 	private PlayerPanel playerPanel;
@@ -162,9 +163,9 @@ public class MainWindow {
 		
 		playlistsPanel = new JList<>();
 		playlistsPanel.setBorder(new TitledBorder("Mis listas"));
-		DefaultListModel<String> playlistsListModel = new DefaultListModel<>();
-		controlador.getPlaylists().forEach(p -> playlistsListModel.addElement(p.getNombre()));
-		playlistsPanel.setModel(playlistsListModel);
+		playlistsModel = new PlaylistListModel();
+		playlistsModel.setPlaylists(controlador.getPlaylists());
+		playlistsPanel.setModel(playlistsModel);
 		gbc_playlistsPanel = new GridBagConstraints();
 		gbc_playlistsPanel.anchor = GridBagConstraints.NORTHWEST;
 		gbc_playlistsPanel.gridx = 0;
@@ -173,35 +174,25 @@ public class MainWindow {
 		playlistsPanel.setVisible(false);
 		leftPanel.add(playlistsPanel, gbc_playlistsPanel);
 
-		playlistsPanel.addListSelectionListener(e -> {
-			if(playlistsPanel.getSelectedValue() != null) {
-				Optional<Playlist> playlist = controlador.getPlaylists().stream()
-						.filter(p -> playlistsPanel.getSelectedValue().equals(p.getNombre()))
-						.findFirst();
+		controlador.addPlaylistListenerToUser(l -> playlistsModel.setPlaylists(l));
 
-				playlist.ifPresent(value -> mainPanel.setSelectedPlaylistView(value));
+		playlistsPanel.addListSelectionListener(e -> {
+			Playlist selected = playlistsPanel.getSelectedValue();
+			if(selected != null) {
+				mainPanel.setSelectedPlaylistView(selected);
+				playlistsPanel.clearSelection();
 			}
 		});
 		
-		navigationPanel.addSearchActionListener(e -> {
-			mainPanel.setSearchPanelView();
-		});
+		navigationPanel.addSearchActionListener(e -> mainPanel.setSearchPanelView());
 		
-		navigationPanel.addNewListActionListener(e -> {
-			mainPanel.setPlaylistModPanelView();
-		});
+		navigationPanel.addNewListActionListener(e -> mainPanel.setPlaylistModPanelView());
 		
-		navigationPanel.addRecentsActionListener(e -> {
-			mainPanel.setRecentsView();
-		});
+		navigationPanel.addRecentsActionListener(e -> mainPanel.setRecentsView());
 		
-		navigationPanel.addMyListsActionListener(e -> {
-			playlistsPanel.setVisible(true);
-		});
+		navigationPanel.addMyListsActionListener(e -> playlistsPanel.setVisible(true));
 		
-		navigationPanel.addFavouritesActionListener(e -> {
-			mainPanel.setFavouritesView();
-		});
+		navigationPanel.addFavouritesActionListener(e -> mainPanel.setFavouritesView());
 		
 		//Panel central
 		mainPanel = new MainPanel(playlistsPanel);
@@ -239,21 +230,13 @@ public class MainWindow {
 			}
 		});
 
-		playerPanel.getBackButton().addActionListener(a -> {
-			controlador.goBack();
-		});
+		playerPanel.getBackButton().addActionListener(a -> controlador.goBack());
 
-		playerPanel.getForwardButton().addActionListener(a -> {
-			controlador.goNext();
-		});
+		playerPanel.getForwardButton().addActionListener(a -> controlador.goNext());
 
-		playerPanel.getRandomButton().addActionListener(a -> {
-			controlador.alternateRandom();
-		});
+		playerPanel.getRandomButton().addActionListener(a -> controlador.alternateRandom());
 
-		playerPanel.getReplayButton().addActionListener(a -> {
-			controlador.alternateRepeat();
-		});
+		playerPanel.getReplayButton().addActionListener(a -> controlador.alternateRepeat());
 
 		controlador.addListenerToPlayer(new ReproductorListener() {
 			@Override
