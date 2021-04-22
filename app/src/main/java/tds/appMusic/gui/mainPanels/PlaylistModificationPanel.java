@@ -15,6 +15,8 @@ import tds.appMusic.modelo.Playlist;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
 public class PlaylistModificationPanel extends JPanel {
@@ -59,6 +61,13 @@ public class PlaylistModificationPanel extends JPanel {
 		playlistNameField.setText("Playlist");
 		playlistCreationPanel.add(playlistNameField);
 		playlistNameField.setColumns(10);
+		playlistNameField.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent mouseEvent) {
+				super.mouseClicked(mouseEvent);
+				playlistNameField.setText("");
+			}
+		});
 		
 		Component horizontalStrut = Box.createHorizontalStrut(20);
 		playlistCreationPanel.add(horizontalStrut);
@@ -141,6 +150,8 @@ public class PlaylistModificationPanel extends JPanel {
 		add(searchControls, gbc_searchControls);
 
 		installListeners();
+
+		setPlaylist(null);
 	}
 
 	private void installListeners() {
@@ -200,18 +211,22 @@ public class PlaylistModificationPanel extends JPanel {
 			}
 		});
 
-		searchControls.getCancelButton().addActionListener(e -> {
+		searchControls.getCancelButton().addActionListener(e -> setPlaylist(null));
+	}
+
+	public void setPlaylist(Playlist playlist) {
+		if(playlist == null) {
 			selectedPlaylist = null;
 			playlistTable.clear();
 			playlistNameField.setEnabled(true);
 			playlistNameField.setText("Playlist");
-		});
-	}
-
-	public void setPlaylist(Playlist playlist) {
-		selectedPlaylist = playlist;
-		playlistTable.setSongs(playlist.getSongs());
-		playlistNameField.setText(playlist.getNombre());
-		playlistNameField.setEnabled(false);
+			createButton.setText("Crear");
+		} else {
+			selectedPlaylist = playlist;
+			playlistTable.setSongs(playlist.getSongs());
+			playlistNameField.setText(playlist.getNombre());
+			playlistNameField.setEnabled(false);
+			createButton.setText("Sobreescribir");
+		}
 	}
 }

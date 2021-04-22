@@ -2,6 +2,7 @@ package tds.appMusic.modelo;
 
 import tds.appMusic.modelo.util.Filter;
 import tds.appMusic.modelo.util.PlaylistListener;
+import tds.appMusic.modelo.util.PremiumListener;
 import tds.appMusic.modelo.util.ReproductorListener;
 import tds.appMusic.persistencia.DAOException;
 import tds.appMusic.persistencia.FactoriaDAO;
@@ -164,6 +165,18 @@ public class AppMusic {
 
 	public boolean isPremium() {
 		return loggedUser.isPremium();
+	}
+
+	public void setPremium(boolean premium) {
+		loggedUser.setPremium(premium);
+	}
+
+	public void addPremiumListener(PremiumListener listener) {
+		loggedUser.addPremiumListener(listener);
+	}
+
+	public void removePremiumListener(PremiumListener listener) {
+		loggedUser.removePremiumListener(listener);
 	}
 
 	public void setVolume(float volume) { player.setVolume(volume); }

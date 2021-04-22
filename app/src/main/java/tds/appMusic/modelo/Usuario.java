@@ -1,6 +1,7 @@
 package tds.appMusic.modelo;
 
 import tds.appMusic.modelo.util.PlaylistListener;
+import tds.appMusic.modelo.util.PremiumListener;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,6 +22,8 @@ public class Usuario {
 	
 	//Datos de la cuenta
 	private boolean premium;
+	private final List<PremiumListener> premiumListeners;
+
 	private final Map<String, Playlist> playlists;
 	private final List<PlaylistListener> playlistListeners;
 
@@ -41,6 +44,7 @@ public class Usuario {
 		history = new LinkedList<>();
 		reproductions = new HashMap<>();
 		playlistListeners = new LinkedList<>();
+		premiumListeners = new LinkedList<>();
 	}
 	
 	//Funciones
@@ -79,6 +83,18 @@ public class Usuario {
 
 	public void setPremium(boolean premium) {
 		this.premium = premium;
+
+		for (PremiumListener l : premiumListeners) {
+			l.premiumChanged(this, premium);
+		}
+	}
+
+	public void addPremiumListener(PremiumListener listener) {
+		premiumListeners.add(listener);
+	}
+
+	public void removePremiumListener(PremiumListener listener) {
+		premiumListeners.remove(listener);
 	}
 
 	public Date getBirthdate() {

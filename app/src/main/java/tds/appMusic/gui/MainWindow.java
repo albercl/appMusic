@@ -125,6 +125,19 @@ public class MainWindow {
 		upgradeButton.setFont(new Font("Dialog", Font.PLAIN, 16));
 		upgradeButton.setFocusPainted(false);
 		upgradeButton.setBackground(Color.BLACK);
+		controlador.addPremiumListener((user, isPremium) -> {
+			upgradeButton.setEnabled(!isPremium);
+
+			if(isPremium) {
+				upgradeButton.setEnabled(false);
+				upgradeButton.setText("<html><p><b><span style=\"color: rgb(239, 184, 16)\">Ya eres premium!</b></span></p></html>");
+			} else {
+				upgradeButton.setEnabled(true);
+				upgradeButton.setText("<html><p><b><span style=\"color: rgb(239, 184, 16)\">Mejora tu cuenta</b></span></p></html>");
+			}
+		});
+
+		upgradeButton.addActionListener(e -> controlador.setPremium(true));
 		topPanel.add(upgradeButton);
 		
 		logoutButton = new JButton("Cerrar sesión");

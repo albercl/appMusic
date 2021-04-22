@@ -26,10 +26,13 @@ public class MainPanel extends JPanel {
 	private int state = NONE;
 
 	private SearchPanel searchPanel;
-	private PlaylistModificationPanel playlistPanel;
+	private PlaylistModificationPanel playlistModificationPanel;
 	private SongTable recentsPanel;
 	private FavouritesPanel favouritesPanel;
+
+	private JPanel playlistPanel;
 	private SongTable playlistTable;
+	private JButton generatePdfButton;
 
 	private JList<Playlist> playlistList;
 	
@@ -37,48 +40,64 @@ public class MainPanel extends JPanel {
 		this.playlistList = playlistList;
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[] {0, 0, 0, 0};
-		gridBagLayout.rowHeights = new int[] {300};
-		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0};
+		gridBagLayout.columnWidths = new int[] {500};
+		gridBagLayout.rowHeights = new int[] {0};
+		gridBagLayout.columnWeights = new double[]{0.0};
 		gridBagLayout.rowWeights = new double[]{1.0};
 		setLayout(gridBagLayout);
 		
 		favouritesPanel = new FavouritesPanel();
 		GridBagConstraints gbc_favouritesPanel = new GridBagConstraints();
-		gbc_favouritesPanel.fill = GridBagConstraints.BOTH;
+		gbc_favouritesPanel.fill = GridBagConstraints.VERTICAL;
 		gbc_favouritesPanel.gridx = 0;
 		gbc_favouritesPanel.gridy = 0;
 		add(favouritesPanel, gbc_favouritesPanel);
 		searchPanel = new SearchPanel();
 		GridBagConstraints gbc_searchPanel = new GridBagConstraints();
-		gbc_searchPanel.fill = GridBagConstraints.BOTH;
-		gbc_searchPanel.gridx = 1;
+		gbc_searchPanel.fill = GridBagConstraints.VERTICAL;
+		gbc_searchPanel.gridx = 0;
 		gbc_searchPanel.gridy = 0;
 		add(searchPanel, gbc_searchPanel);
 		
 		recentsPanel = new SongTable();
 		recentsPanel.setPreferredSize(new Dimension(500, 0));
 		GridBagConstraints gbc_recentsPanel = new GridBagConstraints();
-		gbc_recentsPanel.fill = GridBagConstraints.BOTH;
-		gbc_recentsPanel.gridx = 2;
+		gbc_recentsPanel.fill = GridBagConstraints.VERTICAL;
+		gbc_recentsPanel.gridx = 0;
 		gbc_recentsPanel.gridy = 0;
 		add(recentsPanel, gbc_recentsPanel);
 		
-		playlistPanel = new PlaylistModificationPanel(playlistList);
+		playlistModificationPanel = new PlaylistModificationPanel(playlistList);
+		GridBagConstraints gbc_playlistModificationPanel = new GridBagConstraints();
+		gbc_playlistModificationPanel.fill = GridBagConstraints.VERTICAL;
+		gbc_playlistModificationPanel.gridx = 0;
+		gbc_playlistModificationPanel.gridy = 0;
+		add(playlistModificationPanel, gbc_playlistModificationPanel);
+
+
+		//Panel de vista de playlist
+		playlistPanel = new JPanel(new BorderLayout());
+
 		GridBagConstraints gbc_playlistPanel = new GridBagConstraints();
 		gbc_playlistPanel.fill = GridBagConstraints.BOTH;
-		gbc_playlistPanel.gridx = 3;
+		gbc_playlistPanel.gridx = 0;
 		gbc_playlistPanel.gridy = 0;
+
+		//Tabla
+		playlistTable = new SongTable();
+		playlistTable.setPreferredSize(new Dimension(500, 0));
+		playlistPanel.add(playlistTable, BorderLayout.CENTER);
+
+		//Boton
+		generatePdfButton = new JButton();
+		generatePdfButton.setText("Generar PDF");
+		playlistPanel.add(generatePdfButton, BorderLayout.SOUTH);
+
 		add(playlistPanel, gbc_playlistPanel);
 
-		playlistTable = new SongTable();
-		playlistTable.setPreferredSize(new Dimension(450, 400));
-		GridBagConstraints gbc_playlistTable = new GridBagConstraints();
-		gbc_playlistTable.fill = GridBagConstraints.BOTH;
-		gbc_playlistTable.gridx = 4;
-		gbc_playlistTable.gridy = 0;
-		playlistTable.setVisible(false);
-		add(playlistTable, gbc_playlistTable);
+		generatePdfButton.setVisible(controlador.isPremium());
+
+		controlador.addPremiumListener((user, isPremium) -> generatePdfButton.setVisible(isPremium));
 
 		controlador.addListenerToPlayer(new ReproductorListener() {
 			@Override
@@ -99,10 +118,11 @@ public class MainPanel extends JPanel {
 	
 	public void resetView() {
 		searchPanel.setVisible(false);
-		playlistPanel.setVisible(false);
+		playlistModificationPanel.setVisible(false);
 		recentsPanel.setVisible(false);
 		favouritesPanel.setVisible(false);
-		playlistTable.setVisible(false);
+		playlistPanel.setVisible(false);
+		playlistList.setVisible(false);
 
 		playlistList.clearSelection();
 		setBorder(null);
@@ -121,7 +141,7 @@ public class MainPanel extends JPanel {
 
 		resetView();
 		this.setBorder(new TitledBorder("Modificación de playlist"));
-		playlistPanel.setVisible(true);
+		playlistModificationPanel.setVisible(true);
 		playlistList.setVisible(true);
 	}
 	
@@ -145,12 +165,12 @@ public class MainPanel extends JPanel {
 
 	public void setSelectedPlaylistView(Playlist playlist) {
 		if (state == PLAYLIST_MOD) {
-			playlistPanel.setPlaylist(playlist);
+			playlistModificationPanel.setPlaylist(playlist);
 		} else {
 			state = PLAYLIST;
 			resetView();
 			playlistTable.setSongs(playlist.getSongs());
-			playlistTable.setVisible(true);
+			playlistPanel.setVisible(true);
 			playlistList.setVisible(true);
 		}
 	}

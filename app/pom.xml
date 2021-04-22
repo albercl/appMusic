@@ -54,5 +54,12 @@
             <artifactId>pulsador</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>um.tds</groupId>
+            <artifactId>persistencia</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/DriverPersistencia.jar</systemPath>
+        </dependency>
     </dependencies>
 </project>
