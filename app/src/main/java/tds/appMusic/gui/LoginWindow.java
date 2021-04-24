@@ -77,6 +77,7 @@ public class LoginWindow {
 
 	/**
 	 * Create the application.
+	 * @wbp.parser.entryPoint
 	 */
 	public LoginWindow() {
 		initialize();
@@ -200,7 +201,7 @@ public class LoginWindow {
 		registerPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 		registerLabel = new JLabel("<html>¿<b>No</b> tienes cuenta?</html>");
-		registerLabel.setForeground(Color.BLACK);
+		registerLabel.setForeground(new Color(255, 255, 255));
 		registerLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		registerLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		registerPanel.add(registerLabel);

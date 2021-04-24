@@ -41,6 +41,7 @@ public class Login {
 	
 	/**
 	 * Create the application.
+	 * @wbp.parser.entryPoint
 	 */
 	public Login() {
 		initialize();
@@ -71,7 +72,7 @@ public class Login {
 		gbl_loginPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 		loginPanel.setLayout(gbl_loginPanel);
 		
-		JLabel titleLabel = new JLabel("AppMusic");
+		JLabel titleLabel = new JLabel("<html>\r\n<p style=\"color:#B22222\">AppMusic </p><p style=\"color:#DAA520\">Premium</p>\r\n<html>");
 		ImageIcon imageIcon = new ImageIcon(GuiUtils.loadImage("icons/iconoCircular.png")); // load the image to a imageIcon
 		Image image = imageIcon.getImage(); // transform it 
 		Image newimg = image.getScaledInstance(40, 40,  Image.SCALE_SMOOTH); // scale it the smooth way
