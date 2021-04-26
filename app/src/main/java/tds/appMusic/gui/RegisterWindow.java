@@ -191,6 +191,10 @@ public class RegisterWindow {
 		gbc_dateChooser.fill = GridBagConstraints.HORIZONTAL;
 		gbc_dateChooser.gridx = 1;
 		gbc_dateChooser.gridy = 3;
+
+		JTextField dateField = (JTextField) dateChooser.getDateEditor().getUiComponent();
+		dateField.setBackground(Color.gray);
+
 		registerPanel.add(dateChooser, gbc_dateChooser);
 
 		emailLabel = new JLabel("Email:");

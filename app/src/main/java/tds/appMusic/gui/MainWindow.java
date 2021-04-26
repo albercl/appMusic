@@ -127,16 +127,10 @@ public class MainWindow {
 		upgradeButton.setFocusPainted(false);
 		upgradeButton.setBackground(Color.BLACK);
 		controlador.addPremiumListener((user, isPremium) -> {
-			upgradeButton.setEnabled(!isPremium);
-
-			if(isPremium) {
-				upgradeButton.setEnabled(false);
-				upgradeButton.setText("<html><p><b><span style=\"color: rgb(239, 184, 16)\">Ya eres premium!</b></span></p></html>");
-			} else {
-				upgradeButton.setEnabled(true);
-				upgradeButton.setText("<html><p><b><span style=\"color: rgb(239, 184, 16)\">Mejora tu cuenta</b></span></p></html>");
-			}
+			setPremium(isPremium);
 		});
+
+		setPremium(controlador.isPremium());
 
 		upgradeButton.addActionListener(e -> {
 			//Abrir la ventana
@@ -311,5 +305,17 @@ public class MainWindow {
 	
 	public void setVisible(boolean value) {
 		frmAppmusic.setVisible(true);
+	}
+
+	private void setPremium(boolean isPremium) {
+		upgradeButton.setEnabled(!isPremium);
+
+		if(isPremium) {
+			upgradeButton.setEnabled(false);
+			upgradeButton.setText("<html><p><b><span style=\"color: rgb(239, 184, 16)\">Ya eres premium!</b></span></p></html>");
+		} else {
+			upgradeButton.setEnabled(true);
+			upgradeButton.setText("<html><p><b><span style=\"color: rgb(239, 184, 16)\">Mejora tu cuenta</b></span></p></html>");
+		}
 	}
 }
