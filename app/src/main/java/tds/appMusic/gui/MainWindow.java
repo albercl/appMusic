@@ -70,7 +70,7 @@ public class MainWindow {
 	private void initialize() {
 		frmAppmusic = new JFrame();
 		frmAppmusic.setTitle("AppMusic");
-		frmAppmusic.setBounds(100, 100, 996, 850);
+		frmAppmusic.setBounds(450, 100, 1025, 850);
 		frmAppmusic.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmAppmusic.getContentPane().setLayout(new BorderLayout(0, 0));
 
