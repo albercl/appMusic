@@ -19,7 +19,6 @@ import tds.appMusic.modelo.AppMusic;
 import tds.appMusic.modelo.Cancion;
 import tds.appMusic.modelo.Playlist;
 import tds.appMusic.modelo.util.ReproductorListener;
-import tds.appMusic.oldgui.Login;
 import um.tds.componente.CargadorCanciones;
 
 import java.awt.FlowLayout;
@@ -77,6 +76,8 @@ public class MainWindow {
 
 		ImageIcon iconoAppMusic = new ImageIcon(GuiUtils.loadAppIcon("icons/iconoAppMusic.png"));
 		frmAppmusic.setIconImage(iconoAppMusic.getImage());
+
+		ImageIcon iconoPremium = new ImageIcon(GuiUtils.loadAppIcon("icons/iconoAppMusicPremium.png"));
 		
 		//Panel superior
 		topPanel = new JPanel();
@@ -137,7 +138,11 @@ public class MainWindow {
 			}
 		});
 
-		upgradeButton.addActionListener(e -> controlador.setPremium(true));
+		upgradeButton.addActionListener(e -> {
+			//Abrir la ventana
+			PremiumWindow premiumWindow = new PremiumWindow();
+			premiumWindow.setVisible(true);
+		});
 		topPanel.add(upgradeButton);
 		
 		logoutButton = new JButton("Cerrar sesión");
@@ -147,8 +152,8 @@ public class MainWindow {
 		logoutButton.setBackground(new Color(178, 34, 34));
 		logoutButton.addActionListener(arg0 -> {
 			frmAppmusic.setVisible(false);
-			Login LoginFrame = new Login();
-			LoginFrame.setVisible(true);
+			LoginWindow loginWindow = new LoginWindow();
+			loginWindow.setVisible(true);
 
 			controlador.logout();
 		});
@@ -188,6 +193,16 @@ public class MainWindow {
 		leftPanel.add(playlistsPanel, gbc_playlistsPanel);
 
 		controlador.addPlaylistListenerToUser(l -> playlistsModel.setPlaylists(l));
+
+		controlador.addPremiumListener((user, isPremium) -> {
+			if(isPremium) {
+				frmAppmusic.setIconImage(iconoPremium.getImage());
+				frmAppmusic.setTitle("AppMusic Premium");
+			} else {
+				frmAppmusic.setIconImage(iconoAppMusic.getImage());
+				frmAppmusic.setTitle("AppMusic");
+			}
+		});
 
 		playlistsPanel.addListSelectionListener(e -> {
 			Playlist selected = playlistsPanel.getSelectedValue();

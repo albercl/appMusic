@@ -3,10 +3,15 @@ package tds.appMusic.modelo;
 import tds.appMusic.modelo.util.PlaylistListener;
 import tds.appMusic.modelo.util.PremiumListener;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Usuario {
+
+	private static final int ELDER_MIN_AGE = 65;
+	private static final int YOUNG_MAX_AGE = 25;
 	
 	//Atributos
 	private int id;
@@ -191,5 +196,23 @@ public class Usuario {
 		for (PlaylistListener l : playlistListeners) {
 			l.playlistListChanged(new ArrayList<>(playlists.values()));
 		}
+	}
+
+	public boolean isElder() {
+		Calendar c = Calendar.getInstance();
+		c.setTime(birthdate);
+		c.add(Calendar.YEAR, ELDER_MIN_AGE);
+		Date d = c.getTime();
+
+		return d.before(new Date(System.currentTimeMillis()));
+	}
+
+	public boolean isYoung() {
+		Calendar c = Calendar.getInstance();
+		c.setTime(birthdate);
+		c.add(Calendar.YEAR, YOUNG_MAX_AGE);
+		Date d = c.getTime();
+
+		return d.after(new Date(System.currentTimeMillis()));
 	}
 }

@@ -167,6 +167,14 @@ public class AppMusic {
 		return loggedUser.isPremium();
 	}
 
+	public boolean isElder() {
+		return loggedUser.isElder();
+	}
+
+	public boolean isYoung() {
+		return loggedUser.isYoung();
+	}
+
 	public void setPremium(boolean premium) {
 		loggedUser.setPremium(premium);
 	}

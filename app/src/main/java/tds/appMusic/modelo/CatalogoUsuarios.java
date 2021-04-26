@@ -21,7 +21,7 @@ public class CatalogoUsuarios {
 	private IAdaptadorUsuarioDAO adaptadorUsuarios;
 
 	private CatalogoUsuarios() {
-		addUsuario(new Usuario("Luis Gregorio Martinez", null, "luisgreg77@gmail.com", "luisgrego_", "wsl2"));
+		addUsuario(new Usuario("Luis Gregorio Martinez", new Date(System.currentTimeMillis()), "luisgreg77@gmail.com", "luisgrego_", "wsl2"));
 		addUsuario(new Usuario("alber", null, "alber@gmail.com", "albercl", "vivafli"));
 
 		//cargarCatalogoUsers();

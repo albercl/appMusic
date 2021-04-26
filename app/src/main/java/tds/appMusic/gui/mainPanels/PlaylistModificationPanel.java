@@ -208,6 +208,7 @@ public class PlaylistModificationPanel extends JPanel {
 			} else {
 				//Eliminar playlist existente
 				controlador.removePlaylist(playlistNameField.getText());
+				setPlaylist(null);
 			}
 		});
 

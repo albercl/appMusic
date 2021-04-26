@@ -2,6 +2,7 @@ package tds.appMusic.gui.mainPanels;
 
 import javax.swing.JPanel;
 
+import tds.appMusic.modelo.AppMusic;
 import tds.appMusic.oldgui.GuiUtils;
 
 import java.awt.Font;
@@ -15,6 +16,8 @@ import java.awt.GridBagConstraints;
 
 public class NavigationPanel extends JPanel {
 	private final Font BUTTON_FONT = new Font("Tahoma", Font.PLAIN, 13);
+
+	private final AppMusic controlador = AppMusic.getInstanciaUnica();
 
 	private final GridBagLayout gridBagLayout;
 	private final JButton searchButton;
@@ -119,6 +122,11 @@ public class NavigationPanel extends JPanel {
 		gbc_favouritesButton.gridy = 4;
 		ImageIcon favouritesIcon = new ImageIcon(GuiUtils.loadImage("icons/iconoMasEscuchadas.png")); // load the image to a																					// imageIcon
 		favouritesButton.setIcon(favouritesIcon);
+
+		favouritesButton.setVisible(controlador.isPremium());
+
+		controlador.addPremiumListener((user, isPremium) -> favouritesButton.setVisible(isPremium));
+
 		add(favouritesButton, gbc_favouritesButton);
 	}
 	

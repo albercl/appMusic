@@ -79,7 +79,6 @@ public class PremiumWindow {
 
 	/**
 	 * Create the application.
-	 * @wbp.parser.entryPoint
 	 */
 	public PremiumWindow() {
 		initialize();
@@ -98,7 +97,6 @@ public class PremiumWindow {
 		frame = new JFrame();
 		frame.setTitle("AppMusic Premium");
 		frame.setBounds(630, 300, 730, 450);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		iconoAppMusic = new ImageIcon(GuiUtils.loadAppIcon("icons/iconoAppMusicPremium.png"));
 		frame.setIconImage(iconoAppMusic.getImage());
@@ -128,16 +126,16 @@ public class PremiumWindow {
 
 		loginPanel.add(titleLabel, gbc_titleLabel);
 		
-				userLabel = new JLabel("<html>\r\n<p>Pásate ya a <span style=\"color: #daa520\">Premium</span> y</p><p>empieza a disfrutar de múltiples <u><span style=\"color: #2271b3\">ventajas</u></span>.</p>\r\n<html>");
-				userLabel.setBackground(new Color(0, 0, 0));
-				userLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-				userLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-				gbc_userLabel = new GridBagConstraints();
-				gbc_userLabel.fill = GridBagConstraints.BOTH;
-				gbc_userLabel.insets = new Insets(0, 0, 5, 5);
-				gbc_userLabel.gridx = 0;
-				gbc_userLabel.gridy = 2;
-				loginPanel.add(userLabel, gbc_userLabel);
+		userLabel = new JLabel("<html>\r\n<p>Pásate ya a <span style=\"color: #daa520\">Premium</span> y</p><p>empieza a disfrutar de múltiples <u><span style=\"color: #2271b3\">ventajas</u></span>.</p>\r\n<html>");
+		userLabel.setBackground(new Color(0, 0, 0));
+		userLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		userLabel.setVerticalAlignment(SwingConstants.BOTTOM);
+		gbc_userLabel = new GridBagConstraints();
+		gbc_userLabel.fill = GridBagConstraints.BOTH;
+		gbc_userLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_userLabel.gridx = 0;
+		gbc_userLabel.gridy = 2;
+		loginPanel.add(userLabel, gbc_userLabel);
 		
 		lblNewLabel_1 = new JLabel("-----------------------------------------------------------------------------------------------------------");
 		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
@@ -154,12 +152,24 @@ public class PremiumWindow {
 		gbc_lblNewLabel.gridy = 4;
 		loginPanel.add(lblNewLabel, gbc_lblNewLabel);
 		
-		lblahorra = new JLabel("<html>\r\n<p><span style=\"color: #af1c2f\">Descuento del 50% (usuario mayor de 65 años)</p>\r\n</html>");
+		lblahorra = new JLabel();
 		lblahorra.setFont(new Font("Tahoma", Font.BOLD, 14));
 		GridBagConstraints gbc_lblahorra = new GridBagConstraints();
 		gbc_lblahorra.insets = new Insets(0, 0, 5, 5);
 		gbc_lblahorra.gridx = 0;
 		gbc_lblahorra.gridy = 5;
+
+		if(controlador.isElder()) {
+			lblahorra.setText("<html>\r\n<p><span style=\"color: #FFA500\">Descuento del 50% (usuario mayor de 65 años)</p>\r\n</html>");
+			lblNewLabel.setText("<html>\r\n<p>Precio final: <span style=\"color: #af1c2f\"><strike>50$</strike></span> --> <span style=\"color: green\"><u>25$</u></p>\r\n</html>");
+		} else if(controlador.isYoung()) {
+			lblahorra.setText("<html>\r\n<p><span style=\"color: #FFA500\">Descuento del 20% (usuario menor de 25 años)</p>\r\n</html>");
+			lblNewLabel.setText("<html>\r\n<p>Precio final: <span style=\"color: #af1c2f\"><strike>50$</strike></span> --> <span style=\"color: green\"><u>40$</u></p>\r\n</html>");
+		} else {
+			lblNewLabel.setText("<html>\r\n<p>Precio final: <span style=\"color: green\"><u>50$</u></p>\r\n</html>");
+			lblahorra.setText("<html>\r\n<p><span style=\"color: #FFA500\">No tienes ningún descuento disponible :(</p>\r\n</html>");
+		}
+
 		loginPanel.add(lblahorra, gbc_lblahorra);
 		
 		lblNewLabel_2 = new JLabel("-----------------------------------------------------------------------------------------------------------");
@@ -170,10 +180,10 @@ public class PremiumWindow {
 		loginPanel.add(lblNewLabel_2, gbc_lblNewLabel_2);
 
 		loginButton = new JButton("Quiero empezar a ser premium");
-		loginButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				JOptionPane.showMessageDialog(frame, "A partir de ahora eres usuario premium");
-			}
+		loginButton.addActionListener(arg0 -> {
+			JOptionPane.showMessageDialog(frame, "A partir de ahora eres usuario premium");
+			controlador.setPremium(true);
+			frame.setVisible(false);
 		});
 		loginButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		loginButton.setFocusPainted(false);
