@@ -33,6 +33,7 @@ public class MainPanel extends JPanel {
 	private JPanel playlistPanel;
 	private SongTable playlistTable;
 	private JButton generatePdfButton;
+	private Playlist selectedPlaylist;
 
 	private JList<Playlist> playlistList;
 	
@@ -92,6 +93,7 @@ public class MainPanel extends JPanel {
 		generatePdfButton = new JButton();
 		generatePdfButton.setText("Generar PDF");
 		playlistPanel.add(generatePdfButton, BorderLayout.SOUTH);
+		generatePdfButton.addActionListener(e -> selectedPlaylist.generarPDF());
 
 		add(playlistPanel, gbc_playlistPanel);
 
@@ -172,6 +174,7 @@ public class MainPanel extends JPanel {
 			playlistTable.setSongs(playlist.getSongs());
 			playlistPanel.setVisible(true);
 			playlistList.setVisible(true);
+			selectedPlaylist = playlist;
 		}
 	}
 

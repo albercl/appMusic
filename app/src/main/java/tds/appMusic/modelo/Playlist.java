@@ -1,5 +1,14 @@
 package tds.appMusic.modelo;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfWriter;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -58,6 +67,28 @@ public class Playlist {
 	 */
 	public boolean generarPDF() {
 		//TODO: Implementar métodos
+		try {
+			FileOutputStream pdf = new FileOutputStream(nombre + ".pdf");
+			Document document = new Document();
+			PdfWriter.getInstance(document, pdf);
+
+			document.open();
+			document.addTitle(nombre);
+			document.add(new Paragraph("Coldplay", new Font(Font.FontFamily.COURIER, 30)));
+			StringBuilder sb = new StringBuilder();
+			for(Cancion song : canciones) {
+				sb.append(song.getTitulo()).append(" | ").append(song.getInterpretesString()).append(" | ").append(song.getEstilo()).append("\n");
+			}
+
+			document.add(new Paragraph(sb.toString()));
+			document.close();
+
+			return true;
+
+		} catch (FileNotFoundException | DocumentException e) {
+			e.printStackTrace();
+		}
+
 		return false;
 	}
 
