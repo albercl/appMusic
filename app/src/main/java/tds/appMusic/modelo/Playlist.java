@@ -74,7 +74,7 @@ public class Playlist {
 
 			document.open();
 			document.addTitle(nombre);
-			document.add(new Paragraph("Coldplay", new Font(Font.FontFamily.COURIER, 30)));
+			document.add(new Paragraph(nombre, new Font(Font.FontFamily.COURIER, 30)));
 			StringBuilder sb = new StringBuilder();
 			for(Cancion song : canciones) {
 				sb.append(song.getTitulo()).append(" | ").append(song.getInterpretesString()).append(" | ").append(song.getEstilo()).append("\n");
