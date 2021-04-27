@@ -13,22 +13,37 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import tds.appMusic.modelo.util.Filter;
+import tds.appMusic.persistencia.DAOException;
+import tds.appMusic.persistencia.FactoriaDAO;
+import tds.appMusic.persistencia.IAdaptadorCancionDAO;
+import tds.appMusic.persistencia.tds.AdaptadorCancionTDS;
+import tds.appMusic.persistencia.tds.TDSFactoriaDAO;
 import um.tds.componente.Canciones;
 
 public class CatalogoCanciones {
 	private final static String SONGS_PATH = "C:\\tds\\canciones";
 	private String tempPath;
 
+	private final IAdaptadorCancionDAO adaptador;
+
     private List<Cancion> canciones;
     
-    public CatalogoCanciones() throws Exception {
+    public CatalogoCanciones(IAdaptadorCancionDAO adaptador) throws Exception {
+    	this.adaptador = adaptador;
 		String binPath = CatalogoCanciones.class.getClassLoader().getResource(".").getPath();
 		binPath = binPath.replaceFirst("/", "");
 		// quitar "/" añadida al inicio del path en plataforma Windows
 		tempPath = binPath.replace("/bin", "/temp");
 
-    	canciones = new LinkedList<>();
-    	cargarCanciones();
+    	canciones = adaptador.recuperarTodasCanciones();
+
+    	//Si no hay canciones en la persistencia, se cargan de disco
+    	if(canciones.isEmpty()) {
+			cargarCanciones();
+
+			for(Cancion cancion : canciones)
+				adaptador.registrarCancion(cancion);
+		}
     }
 
     public List<Cancion> getCanciones() {
@@ -85,8 +100,7 @@ public class CatalogoCanciones {
 
 				String name = parts[1].substring(0, parts[1].length() - 4).trim();
 
-				Cancion song = new Cancion(name, ruta, interpretes);
-				song.setEstilo(f.getName());
+				Cancion song = new Cancion(0, name, ruta, f.getName(), interpretes);
 				this.canciones.add(song);
 			}
 		}
@@ -136,7 +150,19 @@ public class CatalogoCanciones {
 					Files.copy(stream, song);
 				}
 
-				cargarCanciones();
+				StringBuilder builder = new StringBuilder();
+				builder.append(cancion.getEstilo().toUpperCase()).append('/')
+						.append(cancion.getInterprete()).append(" - ").append(cancion.getTitulo())
+						.append(".mp3");
+
+				Cancion c = new Cancion(0,
+						cancion.getTitulo(),
+						builder.toString(),
+						cancion.getEstilo().toUpperCase(),
+						cancion.getInterprete());
+
+				this.canciones.add(c);
+				adaptador.registrarCancion(c);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

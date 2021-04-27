@@ -40,16 +40,16 @@ public class AppMusic {
 		player = new Reproductor();
 
 		try {
-			songs = new CatalogoCanciones();
-		} catch (Exception e) {
-			System.err.println("Algo ha ocurrido al intentar cargar las canciones");
+			factoriaDAO = FactoriaDAO.getInstancia();
+		} catch (DAOException e) {
 			e.printStackTrace();
 			System.exit(1);
 		}
 
 		try {
-			factoriaDAO = FactoriaDAO.getInstancia();
-		} catch (DAOException e) {
+			songs = new CatalogoCanciones(factoriaDAO.getCancionDAO());
+		} catch (Exception e) {
+			System.err.println("Algo ha ocurrido al intentar cargar las canciones");
 			e.printStackTrace();
 			System.exit(1);
 		}

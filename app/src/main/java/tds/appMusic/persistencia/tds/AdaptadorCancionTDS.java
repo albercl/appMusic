@@ -32,30 +32,24 @@ public class AdaptadorCancionTDS implements IAdaptadorCancionDAO {
     @Override
     public void registrarCancion(Cancion cancion) {
     	Entidad entidadCancion;
-        boolean existe = true;
 
         //Se comprueba si la cancion está registrada en el servicio de persistencia
-        try {
-            servicioPersistencia.recuperarEntidad(cancion.getId());
-        } catch (NullPointerException e) {
-            existe = false;
-        }
+        entidadCancion = servicioPersistencia.recuperarEntidad(cancion.getId());
 
-        if(existe) return;
+        if(entidadCancion != null) return;
 
         //Crear la entidad cancion
         entidadCancion = new Entidad();
         entidadCancion.setNombre("cancion");
-        entidadCancion.setPropiedades(new ArrayList<>(
-                Arrays.asList(new Propiedad("titulo", cancion.getTitulo()),
-                		//TODO: Actualizar para varios interpretes
+        entidadCancion.setPropiedades(Arrays.asList(
+                new Propiedad("titulo", cancion.getTitulo()),
                 		new Propiedad("interprete", cancion.getInterpretes().get(0)),
                 		new Propiedad("estilo", cancion.getEstilo()),
                 		new Propiedad("ruta", cancion.getRuta())
-                		)));
+        ));
 
         //Registrar la entidad creada
-        servicioPersistencia.registrarEntidad(entidadCancion);
+        entidadCancion = servicioPersistencia.registrarEntidad(entidadCancion);
 
         //Actualizar el id del usuario
         cancion.setId(entidadCancion.getId());
@@ -64,6 +58,8 @@ public class AdaptadorCancionTDS implements IAdaptadorCancionDAO {
     @Override
     public void borrarCancion(Cancion cancion) {
     	Entidad entidadCancion;
+
+    	//TODO: Borrar cancion de playlist
         AdaptadorPlaylistTDS adaptadorPlaylistTDS = AdaptadorPlaylistTDS.getInstanciaUnica();
 
         entidadCancion = servicioPersistencia.recuperarEntidad(cancion.getId());
@@ -122,7 +118,7 @@ public class AdaptadorCancionTDS implements IAdaptadorCancionDAO {
                 servicioPersistencia.recuperarPropiedadEntidad(entidadCancion, "ruta");
 
         //TODO: Actualizar para soporte de varios interpretes
-        Cancion cancion = new Cancion(titulo, ruta, interprete);
+        Cancion cancion = new Cancion(codigo, titulo, ruta, estilo, interprete);
 
         PoolDAO.getInstanciaUnica().addObjeto(codigo, cancion);
 

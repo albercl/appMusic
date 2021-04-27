@@ -22,6 +22,4 @@ public class TDSFactoriaDAO extends FactoriaDAO {
     public IAdaptadorCancionDAO getCancionDAO() {
         return AdaptadorCancionTDS.getInstanciaUnica();
     }
-
-
 }

@@ -13,7 +13,7 @@ public class Cancion {
 	private String ruta;
 	
 	//Constructores
-	public Cancion(String titulo, String ruta, String... interpretes) {
+	public Cancion(int id, String titulo, String ruta, String estilo, String... interpretes) {
 		this.titulo = titulo;
 		this.ruta = ruta;
 		this.interpretes = Arrays.asList(interpretes);

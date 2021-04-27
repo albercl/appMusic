@@ -117,4 +117,8 @@ public class Playlist {
 	public String toString() {
 		return nombre;
 	}
+
+    public void setId(int id) {
+		this.id = id;
+    }
 }
