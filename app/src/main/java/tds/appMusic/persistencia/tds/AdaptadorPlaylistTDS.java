@@ -2,6 +2,7 @@ package tds.appMusic.persistencia.tds;
 
 import beans.Entidad;
 import beans.Propiedad;
+import tds.appMusic.modelo.AppMusic;
 import tds.appMusic.modelo.Cancion;
 import tds.appMusic.persistencia.PoolDAO;
 import tds.driver.FactoriaServicioPersistencia;
@@ -9,10 +10,8 @@ import tds.driver.ServicioPersistencia;
 import tds.appMusic.modelo.Playlist;
 import tds.appMusic.persistencia.IAdaptadorPlaylistDAO;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.time.LocalDate;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public class AdaptadorPlaylistTDS implements IAdaptadorPlaylistDAO {
@@ -64,9 +63,7 @@ public class AdaptadorPlaylistTDS implements IAdaptadorPlaylistDAO {
 
     @Override
     public void modificarPlaylist(Playlist playlist) {
-        Entidad entidadPlaylist;
-
-        entidadPlaylist = servicioPersistencia.recuperarEntidad(playlist.getId());
+        Entidad entidadPlaylist = servicioPersistencia.recuperarEntidad(playlist.getId());
 
         //Actualizar todas las propiedades de la cancion
         servicioPersistencia.eliminarPropiedadEntidad(entidadPlaylist, "nombre");
@@ -74,6 +71,7 @@ public class AdaptadorPlaylistTDS implements IAdaptadorPlaylistDAO {
 
         servicioPersistencia.eliminarPropiedadEntidad(entidadPlaylist, "canciones");
         servicioPersistencia.anadirPropiedadEntidad(entidadPlaylist, "canciones", songListToIdString(playlist.getSongs()));
+
     }
 
     @Override
@@ -86,12 +84,21 @@ public class AdaptadorPlaylistTDS implements IAdaptadorPlaylistDAO {
         String nombre = servicioPersistencia.recuperarPropiedadEntidad(entidadPlaylist, "nombre");
         String songs = servicioPersistencia.recuperarPropiedadEntidad(entidadPlaylist, "canciones");
 
-        return null;
+        Playlist pl = new Playlist(entidadPlaylist.getId(), nombre, idsToSongList(songs));
+        PoolDAO.getInstanciaUnica().addObjeto(entidadPlaylist.getId(), pl);
+
+        return pl;
     }
 
     @Override
     public List<Playlist> recuperarTodasPlaylists() {
-        return null;
+        List<Playlist> playlists = new LinkedList<>();
+        List<Entidad> entidadesPlaylist = servicioPersistencia.recuperarEntidades("playlist");
+
+        for(Entidad e : entidadesPlaylist)
+            playlists.add(recuperarPlaylist(e.getId()));
+
+        return playlists;
     }
 
     private String songListToIdString(List<Cancion> songs) {
@@ -99,7 +106,7 @@ public class AdaptadorPlaylistTDS implements IAdaptadorPlaylistDAO {
         for(Cancion cancion : songs)
             songsIds.append(cancion.getId()).append(" ");
 
-        return songsIds.toString();
+        return songsIds.toString().trim();
     }
 
     private List<Cancion> idsToSongList(String ids) {

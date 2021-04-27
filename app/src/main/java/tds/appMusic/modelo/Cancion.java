@@ -14,6 +14,7 @@ public class Cancion {
 	
 	//Constructores
 	public Cancion(int id, String titulo, String ruta, String estilo, String... interpretes) {
+		this.id = id;
 		this.titulo = titulo;
 		this.ruta = ruta;
 		this.interpretes = Arrays.asList(interpretes);
@@ -76,5 +77,16 @@ public class Cancion {
 
 			return result.toString();
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "Cancion{" +
+				"id=" + id +
+				", titulo='" + titulo + '\'' +
+				", interpretes=" + interpretes +
+				", estilo='" + estilo + '\'' +
+				", ruta='" + ruta + '\'' +
+				'}';
 	}
 }

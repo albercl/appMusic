@@ -68,9 +68,7 @@ public class AdaptadorCancionTDS implements IAdaptadorCancionDAO {
 
     @Override
     public void modificarCancion(Cancion cancion) {
-        Entidad entidadCancion;
-
-        entidadCancion = servicioPersistencia.recuperarEntidad(cancion.getId());
+        Entidad entidadCancion = servicioPersistencia.recuperarEntidad(cancion.getId());
 
         //Actualizar todas las propiedades de la cancion
         servicioPersistencia.eliminarPropiedadEntidad(entidadCancion, "titulo");
@@ -89,6 +87,7 @@ public class AdaptadorCancionTDS implements IAdaptadorCancionDAO {
         servicioPersistencia.eliminarPropiedadEntidad(entidadCancion, "ruta");
         servicioPersistencia.anadirPropiedadEntidad(entidadCancion, "ruta",
                                                     cancion.getRuta());
+
     }
 
     @Override

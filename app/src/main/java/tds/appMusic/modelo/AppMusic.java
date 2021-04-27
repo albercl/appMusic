@@ -36,7 +36,6 @@ public class AppMusic {
 	}
 
 	private AppMusic() {
-		users = CatalogoUsuarios.getUnicaInstancia();
 		player = new Reproductor();
 
 		try {
@@ -45,6 +44,8 @@ public class AppMusic {
 			e.printStackTrace();
 			System.exit(1);
 		}
+
+		users = CatalogoUsuarios.getUnicaInstancia(factoriaDAO);
 
 		try {
 			songs = new CatalogoCanciones(factoriaDAO.getCancionDAO());
@@ -76,6 +77,10 @@ public class AppMusic {
 		// a catalogo de usuarios
 		return users.register(nombreReal, fechaU, emailU, nombreU, passwordU);
 		// falla cuando nombre o correo ya registrados
+	}
+
+	public FactoriaDAO getFactoriaDAO() {
+		return factoriaDAO;
 	}
 
 	public boolean usernameExists(String username) {

@@ -21,6 +21,7 @@ import tds.appMusic.persistencia.tds.TDSFactoriaDAO;
 import um.tds.componente.Canciones;
 
 public class CatalogoCanciones {
+	//TODO: SINGLETON
 	private final static String SONGS_PATH = "C:\\tds\\canciones";
 	private String tempPath;
 

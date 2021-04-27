@@ -6,29 +6,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import tds.appMusic.persistencia.FactoriaDAO;
 import tds.appMusic.persistencia.IAdaptadorUsuarioDAO;
 
 public class CatalogoUsuarios {
 
-	/*
-			dao = FactoriaDAO.getInstancia(FactoriaDAO.DAO_TDS);
-			adaptadorUsuarios = dao.getUsuarioDAO();
-			 */
+	private static CatalogoUsuarios instanciaUnica;
+
 	private Map<String, Usuario> usersByUsername = new HashMap<>();
 	private Map<String, Usuario> usersByEmail = new HashMap<>();
-	private static CatalogoUsuarios unicaInstancia = new CatalogoUsuarios();
+
 	//private FactoriaDAO dao;
+	private FactoriaDAO factoriaDAO;
 	private IAdaptadorUsuarioDAO adaptadorUsuarios;
 
-	private CatalogoUsuarios() {
-		addUsuario(new Usuario("Luis Gregorio Martinez", new Date(System.currentTimeMillis()), "luisgreg77@gmail.com", "luisgrego_", "wsl2"));
-		addUsuario(new Usuario("alber", null, "alber@gmail.com", "albercl", "vivafli"));
-
-		//cargarCatalogoUsers();
+	private CatalogoUsuarios(FactoriaDAO factoriaDAO) {
+		this.adaptadorUsuarios = factoriaDAO.getUsuarioDAO();
+		cargarUsuariosPersistencia();
 	}
 
-	public static CatalogoUsuarios getUnicaInstancia() {
-		return unicaInstancia;
+	public static CatalogoUsuarios getUnicaInstancia(FactoriaDAO factoriaDAO) {
+		if (instanciaUnica == null)
+			instanciaUnica = new CatalogoUsuarios(factoriaDAO);
+
+		return instanciaUnica;
 	}
 
 	/* Devuelve todos los usuarios */
@@ -51,11 +52,13 @@ public class CatalogoUsuarios {
 	public void addUsuario(Usuario user) {
 		usersByUsername.put(user.getUsername(), user);
 		usersByEmail.put(user.getEmail(), user);
+		adaptadorUsuarios.registrarUsuario(user);
 	}
 
 	public void removeUsuario(Usuario user) {
 		usersByUsername.remove(user.getUsername());
 		usersByEmail.remove(user.getEmail());
+		adaptadorUsuarios.borrarUsuario(user);
 	}
 
 	/* Recupera todos los usuarios para trabajar con ellos en memoria */
@@ -76,11 +79,12 @@ public class CatalogoUsuarios {
 	}
 
 	public boolean register(String nombreReal, Date fechaU, String emailU, String nombreU, String passwordU) {
-		Usuario user1 = new Usuario(nombreReal, fechaU, emailU, nombreU, passwordU);
+		Usuario user1 = new Usuario(0, nombreReal, fechaU, emailU, nombreU, passwordU);
 		if (usersByUsername.containsKey(nombreU) || (usersByEmail.containsKey(emailU))) {
 			return false;
-		} else
+		} else {
 			addUsuario(user1);
+		}
 		return true;
 	}
 
@@ -88,4 +92,12 @@ public class CatalogoUsuarios {
 		return usersByUsername.containsKey(username);
 	}
 
+	private void cargarUsuariosPersistencia() {
+		List<Usuario> usuarios = adaptadorUsuarios.recuperarTodosUsuarios();
+
+		for(Usuario u : usuarios) {
+			usersByUsername.put(u.getUsername(), u);
+			usersByEmail.put(u.getEmail(), u);
+		}
+	}
 }
