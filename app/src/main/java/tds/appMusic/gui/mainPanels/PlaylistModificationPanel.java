@@ -64,8 +64,8 @@ public class PlaylistModificationPanel extends JPanel {
 		playlistNameField.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {
-				super.mouseClicked(mouseEvent);
-				playlistNameField.setText("");
+				if(selectedPlaylist == null)
+					playlistNameField.setText("");
 			}
 		});
 		

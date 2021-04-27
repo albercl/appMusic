@@ -2,11 +2,12 @@ package tds.appMusic.modelo;
 
 import tds.appMusic.modelo.util.PlaylistListener;
 import tds.appMusic.modelo.util.PremiumListener;
+import tds.appMusic.persistencia.DAOException;
+import tds.appMusic.persistencia.FactoriaDAO;
+import tds.appMusic.persistencia.IAdaptadorPlaylistDAO;
+import tds.appMusic.persistencia.IAdaptadorUsuarioDAO;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Usuario {
 
@@ -34,10 +35,13 @@ public class Usuario {
 
 	private final Map<Cancion, Integer> reproductions;
 	private List<Cancion> history;
+
+	private IAdaptadorPlaylistDAO adaptadorPlaylistDAO;
+	private IAdaptadorUsuarioDAO adaptadorUsuarioDAO;
 	
 	//Constructores
-	public Usuario(String nombreReal, Date fechaU, String emailU, String nombreU, String passwordU) {
-		this.id = 0;
+	public Usuario(int id, String nombreReal, Date fechaU, String emailU, String nombreU, String passwordU) {
+		this.id = id;
 		this.name = nombreReal;
 		this.birthdate = fechaU;
 		this.email = emailU;
@@ -50,21 +54,16 @@ public class Usuario {
 		reproductions = new HashMap<>();
 		playlistListeners = new LinkedList<>();
 		premiumListeners = new LinkedList<>();
+
+		try {
+			adaptadorPlaylistDAO = FactoriaDAO.getInstancia().getPlaylistDAO();
+			adaptadorUsuarioDAO = FactoriaDAO.getInstancia().getUsuarioDAO();
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	//Funciones
-	/**
-	 * Funcionalidad de usuario premium. Genera un PDF de la lista dada si el usuario es premium.
-	 * Para generar el archivo el usuario debe ser premium.
-	 * @param pl Playlist de la que generar el PDF
-	 * @return true si se ha generado el PDF, false si no se ha generado
-	 */
-	public boolean generarPDFPlaylist(Playlist pl) {
-		if(premium)
-			return pl.generarPDF();
-		
-		return false;
-	}
 
 	public String getName() {
 		return name;
@@ -124,12 +123,19 @@ public class Usuario {
 			return null;
 
 		playlists.put(name, pl);
+
+		adaptadorPlaylistDAO.registrarPlaylist(pl);
+		adaptadorUsuarioDAO.modificarUsuario(this);
+
 		notifyListeners();
 		return pl;
 	}
 
 	public void removePlaylist(String name) {
+		adaptadorPlaylistDAO.borrarPlaylist(playlists.get(name));
 		playlists.remove(name);
+		adaptadorUsuarioDAO.modificarUsuario(this);
+
 		notifyListeners();
 	}
 
@@ -181,7 +187,8 @@ public class Usuario {
 	}
 
     public void setPlaylists(List<Playlist> playlists) {
-		playlists.forEach(p -> addPlaylist(p.getNombre(), p.getSongs()));
+		this.playlists.clear();
+		playlists.forEach(p -> this.playlists.put(p.getNombre(), p));
     }
 
     public void addPlaylistListener(PlaylistListener listener) {
@@ -214,5 +221,16 @@ public class Usuario {
 		Date d = c.getTime();
 
 		return d.after(new Date(System.currentTimeMillis()));
+	}
+
+	@Override
+	public String toString() {
+		return "Usuario{" +
+				"id='" + id + '\'' +
+				"username='" + username + '\'' +
+				", password='" + password + '\'' +
+				", premium=" + premium +
+				", playlists=" + playlists +
+				'}';
 	}
 }

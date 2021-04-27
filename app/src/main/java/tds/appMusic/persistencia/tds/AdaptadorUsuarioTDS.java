@@ -7,7 +7,6 @@ import tds.driver.ServicioPersistencia;
 import tds.appMusic.modelo.Playlist;
 import tds.appMusic.modelo.Usuario;
 import tds.appMusic.persistencia.IAdaptadorUsuarioDAO;
-import tds.appMusic.persistencia.PoolDAO;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,22 +32,11 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
     @Override
     public void registrarUsuario(Usuario usuario) {
         Entidad entidadUsuario;
-        boolean existe = true;
 
         //Se comprueba si el usuario está registrado en el servicio de persistencia
-        try {
-            servicioPersistencia.recuperarEntidad(usuario.getId());
-        } catch (NullPointerException e) {
-            existe = false;
-        }
 
-        if(existe) return;
-
-        //Se registran las playlists del usuario
-        AdaptadorPlaylistTDS adaptadorPlaylistTDS = AdaptadorPlaylistTDS.getInstanciaUnica();
-        for(Playlist pl : usuario.getPlaylists()) {
-            adaptadorPlaylistTDS.registrarPlaylist(pl);
-        }
+        entidadUsuario = servicioPersistencia.recuperarEntidad(usuario.getId());
+        if(entidadUsuario != null) return;
 
         //Crear la entidad usuario
         entidadUsuario = new Entidad();
@@ -60,11 +48,11 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
                         new Propiedad("usuario", usuario.getUsername()),
                         new Propiedad("contrasena", usuario.getPassword()),
                         new Propiedad("premium", String.valueOf(usuario.isPremium())),
-                        new Propiedad("playlists", obtenerCodigosPlaylists(usuario.getPlaylists()))
+                        new Propiedad("playlists", playlistListToIdString(usuario.getPlaylists()))
         )));
 
         //Registrar la entidad creada
-        servicioPersistencia.registrarEntidad(entidadUsuario);
+        entidadUsuario = servicioPersistencia.registrarEntidad(entidadUsuario);
 
         //Actualizar el id del usuario
         usuario.setId(entidadUsuario.getId());
@@ -85,46 +73,41 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
     @Override
     public void modificarUsuario(Usuario usuario) {
-        Entidad entidadUsuario;
-
-        entidadUsuario = servicioPersistencia.recuperarEntidad(usuario.getId());
+        Entidad entidadUsuario = servicioPersistencia.recuperarEntidad(usuario.getId());
 
         //Actualizar todas las propiedades del usuario
-        servicioPersistencia.eliminarPropiedadEntidad(entidadUsuario, "nombre");
-        servicioPersistencia.anadirPropiedadEntidad(entidadUsuario, "nombre",
-                                                    usuario.getName());
+        for(Propiedad p : entidadUsuario.getPropiedades()) {
+            String name = p.getNombre();
+            switch (name) {
+                case "nombre":
+                    p.setValor(usuario.getName());
+                    break;
+                case "fechaNacimiento":
+                    p.setValor(dateFormat.format(usuario.getBirthdate()));
+                    break;
+                case "email":
+                    p.setValor(usuario.getEmail());
+                    break;
+                case "usuario":
+                    p.setValor(usuario.getUsername());
+                    break;
+                case "contrasena":
+                    p.setValor(usuario.getPassword());
+                    break;
+                case "premium":
+                    p.setValor(String.valueOf(usuario.isPremium()));
+                    break;
+                case "playlists":
+                    p.setValor(playlistListToIdString(usuario.getPlaylists()));
+                    break;
+            }
 
-        servicioPersistencia.eliminarPropiedadEntidad(entidadUsuario, "fechaNacimiento");
-        servicioPersistencia.anadirPropiedadEntidad(entidadUsuario, "fechaNacimiento",
-                                                    dateFormat.format(usuario.getBirthdate()));
-
-        servicioPersistencia.eliminarPropiedadEntidad(entidadUsuario, "email");
-        servicioPersistencia.anadirPropiedadEntidad(entidadUsuario, "email",
-                                                    usuario.getEmail());
-
-        servicioPersistencia.eliminarPropiedadEntidad(entidadUsuario, "usuario");
-        servicioPersistencia.anadirPropiedadEntidad(entidadUsuario, "usuario",
-                                                    usuario.getUsername());
-
-        servicioPersistencia.eliminarPropiedadEntidad(entidadUsuario, "contrasena");
-        servicioPersistencia.anadirPropiedadEntidad(entidadUsuario, "contrasena",
-                                                    usuario.getPassword());
-
-        servicioPersistencia.eliminarPropiedadEntidad(entidadUsuario, "premium");
-        servicioPersistencia.anadirPropiedadEntidad(entidadUsuario, "premium",
-                                                    String.valueOf(usuario.isPremium()));
-
-        servicioPersistencia.eliminarPropiedadEntidad(entidadUsuario, "playlists");
-        servicioPersistencia.anadirPropiedadEntidad(entidadUsuario, "playlists",
-                                                    obtenerCodigosPlaylists(usuario.getPlaylists()));
+            servicioPersistencia.modificarPropiedad(p);
+        }
     }
 
     @Override
     public Usuario recuperarUsuario(int codigo) {
-        //Comprobar si la entidad esta en el pool
-        if (PoolDAO.getInstanciaUnica().contiene(codigo))
-            return (Usuario) PoolDAO.getInstanciaUnica().getObjeto(codigo);
-
         //Si no recuperar de la base de datos
         Entidad entidadUsuario = servicioPersistencia.recuperarEntidad(codigo);
         String nombreReal;
@@ -156,16 +139,14 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
         passwordU = servicioPersistencia.recuperarPropiedadEntidad(entidadUsuario, "contrasena");
         
         
-        Usuario usuario = new Usuario(nombreReal, fechaU, emailU, nombreU, passwordU);
-        PoolDAO.getInstanciaUnica().addObjeto(codigo, usuario);
+        Usuario usuario = new Usuario(entidadUsuario.getId(), nombreReal, fechaU, emailU, nombreU, passwordU);
 
         //Recuperar entidades que son objetos
         //Playlists
         usuario.setPlaylists(
-                recuperarPlaylistsDesdeCodigos(
+                idsToPlaylistList(
                         servicioPersistencia.recuperarPropiedadEntidad(entidadUsuario, "playlists")));
 
-        
         return usuario;
     }
 
@@ -180,24 +161,23 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
         return usuarios;
     }
 
-    private String obtenerCodigosPlaylists(List<Playlist> playlists) {
-        StringBuilder codigos = new StringBuilder();
+    private String playlistListToIdString(List<Playlist> playlists) {
+        StringBuilder playlistsIds = new StringBuilder();
+        for(Playlist playlist : playlists)
+            playlistsIds.append(playlist.getId()).append(" ");
 
-        for(Playlist pl : playlists) {
-            codigos.append(pl.getId()).append(' ');
-        }
-
-        return codigos.toString().trim();
+        return playlistsIds.toString().trim();
     }
 
-    private List<Playlist> recuperarPlaylistsDesdeCodigos(String codigos) {
+    private List<Playlist> idsToPlaylistList(String ids) {
         List<Playlist> playlists = new LinkedList<>();
+        StringTokenizer tokenizer = new StringTokenizer(ids, " ");
 
         AdaptadorPlaylistTDS adaptadorPlaylistTDS = AdaptadorPlaylistTDS.getInstanciaUnica();
-        Arrays.stream(codigos.split(" ")).forEach(c -> {
-            int cInt = Integer.parseInt(c);
-            playlists.add(adaptadorPlaylistTDS.recuperarPlaylist(cInt));
-        });
+
+        while(tokenizer.hasMoreTokens()) {
+            playlists.add(adaptadorPlaylistTDS.recuperarPlaylist(Integer.parseInt((String) tokenizer.nextElement())));
+        }
 
         return playlists;
     }

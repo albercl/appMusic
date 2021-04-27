@@ -35,6 +35,12 @@ public class Playlist {
 		this.nombre = name;
 		this.canciones = new LinkedList<>(songs);
 	}
+
+	public Playlist(int id, String name, List<Cancion> songs) {
+		this.id = id;
+		this.nombre = name;
+		this.canciones = new LinkedList<>(songs);
+	}
 	
 	/**
 	 * @param cancion Añade una canción al final de la playlist
@@ -118,7 +124,7 @@ public class Playlist {
 		return nombre;
 	}
 
-    public void setId(int id) {
+	public void setId(int id) {
 		this.id = id;
     }
 }
