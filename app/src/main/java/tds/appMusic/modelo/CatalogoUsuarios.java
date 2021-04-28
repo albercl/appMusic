@@ -79,7 +79,7 @@ public class CatalogoUsuarios {
 	}
 
 	public boolean register(String nombreReal, Date fechaU, String emailU, String nombreU, String passwordU) {
-		Usuario user1 = new Usuario(0, nombreReal, fechaU, emailU, nombreU, passwordU);
+		Usuario user1 = new Usuario(0, nombreReal, fechaU, emailU, nombreU, passwordU, false);
 		if (usersByUsername.containsKey(nombreU) || (usersByEmail.containsKey(emailU))) {
 			return false;
 		} else {

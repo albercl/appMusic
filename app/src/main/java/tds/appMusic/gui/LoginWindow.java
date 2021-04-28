@@ -77,7 +77,6 @@ public class LoginWindow {
 
 	/**
 	 * Create the application.
-	 * @wbp.parser.entryPoint
 	 */
 	public LoginWindow() {
 		initialize();
@@ -222,10 +221,6 @@ public class LoginWindow {
 		registerButton.setForeground(Color.WHITE);
 		registerPanel.add(registerButton);
 		registerButton.setFont(new Font("Tahoma", Font.BOLD, 13));
-		
-
-		userField.setText("luisgrego_");
-		passwordField.setText("wsl2");
 		
 		verticalStrut = Box.createVerticalStrut(20);
 		GridBagConstraints gbc_verticalStrut = new GridBagConstraints();

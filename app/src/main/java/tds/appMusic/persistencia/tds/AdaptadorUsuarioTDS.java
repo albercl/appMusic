@@ -2,6 +2,8 @@ package tds.appMusic.persistencia.tds;
 
 import beans.Entidad;
 import beans.Propiedad;
+import tds.appMusic.modelo.Cancion;
+import tds.appMusic.persistencia.PoolDAO;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 import tds.appMusic.modelo.Playlist;
@@ -29,6 +31,8 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
         dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     }
 
+    private final PoolDAO pool = PoolDAO.getInstanciaUnica();
+
     @Override
     public void registrarUsuario(Usuario usuario) {
         Entidad entidadUsuario;
@@ -48,7 +52,8 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
                         new Propiedad("usuario", usuario.getUsername()),
                         new Propiedad("contrasena", usuario.getPassword()),
                         new Propiedad("premium", String.valueOf(usuario.isPremium())),
-                        new Propiedad("playlists", playlistListToIdString(usuario.getPlaylists()))
+                        new Propiedad("playlists", listToIdString(usuario.getPlaylists())),
+                        new Propiedad("recientes", listToIdString(usuario.getHistory().subList(0, 9)))
         )));
 
         //Registrar la entidad creada
@@ -98,7 +103,10 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
                     p.setValor(String.valueOf(usuario.isPremium()));
                     break;
                 case "playlists":
-                    p.setValor(playlistListToIdString(usuario.getPlaylists()));
+                    p.setValor(listToIdString(usuario.getPlaylists()));
+                    break;
+                case "recientes":
+                    p.setValor(listToIdString(usuario.getHistory().subList(0, 9)));
                     break;
             }
 
@@ -108,6 +116,8 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
     @Override
     public Usuario recuperarUsuario(int codigo) {
+        if(pool.contiene(codigo)) return (Usuario) pool.getObjeto(codigo);
+
         //Si no recuperar de la base de datos
         Entidad entidadUsuario = servicioPersistencia.recuperarEntidad(codigo);
         String nombreReal;
@@ -115,6 +125,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
         String emailU;
         String nombreU;
         String passwordU;
+        boolean premium;
 
         //Recuperar entidades que no son objetos
         //Fecha
@@ -137,15 +148,25 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
         //Contraseña
         passwordU = servicioPersistencia.recuperarPropiedadEntidad(entidadUsuario, "contrasena");
+
+        premium = Boolean.parseBoolean(servicioPersistencia.recuperarPropiedadEntidad(entidadUsuario, "premium"));
         
         
-        Usuario usuario = new Usuario(entidadUsuario.getId(), nombreReal, fechaU, emailU, nombreU, passwordU);
+        Usuario usuario = new Usuario(entidadUsuario.getId(), nombreReal, fechaU, emailU, nombreU, passwordU, premium);
 
         //Recuperar entidades que son objetos
         //Playlists
         usuario.setPlaylists(
-                idsToPlaylistList(
-                        servicioPersistencia.recuperarPropiedadEntidad(entidadUsuario, "playlists")));
+                idStringToPlaylistList(
+                        servicioPersistencia.recuperarPropiedadEntidad(entidadUsuario, "playlists"))
+        );
+
+        usuario.setHistory(
+                idStringToSongList(
+                        servicioPersistencia.recuperarPropiedadEntidad(entidadUsuario, "recientes"))
+        );
+
+        pool.addObjeto(entidadUsuario.getId(), usuario);
 
         return usuario;
     }
@@ -161,15 +182,22 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
         return usuarios;
     }
 
-    private String playlistListToIdString(List<Playlist> playlists) {
-        StringBuilder playlistsIds = new StringBuilder();
-        for(Playlist playlist : playlists)
-            playlistsIds.append(playlist.getId()).append(" ");
+    private String listToIdString(List<?> list) {
+        StringBuilder ids = new StringBuilder();
+        for(Object o : list) {
+            if (o instanceof Playlist) {
+                Playlist pl = (Playlist) o;
+                ids.append(pl.getId()).append(" ");
+            } else if (o instanceof Cancion) {
+                Cancion c = (Cancion) o;
+                ids.append(c.getId()).append(" ");
+            }
+        }
 
-        return playlistsIds.toString().trim();
+        return ids.toString().trim();
     }
 
-    private List<Playlist> idsToPlaylistList(String ids) {
+    private List<Playlist> idStringToPlaylistList(String ids) {
         List<Playlist> playlists = new LinkedList<>();
         StringTokenizer tokenizer = new StringTokenizer(ids, " ");
 
@@ -180,5 +208,18 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
         }
 
         return playlists;
+    }
+
+    private List<Cancion> idStringToSongList(String ids) {
+        List<Cancion> canciones = new LinkedList<>();
+        StringTokenizer tokenizer = new StringTokenizer(ids, " ");
+
+        AdaptadorCancionTDS adaptadorCancionTDS = AdaptadorCancionTDS.getInstanciaUnica();
+
+        while(tokenizer.hasMoreTokens()) {
+            canciones.add(adaptadorCancionTDS.recuperarCancion(Integer.parseInt((String) tokenizer.nextElement())));
+        }
+
+        return canciones;
     }
 }

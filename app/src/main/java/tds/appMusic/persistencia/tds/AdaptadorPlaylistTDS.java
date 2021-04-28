@@ -2,6 +2,7 @@ package tds.appMusic.persistencia.tds;
 
 import beans.Entidad;
 import beans.Propiedad;
+import com.sun.jndi.ldap.pool.Pool;
 import tds.appMusic.modelo.AppMusic;
 import tds.appMusic.modelo.Cancion;
 import tds.appMusic.persistencia.PoolDAO;
@@ -28,6 +29,8 @@ public class AdaptadorPlaylistTDS implements IAdaptadorPlaylistDAO {
     private AdaptadorPlaylistTDS() {
         servicioPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
     }
+
+    private final PoolDAO pool = PoolDAO.getInstanciaUnica();
 
     @Override
     public void registrarPlaylist(Playlist playlist) {
@@ -76,8 +79,8 @@ public class AdaptadorPlaylistTDS implements IAdaptadorPlaylistDAO {
 
     @Override
     public Playlist recuperarPlaylist(int codigo) {
-        if(PoolDAO.getInstanciaUnica().contiene(codigo))
-            return (Playlist) PoolDAO.getInstanciaUnica().getObjeto(codigo);
+        if (pool.contiene(codigo))
+            return (Playlist) pool.getObjeto(codigo);
 
         Entidad entidadPlaylist = servicioPersistencia.recuperarEntidad(codigo);
 
@@ -85,7 +88,9 @@ public class AdaptadorPlaylistTDS implements IAdaptadorPlaylistDAO {
         String songs = servicioPersistencia.recuperarPropiedadEntidad(entidadPlaylist, "canciones");
 
         Playlist pl = new Playlist(entidadPlaylist.getId(), nombre, idsToSongList(songs));
-        PoolDAO.getInstanciaUnica().addObjeto(entidadPlaylist.getId(), pl);
+
+
+        pool.addObjeto(entidadPlaylist.getId(), pl);
 
         return pl;
     }

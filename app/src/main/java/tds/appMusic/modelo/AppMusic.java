@@ -46,14 +46,8 @@ public class AppMusic {
 		}
 
 		users = CatalogoUsuarios.getUnicaInstancia(factoriaDAO);
+		songs = CatalogoCanciones.getInstanciaUnica(factoriaDAO);
 
-		try {
-			songs = new CatalogoCanciones(factoriaDAO.getCancionDAO());
-		} catch (Exception e) {
-			System.err.println("Algo ha ocurrido al intentar cargar las canciones");
-			e.printStackTrace();
-			System.exit(1);
-		}
 
 		addListenerToCargador(this::nuevasCanciones);
 	}
@@ -77,6 +71,10 @@ public class AppMusic {
 		// a catalogo de usuarios
 		return users.register(nombreReal, fechaU, emailU, nombreU, passwordU);
 		// falla cuando nombre o correo ya registrados
+	}
+
+	public Usuario getLoggedUser() {
+		return loggedUser;
 	}
 
 	public FactoriaDAO getFactoriaDAO() {
@@ -170,14 +168,6 @@ public class AppMusic {
 
 	public boolean isPremium() {
 		return loggedUser.isPremium();
-	}
-
-	public boolean isElder() {
-		return loggedUser.isElder();
-	}
-
-	public boolean isYoung() {
-		return loggedUser.isYoung();
 	}
 
 	public void setPremium(boolean premium) {

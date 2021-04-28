@@ -19,12 +19,12 @@ public class Usuario {
 
 	//Datos personales
 	private String name;
-	private Date birthdate;
-	private String email;
+	private final Date birthdate;
+	private final String email;
 	
 	//Credenciales
-	private String username;
-	private String password;
+	private final String username;
+	private final String password;
 	
 	//Datos de la cuenta
 	private boolean premium;
@@ -36,24 +36,33 @@ public class Usuario {
 	private final Map<Cancion, Integer> reproductions;
 	private List<Cancion> history;
 
+	private final List<IDescuento> descuentos;
+
 	private IAdaptadorPlaylistDAO adaptadorPlaylistDAO;
 	private IAdaptadorUsuarioDAO adaptadorUsuarioDAO;
 	
 	//Constructores
-	public Usuario(int id, String nombreReal, Date fechaU, String emailU, String nombreU, String passwordU) {
+	public Usuario(int id, String nombreReal, Date fechaU, String emailU, String nombreU, String passwordU, boolean premium) {
 		this.id = id;
 		this.name = nombreReal;
 		this.birthdate = fechaU;
 		this.email = emailU;
 		this.username = nombreU;
 		this.password = passwordU;
-		this.premium = false;
+		this.premium = premium;
 
 		playlists = new HashMap<>();
 		history = new LinkedList<>();
 		reproductions = new HashMap<>();
 		playlistListeners = new LinkedList<>();
 		premiumListeners = new LinkedList<>();
+		descuentos = new LinkedList<>();
+
+		if(isYoung())
+			descuentos.add(new DescuentoJoven());
+
+		if(isElder())
+			descuentos.add(new DescuentoJoven());
 
 		try {
 			adaptadorPlaylistDAO = FactoriaDAO.getInstancia().getPlaylistDAO();
@@ -91,6 +100,8 @@ public class Usuario {
 		for (PremiumListener l : premiumListeners) {
 			l.premiumChanged(this, premium);
 		}
+
+		adaptadorUsuarioDAO.modificarUsuario(this);
 	}
 
 	public void addPremiumListener(PremiumListener listener) {
@@ -103,10 +114,6 @@ public class Usuario {
 
 	public Date getBirthdate() {
 		return birthdate;
-	}
-
-	public void setBirthdate(Date birthdate) {
-		this.birthdate = birthdate;
 	}
 
 	public List<Playlist> getPlaylists() {
@@ -143,33 +150,19 @@ public class Usuario {
 		return password;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
 	public String getEmail() {
 		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 	public String getUsername() {
 		return username;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
 	public List<Cancion> getHistory() {
 		return new LinkedList<>(history);
 	}
 
-	public void setHistory(List<Cancion> history) {
-		this.history = history;
-	}
+	public void setHistory(List<Cancion> history) {this.history = history; }
 
 	public Map<Cancion, Integer> getReproductions() {
 		return new HashMap<>(reproductions);
@@ -195,17 +188,27 @@ public class Usuario {
 		playlistListeners.add(listener);
 	}
 
-	public void removePlaylistListener(PlaylistListener listener) {
-		playlistListeners.remove(listener);
-	}
-
 	private void notifyListeners() {
 		for (PlaylistListener l : playlistListeners) {
 			l.playlistListChanged(new ArrayList<>(playlists.values()));
 		}
 	}
 
-	public boolean isElder() {
+	public IDescuento getMejorDescuento() {
+		if(descuentos.isEmpty())
+			return null;
+
+		IDescuento mejorDescuento = descuentos.get(0);
+
+		for(IDescuento descuento : descuentos) {
+			if(descuento.getDescuento() < mejorDescuento.getDescuento())
+				mejorDescuento = descuento;
+		}
+
+		return mejorDescuento;
+	}
+
+	private boolean isElder() {
 		Calendar c = Calendar.getInstance();
 		c.setTime(birthdate);
 		c.add(Calendar.YEAR, ELDER_MIN_AGE);
@@ -214,7 +217,7 @@ public class Usuario {
 		return d.before(new Date(System.currentTimeMillis()));
 	}
 
-	public boolean isYoung() {
+	private boolean isYoung() {
 		Calendar c = Calendar.getInstance();
 		c.setTime(birthdate);
 		c.add(Calendar.YEAR, YOUNG_MAX_AGE);

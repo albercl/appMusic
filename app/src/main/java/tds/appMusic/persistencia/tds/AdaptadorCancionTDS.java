@@ -29,6 +29,8 @@ public class AdaptadorCancionTDS implements IAdaptadorCancionDAO {
         servicioPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
     }
 
+    private final PoolDAO pool = PoolDAO.getInstanciaUnica();
+
     @Override
     public void registrarCancion(Cancion cancion) {
     	Entidad entidadCancion;
@@ -93,8 +95,8 @@ public class AdaptadorCancionTDS implements IAdaptadorCancionDAO {
     @Override
     public Cancion recuperarCancion(int codigo) {
         //Comprobar si la entidad esta en el pool
-        if (PoolDAO.getInstanciaUnica().contiene(codigo))
-            return (Cancion) PoolDAO.getInstanciaUnica().getObjeto(codigo);
+        if (pool.contiene(codigo))
+            return (Cancion) pool.getObjeto(codigo);
 
         //Si no recuperar de la base de datos
         Entidad entidadCancion = servicioPersistencia.recuperarEntidad(codigo);
@@ -119,7 +121,7 @@ public class AdaptadorCancionTDS implements IAdaptadorCancionDAO {
         //TODO: Actualizar para soporte de varios interpretes
         Cancion cancion = new Cancion(codigo, titulo, ruta, estilo, interprete);
 
-        PoolDAO.getInstanciaUnica().addObjeto(codigo, cancion);
+       pool.addObjeto(codigo, cancion);
 
         return cancion;
     }

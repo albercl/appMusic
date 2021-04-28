@@ -27,6 +27,9 @@ import com.github.weisj.darklaf.settings.ThemeSettings;
 import com.github.weisj.darklaf.theme.DarculaTheme;
 
 import tds.appMusic.modelo.AppMusic;
+import tds.appMusic.modelo.IDescuento;
+import tds.appMusic.modelo.Usuario;
+
 import javax.swing.Box;
 import java.awt.SystemColor;
 import java.awt.event.ActionListener;
@@ -36,7 +39,11 @@ public class PremiumWindow {
 
 	private JFrame frame;
 
-	private AppMusic controlador;
+	private final AppMusic controlador;
+	private final Usuario loggedUser;
+
+	private static final float PRECIO = 50f;
+
 	private ImageIcon iconoAppMusic;
 	private JPanel loginPanel;
 	private GridBagLayout gbl_loginPanel;
@@ -81,6 +88,10 @@ public class PremiumWindow {
 	 * Create the application.
 	 */
 	public PremiumWindow() {
+		controlador = AppMusic.getInstanciaUnica();
+		loggedUser = controlador.getLoggedUser();
+
+
 		initialize();
 	}
 	
@@ -92,8 +103,6 @@ public class PremiumWindow {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		controlador = AppMusic.getInstanciaUnica();
-
 		frame = new JFrame();
 		frame.setTitle("AppMusic Premium");
 		frame.setBounds(630, 300, 730, 450);
@@ -159,12 +168,22 @@ public class PremiumWindow {
 		gbc_lblahorra.gridx = 0;
 		gbc_lblahorra.gridy = 5;
 
-		if(controlador.isElder()) {
-			lblahorra.setText("<html>\r\n<p><span style=\"color: #FFA500\">Descuento del 50% (usuario mayor de 65 años)</p>\r\n</html>");
-			lblNewLabel.setText("<html>\r\n<p>Precio final: <span style=\"color: #af1c2f\"><strike>50$</strike></span> --> <span style=\"color: green\"><u>25$</u></p>\r\n</html>");
-		} else if(controlador.isYoung()) {
-			lblahorra.setText("<html>\r\n<p><span style=\"color: #FFA500\">Descuento del 20% (usuario menor de 25 años)</p>\r\n</html>");
-			lblNewLabel.setText("<html>\r\n<p>Precio final: <span style=\"color: #af1c2f\"><strike>50$</strike></span> --> <span style=\"color: green\"><u>40$</u></p>\r\n</html>");
+		IDescuento mejorDescuento = loggedUser.getMejorDescuento();
+
+		if(mejorDescuento != null) {
+			StringBuilder sb = new StringBuilder();
+			sb.append("<html>\r\n<p><span style=\"color: #FFA500\">")
+					.append(mejorDescuento.getTextoDescuento())
+					.append("</p>\r\n</html>");
+			lblahorra.setText(sb.toString());
+
+			sb = new StringBuilder();
+			sb.append("<html>\r\n<p>Precio final: <span style=\"color: #af1c2f\"><strike>")
+					.append(PRECIO)
+					.append("$</strike></span> --> <span style=\"color: green\"><u>")
+					.append(mejorDescuento.getPrecioFinal(PRECIO))
+					.append("$</u></p>\r\n</html>");
+			lblNewLabel.setText(sb.toString());
 		} else {
 			lblNewLabel.setText("<html>\r\n<p>Precio final: <span style=\"color: green\"><u>50$</u></p>\r\n</html>");
 			lblahorra.setText("<html>\r\n<p><span style=\"color: #FFA500\">No tienes ningún descuento disponible :(</p>\r\n</html>");

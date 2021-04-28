@@ -21,31 +21,46 @@ import tds.appMusic.persistencia.tds.TDSFactoriaDAO;
 import um.tds.componente.Canciones;
 
 public class CatalogoCanciones {
-	//TODO: SINGLETON
-	private final static String SONGS_PATH = "C:\\tds\\canciones";
-	private String tempPath;
+	private static final String SONGS_PATH = "C:\\tds\\canciones";
+
+	private static CatalogoCanciones instancia;
+
+	public static CatalogoCanciones getInstanciaUnica(FactoriaDAO factoria) {
+		if(instancia != null) {
+			try {
+				instancia = new CatalogoCanciones(factoria);
+			} catch (Exception e) {
+				System.out.println("No se han podido cargar las canciones...");
+				e.printStackTrace();
+
+				System.exit(1);
+			}
+		}
+
+		return instancia;
+	}
 
 	private final IAdaptadorCancionDAO adaptador;
 
     private List<Cancion> canciones;
-    
-    public CatalogoCanciones(IAdaptadorCancionDAO adaptador) throws Exception {
-    	this.adaptador = adaptador;
-		String binPath = CatalogoCanciones.class.getClassLoader().getResource(".").getPath();
-		binPath = binPath.replaceFirst("/", "");
+
+	private CatalogoCanciones(FactoriaDAO factoria) throws Exception {
+		this.adaptador = factoria.getCancionDAO();
+
+		String binPath = CatalogoCanciones.class.getClassLoader().getResource(".").getPath().replaceFirst("/", "");
+
 		// quitar "/" añadida al inicio del path en plataforma Windows
-		tempPath = binPath.replace("/bin", "/temp");
 
-    	canciones = adaptador.recuperarTodasCanciones();
+		canciones = adaptador.recuperarTodasCanciones();
 
-    	//Si no hay canciones en la persistencia, se cargan de disco
-    	if(canciones.isEmpty()) {
+		//Si no hay canciones en la persistencia, se cargan de disco
+		if(canciones.isEmpty()) {
 			cargarCanciones();
 
 			for(Cancion cancion : canciones)
 				adaptador.registrarCancion(cancion);
 		}
-    }
+	}
 
     public List<Cancion> getCanciones() {
         return canciones;
@@ -151,14 +166,14 @@ public class CatalogoCanciones {
 					Files.copy(stream, song);
 				}
 
-				StringBuilder builder = new StringBuilder();
-				builder.append(cancion.getEstilo().toUpperCase()).append('/')
-						.append(cancion.getInterprete()).append(" - ").append(cancion.getTitulo())
-						.append(".mp3");
+				String builder =
+						cancion.getEstilo().toUpperCase() + '/' +
+						cancion.getInterprete() + " - " + cancion.getTitulo() +
+						".mp3";
 
 				Cancion c = new Cancion(0,
 						cancion.getTitulo(),
-						builder.toString(),
+						builder,
 						cancion.getEstilo().toUpperCase(),
 						cancion.getInterprete());
 
