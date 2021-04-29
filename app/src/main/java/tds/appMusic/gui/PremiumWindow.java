@@ -17,8 +17,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 
@@ -31,9 +29,6 @@ import tds.appMusic.modelo.IDescuento;
 import tds.appMusic.modelo.Usuario;
 
 import javax.swing.Box;
-import java.awt.SystemColor;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class PremiumWindow {
 
@@ -45,27 +40,27 @@ public class PremiumWindow {
 	private static final float PRECIO = 50f;
 
 	private ImageIcon iconoAppMusic;
-	private JPanel loginPanel;
-	private GridBagLayout gbl_loginPanel;
-	private JLabel titleLabel;// load the image to a imageIcon
+	private JPanel mainPanel;
+	private GridBagLayout gbl_mainPanel;
+	private JLabel premiumLabel;// load the image to a imageIcon
 	private ImageIcon imageIcon;// transform it
 	private Image image;// scale it the smooth way
 	private Image newimg;
-	private GridBagConstraints gbc_titleLabel;
-	private JLabel userLabel;
-	private GridBagConstraints gbc_userLabel;
-	private JButton loginButton;
-	private GridBagConstraints gbc_loginButton;
+	private GridBagConstraints gbc_premiumLabel;
+	private JLabel premiumLabel2;
+	private GridBagConstraints gbc_premiumLabel2;
+	private JButton button;
+	private GridBagConstraints gbc_button;
 	private JPanel registerPanel;
 	private Component verticalStrut;
-	private JLabel lblNewLabel;
+	private JLabel priceLabel;
 	private JLabel pdfIconLabel;
 	private JLabel masEscuchadasLabel;
-	private JLabel lblHola;
+	private JLabel ventajasLabel;
 	private JLabel signoLabel_1;
-	private JLabel lblahorra;
-	private JLabel lblNewLabel_1;
-	private JLabel lblNewLabel_2;
+	private JLabel descuentoLabel;
+	private JLabel separatorLabel;
+	private JLabel separatorLabel2;
 
 	/**
 	 * Launch the application.
@@ -111,62 +106,62 @@ public class PremiumWindow {
 		frame.setIconImage(iconoAppMusic.getImage());
 
 
-		loginPanel = new JPanel();
-		frame.getContentPane().add(loginPanel, BorderLayout.CENTER);
-		gbl_loginPanel = new GridBagLayout();
-		gbl_loginPanel.columnWidths = new int[] {200, 0};
-		gbl_loginPanel.rowHeights = new int[] {0, 30, 30, 30, 30, 0, 0, 0, 30, 0};
-		gbl_loginPanel.columnWeights = new double[]{0.0, 0.0};
-		gbl_loginPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-		loginPanel.setLayout(gbl_loginPanel);
+		mainPanel = new JPanel();
+		frame.getContentPane().add(mainPanel, BorderLayout.CENTER);
+		gbl_mainPanel = new GridBagLayout();
+		gbl_mainPanel.columnWidths = new int[] {200, 0};
+		gbl_mainPanel.rowHeights = new int[] {0, 30, 30, 30, 30, 0, 0, 0, 30, 0};
+		gbl_mainPanel.columnWeights = new double[]{0.0, 0.0};
+		gbl_mainPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+		mainPanel.setLayout(gbl_mainPanel);
 
-		titleLabel = new JLabel("<html><p><b><span style=\"color: #2271b3\">AppMusic<span style=\"color: #DAA520\"> Premium</span></b></p></html>");
+		premiumLabel = new JLabel("<html><p><b><span style=\"color: #2271b3\">AppMusic<span style=\"color: #DAA520\"> Premium</span></b></p></html>");
 		imageIcon = new ImageIcon(GuiUtils.loadImage("icons/iconoPremium.png"));
 		image = imageIcon.getImage();
 		newimg = image.getScaledInstance(40, 40,  Image.SCALE_SMOOTH);
 		imageIcon = new ImageIcon(newimg);
-		titleLabel.setIcon(imageIcon);
-		titleLabel.setForeground(new Color(218, 165, 32));
-		titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-		gbc_titleLabel = new GridBagConstraints();
-		gbc_titleLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_titleLabel.gridx = 0;
-		gbc_titleLabel.gridy = 0;
+		premiumLabel.setIcon(imageIcon);
+		premiumLabel.setForeground(new Color(218, 165, 32));
+		premiumLabel.setFont(new Font("Arial", Font.BOLD, 24));
+		gbc_premiumLabel = new GridBagConstraints();
+		gbc_premiumLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_premiumLabel.gridx = 0;
+		gbc_premiumLabel.gridy = 0;
 
-		loginPanel.add(titleLabel, gbc_titleLabel);
+		mainPanel.add(premiumLabel, gbc_premiumLabel);
 		
-		userLabel = new JLabel("<html>\r\n<p>Pásate ya a <span style=\"color: #daa520\">Premium</span> y</p><p>empieza a disfrutar de múltiples <u><span style=\"color: #2271b3\">ventajas</u></span>.</p>\r\n<html>");
-		userLabel.setBackground(new Color(0, 0, 0));
-		userLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		userLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-		gbc_userLabel = new GridBagConstraints();
-		gbc_userLabel.fill = GridBagConstraints.BOTH;
-		gbc_userLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_userLabel.gridx = 0;
-		gbc_userLabel.gridy = 2;
-		loginPanel.add(userLabel, gbc_userLabel);
+		premiumLabel2 = new JLabel("<html>\r\n<p>Pásate ya a <span style=\"color: #daa520\">Premium</span> y</p><p>empieza a disfrutar de múltiples <u><span style=\"color: #2271b3\">ventajas</u></span>.</p>\r\n<html>");
+		premiumLabel2.setBackground(new Color(0, 0, 0));
+		premiumLabel2.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		premiumLabel2.setVerticalAlignment(SwingConstants.BOTTOM);
+		gbc_premiumLabel2 = new GridBagConstraints();
+		gbc_premiumLabel2.fill = GridBagConstraints.BOTH;
+		gbc_premiumLabel2.insets = new Insets(0, 0, 5, 5);
+		gbc_premiumLabel2.gridx = 0;
+		gbc_premiumLabel2.gridy = 2;
+		mainPanel.add(premiumLabel2, gbc_premiumLabel2);
 		
-		lblNewLabel_1 = new JLabel("-----------------------------------------------------------------------------------------------------------");
-		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
-		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_1.gridx = 0;
-		gbc_lblNewLabel_1.gridy = 3;
-		loginPanel.add(lblNewLabel_1, gbc_lblNewLabel_1);
+		separatorLabel = new JLabel("-----------------------------------------------------------------------------------------------------------");
+		GridBagConstraints gbc_separatorLabel = new GridBagConstraints();
+		gbc_separatorLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_separatorLabel.gridx = 0;
+		gbc_separatorLabel.gridy = 3;
+		mainPanel.add(separatorLabel, gbc_separatorLabel);
 		
-		lblNewLabel = new JLabel("<html>\r\n<p>Precio final: <span style=\"color: #af1c2f\"><strike>50$</strike></span> --> <span style=\"color: green\"><u>25$</u></p>\r\n</html>");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 35));
-		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel.gridx = 0;
-		gbc_lblNewLabel.gridy = 4;
-		loginPanel.add(lblNewLabel, gbc_lblNewLabel);
+		priceLabel = new JLabel();
+		priceLabel.setFont(new Font("Tahoma", Font.PLAIN, 35));
+		GridBagConstraints gbc_priceLabel = new GridBagConstraints();
+		gbc_priceLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_priceLabel.gridx = 0;
+		gbc_priceLabel.gridy = 4;
+		mainPanel.add(priceLabel, gbc_priceLabel);
 		
-		lblahorra = new JLabel();
-		lblahorra.setFont(new Font("Tahoma", Font.BOLD, 14));
-		GridBagConstraints gbc_lblahorra = new GridBagConstraints();
-		gbc_lblahorra.insets = new Insets(0, 0, 5, 5);
-		gbc_lblahorra.gridx = 0;
-		gbc_lblahorra.gridy = 5;
+		descuentoLabel = new JLabel();
+		descuentoLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+		GridBagConstraints gbc_descuentoLabel = new GridBagConstraints();
+		gbc_descuentoLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_descuentoLabel.gridx = 0;
+		gbc_descuentoLabel.gridy = 5;
 
 		IDescuento mejorDescuento = loggedUser.getMejorDescuento();
 
@@ -175,7 +170,7 @@ public class PremiumWindow {
 			sb.append("<html>\r\n<p><span style=\"color: #FFA500\">")
 					.append(mejorDescuento.getTextoDescuento())
 					.append("</p>\r\n</html>");
-			lblahorra.setText(sb.toString());
+			descuentoLabel.setText(sb.toString());
 
 			sb = new StringBuilder();
 			sb.append("<html>\r\n<p>Precio final: <span style=\"color: #af1c2f\"><strike>")
@@ -183,40 +178,40 @@ public class PremiumWindow {
 					.append("$</strike></span> --> <span style=\"color: green\"><u>")
 					.append(mejorDescuento.getPrecioFinal(PRECIO))
 					.append("$</u></p>\r\n</html>");
-			lblNewLabel.setText(sb.toString());
+			priceLabel.setText(sb.toString());
 		} else {
-			lblNewLabel.setText("<html>\r\n<p>Precio final: <span style=\"color: green\"><u>50$</u></p>\r\n</html>");
-			lblahorra.setText("<html>\r\n<p><span style=\"color: #FFA500\">No tienes ningún descuento disponible :(</p>\r\n</html>");
+			priceLabel.setText("<html>\r\n<p>Precio final: <span style=\"color: green\"><u>50$</u></p>\r\n</html>");
+			descuentoLabel.setText("<html>\r\n<p><span style=\"color: #FFA500\">No tienes ningún descuento disponible :(</p>\r\n</html>");
 		}
 
-		loginPanel.add(lblahorra, gbc_lblahorra);
+		mainPanel.add(descuentoLabel, gbc_descuentoLabel);
 		
-		lblNewLabel_2 = new JLabel("-----------------------------------------------------------------------------------------------------------");
-		GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
-		gbc_lblNewLabel_2.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_2.gridx = 0;
-		gbc_lblNewLabel_2.gridy = 6;
-		loginPanel.add(lblNewLabel_2, gbc_lblNewLabel_2);
+		separatorLabel2 = new JLabel("-----------------------------------------------------------------------------------------------------------");
+		GridBagConstraints gbc_separatorLabel2 = new GridBagConstraints();
+		gbc_separatorLabel2.insets = new Insets(0, 0, 5, 5);
+		gbc_separatorLabel2.gridx = 0;
+		gbc_separatorLabel2.gridy = 6;
+		mainPanel.add(separatorLabel2, gbc_separatorLabel2);
 
-		loginButton = new JButton("Quiero empezar a ser premium");
-		loginButton.addActionListener(arg0 -> {
+		button = new JButton("Quiero empezar a ser premium");
+		button.addActionListener(arg0 -> {
 			JOptionPane.showMessageDialog(frame, "A partir de ahora eres usuario premium");
 			controlador.setPremium(true);
 			frame.setVisible(false);
 		});
-		loginButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		loginButton.setFocusPainted(false);
-		loginButton.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-		loginButton.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		loginButton.setBackground(new Color(178, 34, 34));
-		loginButton.setForeground(new Color(255, 255, 255));
+		button.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		button.setFocusPainted(false);
+		button.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+		button.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		button.setBackground(new Color(178, 34, 34));
+		button.setForeground(new Color(255, 255, 255));
 
-		gbc_loginButton = new GridBagConstraints();
-		gbc_loginButton.insets = new Insets(0, 0, 5, 5);
-		gbc_loginButton.fill = GridBagConstraints.VERTICAL;
-		gbc_loginButton.gridx = 0;
-		gbc_loginButton.gridy = 8;
-		loginPanel.add(loginButton, gbc_loginButton);
+		gbc_button = new GridBagConstraints();
+		gbc_button.insets = new Insets(0, 0, 5, 5);
+		gbc_button.fill = GridBagConstraints.VERTICAL;
+		gbc_button.gridx = 0;
+		gbc_button.gridy = 8;
+		mainPanel.add(button, gbc_button);
 
 		registerPanel = new JPanel();
 		frame.getContentPane().add(registerPanel, BorderLayout.SOUTH);
@@ -225,11 +220,11 @@ public class PremiumWindow {
 		signoLabel_1 = new JLabel("");
 		registerPanel.add(signoLabel_1);
 		
-		lblHola = new JLabel("<html>\r\n<p><span style=\"color: #2271b3\">* Podrás descargar pdfs de tus playlists y </p><p><span style=\"color: #2271b3\">tendrás acceso a tus 10 canciones más escuchadas </p></p><span style=\"color: #2271b3\">de AppMusic para <u><span style=\"color: #daa520\">siempre</span></u></p>\r\n<html>");
-		lblHola.setVerticalAlignment(SwingConstants.BOTTOM);
-		lblHola.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblHola.setBackground(Color.BLACK);
-		registerPanel.add(lblHola);
+		ventajasLabel = new JLabel("<html>\r\n<p><span style=\"color: #2271b3\">* Podrás descargar pdfs de tus playlists y </p><p><span style=\"color: #2271b3\">tendrás acceso a tus 10 canciones más escuchadas </p></p><span style=\"color: #2271b3\">de AppMusic para <u><span style=\"color: #daa520\">siempre</span></u></p>\r\n<html>");
+		ventajasLabel.setVerticalAlignment(SwingConstants.BOTTOM);
+		ventajasLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
+		ventajasLabel.setBackground(Color.BLACK);
+		registerPanel.add(ventajasLabel);
 		
 		pdfIconLabel = new JLabel("");
 		imageIcon = new ImageIcon(GuiUtils.loadImage("icons/pdfMas.png"));
@@ -252,6 +247,6 @@ public class PremiumWindow {
 		gbc_verticalStrut.insets = new Insets(0, 0, 5, 5);
 		gbc_verticalStrut.gridx = 0;
 		gbc_verticalStrut.gridy = 7;
-		loginPanel.add(verticalStrut, gbc_verticalStrut);
+		mainPanel.add(verticalStrut, gbc_verticalStrut);
 	}
 }
