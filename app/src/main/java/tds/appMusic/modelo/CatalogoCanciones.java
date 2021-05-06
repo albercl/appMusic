@@ -24,16 +24,20 @@ public class CatalogoCanciones {
 	private static final String SONGS_PATH = "C:\\tds\\canciones";
 
 	private static CatalogoCanciones instancia;
+	private static final Object lock = new Object();
 
 	public static CatalogoCanciones getInstanciaUnica(FactoriaDAO factoria) {
-		if(instancia != null) {
-			try {
-				instancia = new CatalogoCanciones(factoria);
-			} catch (Exception e) {
-				System.out.println("No se han podido cargar las canciones...");
-				e.printStackTrace();
+		if(instancia == null) {
+			synchronized (lock) {
+					if(instancia == null)
+						try {
+							instancia = new CatalogoCanciones(factoria);
+						} catch (Exception e) {
+							System.out.println("No se han podido cargar las canciones...");
+							e.printStackTrace();
 
-				System.exit(1);
+							System.exit(1);
+						}
 			}
 		}
 

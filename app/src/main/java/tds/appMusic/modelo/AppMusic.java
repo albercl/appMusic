@@ -21,7 +21,7 @@ public class AppMusic {
 
 	private FactoriaDAO factoriaDAO;
 
-	private CatalogoCanciones songs;
+	private final CatalogoCanciones songs;
 	private final CatalogoUsuarios users;
 	private final Reproductor player;
 	private final CargadorCanciones cargadorCanciones = new CargadorCanciones();

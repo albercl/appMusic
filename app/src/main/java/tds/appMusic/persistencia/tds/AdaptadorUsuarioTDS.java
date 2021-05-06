@@ -42,6 +42,8 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
         entidadUsuario = servicioPersistencia.recuperarEntidad(usuario.getId());
         if(entidadUsuario != null) return;
 
+        List<Cancion> recientes = usuario.getHistory();
+
         //Crear la entidad usuario
         entidadUsuario = new Entidad();
         entidadUsuario.setNombre("usuario");
@@ -53,8 +55,8 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
                         new Propiedad("contrasena", usuario.getPassword()),
                         new Propiedad("premium", String.valueOf(usuario.isPremium())),
                         new Propiedad("playlists", listToIdString(usuario.getPlaylists())),
-                        new Propiedad("recientes", listToIdString(usuario.getHistory().subList(0, 9)))
-        )));
+                        new Propiedad("recientes", listToIdString(recientes.subList(0, Math.min(recientes.size(), 10))
+        )))));
 
         //Registrar la entidad creada
         entidadUsuario = servicioPersistencia.registrarEntidad(entidadUsuario);
@@ -106,7 +108,8 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
                     p.setValor(listToIdString(usuario.getPlaylists()));
                     break;
                 case "recientes":
-                    p.setValor(listToIdString(usuario.getHistory().subList(0, 9)));
+                    List<Cancion> recientes = usuario.getHistory();
+                    p.setValor(listToIdString(recientes.subList(0, Math.min(recientes.size(), 10))));
                     break;
             }
 
@@ -212,12 +215,14 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
     private List<Cancion> idStringToSongList(String ids) {
         List<Cancion> canciones = new LinkedList<>();
-        StringTokenizer tokenizer = new StringTokenizer(ids, " ");
+        if(ids != null) {
+            StringTokenizer tokenizer = new StringTokenizer(ids, " ");
 
-        AdaptadorCancionTDS adaptadorCancionTDS = AdaptadorCancionTDS.getInstanciaUnica();
+            AdaptadorCancionTDS adaptadorCancionTDS = AdaptadorCancionTDS.getInstanciaUnica();
 
-        while(tokenizer.hasMoreTokens()) {
-            canciones.add(adaptadorCancionTDS.recuperarCancion(Integer.parseInt((String) tokenizer.nextElement())));
+            while (tokenizer.hasMoreTokens()) {
+                canciones.add(adaptadorCancionTDS.recuperarCancion(Integer.parseInt((String) tokenizer.nextElement())));
+            }
         }
 
         return canciones;

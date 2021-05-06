@@ -173,6 +173,8 @@ public class Usuario {
 		int timesPlayed = reproductions.computeIfAbsent(song, k -> 0);
 		timesPlayed = timesPlayed + 1;
 		reproductions.put(song, timesPlayed);
+
+		adaptadorUsuarioDAO.modificarUsuario(this);
 	}
 
 	public boolean checkPassword(String password) {
