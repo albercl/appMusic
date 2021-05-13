@@ -1,5 +1,7 @@
 target/
 .idea
 debug.log
-appMusic.iml
-appMusic.eml
+*.iml
+*.eml
+settings/
+bin/

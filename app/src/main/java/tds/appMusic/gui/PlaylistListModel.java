@@ -1,6 +1,5 @@
 package tds.appMusic.gui;
 
-import com.sun.istack.internal.NotNull;
 import tds.appMusic.modelo.Playlist;
 
 import javax.swing.*;
@@ -33,17 +32,17 @@ public class PlaylistListModel implements ListModel<Playlist> {
         listeners.remove(listDataListener);
     }
 
-    public void setPlaylists(@NotNull List<Playlist> playlists) {
+    public void setPlaylists(List<Playlist> playlists) {
         this.playlists = playlists;
         notifyListChanges();
     }
 
-    public void addPlaylist(@NotNull Playlist playlist) {
+    public void addPlaylist(Playlist playlist) {
         playlists.add(playlist);
         notifyListChanges();
     }
 
-    public void removePlaylist(@NotNull Playlist playlist) {
+    public void removePlaylist(Playlist playlist) {
         playlists.remove(playlist);
         notifyListChanges();
     }
