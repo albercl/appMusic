@@ -17,6 +17,7 @@ public class Cancion {
 		this.id = id;
 		this.titulo = titulo;
 		this.ruta = ruta;
+		this.estilo = estilo;
 		this.interpretes = Arrays.asList(interpretes);
 	}
 	
