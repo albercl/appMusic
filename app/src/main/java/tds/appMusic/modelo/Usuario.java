@@ -62,7 +62,7 @@ public class Usuario {
 			descuentos.add(new DescuentoJoven());
 
 		if(isElder())
-			descuentos.add(new DescuentoJoven());
+			descuentos.add(new DescuentoJubilado());
 
 		try {
 			adaptadorPlaylistDAO = FactoriaDAO.getInstancia().getPlaylistDAO();

@@ -10,6 +10,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.text.DecimalFormat;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -172,11 +173,13 @@ public class PremiumWindow {
 					.append("</p>\r\n</html>");
 			descuentoLabel.setText(sb.toString());
 
+			DecimalFormat formatter = new DecimalFormat();
+
 			sb = new StringBuilder();
 			sb.append("<html>\r\n<p>Precio final: <span style=\"color: #af1c2f\"><strike>")
-					.append(PRECIO)
+					.append(formatter.format(PRECIO))
 					.append("$</strike></span> --> <span style=\"color: green\"><u>")
-					.append(mejorDescuento.getPrecioFinal(PRECIO))
+					.append(formatter.format(mejorDescuento.getPrecioFinal(PRECIO)))
 					.append("$</u></p>\r\n</html>");
 			priceLabel.setText(sb.toString());
 		} else {

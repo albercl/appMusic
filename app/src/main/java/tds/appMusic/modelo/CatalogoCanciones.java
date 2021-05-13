@@ -163,12 +163,10 @@ public class CatalogoCanciones {
 
 				Path song = Paths.get(stylePath, cancion.getInterprete() + " - " + cancion.getTitulo() + ".mp3");
 				System.out.println("Descargando: " + cancion.getTitulo());
-				Files.write(song, new byte[0], StandardOpenOption.CREATE_NEW);
-				System.out.println("Descarga terminada!");
 
-				try (InputStream stream = uri.openStream()) {
-					Files.copy(stream, song);
-				}
+				InputStream stream = uri.openStream();
+				Files.copy(stream, song, StandardCopyOption.REPLACE_EXISTING);
+				System.out.println("Descarga terminada!");
 
 				String builder =
 						cancion.getEstilo().toUpperCase() + '/' +

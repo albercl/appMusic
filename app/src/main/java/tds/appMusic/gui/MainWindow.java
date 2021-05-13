@@ -69,15 +69,20 @@ public class MainWindow {
 	 */
 	private void initialize() {
 		frmAppmusic = new JFrame();
-		frmAppmusic.setTitle("AppMusic");
 		frmAppmusic.setBounds(450, 100, 1025, 850);
 		frmAppmusic.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmAppmusic.getContentPane().setLayout(new BorderLayout(0, 0));
 
 		ImageIcon iconoAppMusic = new ImageIcon(GuiUtils.loadAppIcon("icons/iconoAppMusic.png"));
-		frmAppmusic.setIconImage(iconoAppMusic.getImage());
-
 		ImageIcon iconoPremium = new ImageIcon(GuiUtils.loadAppIcon("icons/iconoAppMusicPremium.png"));
+
+		if(controlador.isPremium()) {
+			frmAppmusic.setIconImage(iconoPremium.getImage());
+			frmAppmusic.setTitle("AppMusic Premium");
+		} else {
+			frmAppmusic.setIconImage(iconoAppMusic.getImage());
+			frmAppmusic.setTitle("AppMusic");
+		}
 		
 		//Panel superior
 		topPanel = new JPanel();
