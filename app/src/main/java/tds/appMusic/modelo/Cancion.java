@@ -20,8 +20,8 @@ public class Cancion {
 		this.estilo = estilo;
 		this.interpretes = Arrays.asList(interpretes);
 	}
-	
-	/* TODO: implementar clase
+
+	/*
 	 * Constructor
 	 * Carga de la canción de disco
 	 */

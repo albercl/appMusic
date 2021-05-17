@@ -77,10 +77,6 @@ public class AppMusic {
 		return loggedUser;
 	}
 
-	public FactoriaDAO getFactoriaDAO() {
-		return factoriaDAO;
-	}
-
 	public boolean usernameExists(String username) {
 		return users.usernameExists(username);
 	}
