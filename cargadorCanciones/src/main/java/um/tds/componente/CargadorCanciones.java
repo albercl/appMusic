@@ -12,7 +12,7 @@ public class CargadorCanciones implements IBuscadorCanciones {
         listeners.forEach(listeners -> listeners.nuevasCanciones(event));
     }
 
-    public boolean addListener(CancionesListener listener) {
-        return listeners.add(listener);
+    public void addListener(CancionesListener listener) {
+        listeners.add(listener);
     }
 }

@@ -9,6 +9,7 @@ import tds.appMusic.persistencia.FactoriaDAO;
 import um.tds.componente.CancionesEvent;
 import um.tds.componente.CancionesListener;
 import um.tds.componente.CargadorCanciones;
+import um.tds.componente.IBuscadorCanciones;
 
 import java.util.Date;
 import java.util.List;
@@ -24,7 +25,7 @@ public class AppMusic {
 	private final CatalogoCanciones songs;
 	private final CatalogoUsuarios users;
 	private final Reproductor player;
-	private final CargadorCanciones cargadorCanciones = new CargadorCanciones();
+	private final IBuscadorCanciones buscadorCanciones = new CargadorCanciones();
 
 	private Usuario loggedUser;
 
@@ -47,7 +48,6 @@ public class AppMusic {
 
 		users = CatalogoUsuarios.getUnicaInstancia(factoriaDAO);
 		songs = CatalogoCanciones.getInstanciaUnica(factoriaDAO);
-
 
 		addListenerToCargador(this::nuevasCanciones);
 	}
@@ -181,11 +181,11 @@ public class AppMusic {
 	public void setVolume(float volume) { player.setVolume(volume); }
 
 	public void loadSongsFromFile(String fileUrl) {
-		cargadorCanciones.setArchivoCanciones(fileUrl);
+		buscadorCanciones.setArchivoCanciones(fileUrl);
 	}
 
 	public void addListenerToCargador(CancionesListener listener) {
-		cargadorCanciones.addListener(listener);
+		buscadorCanciones.addListener(listener);
 	}
 
 	public void addPlaylistListenerToUser(PlaylistListener listener) {

@@ -363,18 +363,24 @@ public class RegisterWindow {
 				userErrorLabel.setVisible(false);
 
 			if (ok) {
-				controlador.register(name + " " + surname, birthdate, email, user, pass1);
-				String[] opt1 = {"Aceptar"};
-				JOptionPane.showOptionDialog(RegisterFrame,
-						"Te acabas de registrar en AppMusic.",
-						"Éxito",
-						JOptionPane.YES_NO_OPTION,
-						JOptionPane.INFORMATION_MESSAGE,
-						null, opt1, opt1[0]);
+				if(controlador.register(name + " " + surname, birthdate, email, user, pass1)) {
+					String[] opt1 = {"Aceptar"};
+					JOptionPane.showOptionDialog(RegisterFrame,
+							"Te acabas de registrar en AppMusic.",
+							"Éxito",
+							JOptionPane.YES_NO_OPTION,
+							JOptionPane.INFORMATION_MESSAGE,
+							null, opt1, opt1[0]);
 
-				RegisterFrame.setVisible(false);
-				LoginWindow LoginFrame = new LoginWindow();
-				LoginFrame.setVisible(true);
+					RegisterFrame.setVisible(false);
+					LoginWindow LoginFrame = new LoginWindow();
+					LoginFrame.setVisible(true);
+				} else {
+					JOptionPane.showMessageDialog(RegisterFrame,
+							"No hemos podido registrarte...",
+							"Algo ha salido mal",
+							JOptionPane.ERROR_MESSAGE);
+				}
 			}
 
 		});
