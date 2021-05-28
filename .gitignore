@@ -5,3 +5,6 @@ debug.log
 *.eml
 settings/
 bin/
+.project
+.settings/
+.classpath
