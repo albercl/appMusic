@@ -164,7 +164,12 @@ public class AppMusic {
 
 	// Controles de reproducción
 	public void play(Cancion song) {
-		player.play(song);
+		try{
+			player.play(song);
+		}
+		catch (RuntimeException exception) {
+			System.out.println("Error: No se ha podido reproducir el archivo");
+		}
 		loggedUser.playedSong(song);
 	}
 
