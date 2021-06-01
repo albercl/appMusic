@@ -22,7 +22,8 @@ import tds.appMusic.modelo.Usuario;
 public class UsuarioTest {
 		
 	@Test
-	public void testDescuentoJoven() {		
+	public void testDescuentoJoven() {
+		//Año 2000
 		Usuario usuario = new Usuario(200, "Gregorio Martínez López", new Date (100, 9, 24), "sergiem10@hotmail.com", "sergi", "1234", false);
 		IDescuento descuento = usuario.getMejorDescuento();
 		assertTrue(descuento instanceof DescuentoJoven);
