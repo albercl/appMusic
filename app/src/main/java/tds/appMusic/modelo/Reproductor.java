@@ -34,10 +34,10 @@ public class Reproductor {
 
             if (currentSong == song) {
                 currentPlayer.play();
-            } else {
-                currentSong = song;
-                currentPlayer = createPlayer(currentSong);
             }
+        } else {
+            currentSong = song;
+            currentPlayer = createPlayer(currentSong);
         }
     }
     
