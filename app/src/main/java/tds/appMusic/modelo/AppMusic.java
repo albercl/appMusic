@@ -80,6 +80,7 @@ public class AppMusic {
 
 	public void logout() {
 		loggedUser = null;
+		player.stop();
 	}
 
 	public boolean register(String nombreReal, Date fechaU, String emailU, String nombreU, String passwordU) {
@@ -173,6 +174,10 @@ public class AppMusic {
 
 	public void pause() {
 		player.pause();
+	}
+
+	public void stop() {
+		player.stop();
 	}
 
 	public void addListenerToPlayer(ReproductorListener listener) {

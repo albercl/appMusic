@@ -55,6 +55,12 @@ public class Reproductor {
         }
     }
 
+    public void stop() {
+	    currentPlayer.stop();
+	    currentPlayer = null;
+	    currentSong = null;
+    }
+
     public Cancion getCurrentSong() {
 	    return currentSong;
     }
@@ -67,7 +73,11 @@ public class Reproductor {
         MediaPlayer player = new MediaPlayer(hit);
         player.setVolume(volume);
 
-        player.setOnEndOfMedia(() -> listeners.forEach(l -> l.onFinishedSong(song)));
+        player.setOnEndOfMedia(() -> {
+            currentSong = null;
+            currentPlayer = null;
+            listeners.forEach(l -> l.onFinishedSong(song));
+        });
 
         player.play();
 
