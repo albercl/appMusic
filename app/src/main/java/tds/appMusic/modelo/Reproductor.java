@@ -30,9 +30,11 @@ public class Reproductor {
 	
     public void play(Cancion song) {
 	    if(currentPlayer != null) {
-            currentPlayer.stop();
-
-            if (currentSong == song) {
+            if(!currentSong.equals(song)){
+                currentPlayer.stop();
+                currentSong = song;
+                currentPlayer = createPlayer(song);
+            } else {
                 currentPlayer.play();
             }
         } else {
