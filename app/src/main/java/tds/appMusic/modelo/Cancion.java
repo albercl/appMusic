@@ -1,7 +1,10 @@
 package tds.appMusic.modelo;
 
+import tds.appMusic.modelo.util.Cargador;
+
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class Cancion {
 	int id;
@@ -30,32 +33,24 @@ public class Cancion {
 		return titulo;
 	}
 
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
-	}
-
 	public String getEstilo() {
 		return estilo;
-	}
-
-	public void setEstilo(String estilo) {
-		this.estilo = estilo;
 	}
 	
 	public List<String> getInterpretes() {
 		return interpretes;
-	}
-	
-	public void addInterprete(String interprete) {
-		interpretes.add(interprete);
 	}
 
 	public String getRuta() {
 		return ruta;
 	}
 
-	public void setRuta(String ruta) {
-		this.ruta = ruta;
+	public String getRutaCompleta() {
+		String rutaCompleta = Cargador.SONGS_PATH + ruta;
+		if(Cargador.OS_TYPE.equals("Linux"))
+			rutaCompleta = rutaCompleta.replace('\\', '/');
+
+		return rutaCompleta;
 	}
 
 	public void setId(int id) {
@@ -82,12 +77,19 @@ public class Cancion {
 
 	@Override
 	public String toString() {
-		return "Cancion{" +
-				"id=" + id +
-				", titulo='" + titulo + '\'' +
-				", interpretes=" + interpretes +
-				", estilo='" + estilo + '\'' +
-				", ruta='" + ruta + '\'' +
-				'}';
+		return titulo;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Cancion cancion = (Cancion) o;
+		return id == cancion.id && Objects.equals(titulo, cancion.titulo) && Objects.equals(interpretes, cancion.interpretes) && Objects.equals(estilo, cancion.estilo) && Objects.equals(ruta, cancion.ruta);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, titulo, interpretes, estilo, ruta);
 	}
 }

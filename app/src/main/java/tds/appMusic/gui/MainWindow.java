@@ -1,7 +1,5 @@
 package tds.appMusic.gui;
 
-import java.awt.EventQueue;
-
 import javax.swing.*;
 
 import java.awt.BorderLayout;
@@ -18,21 +16,16 @@ import tds.appMusic.gui.mainPanels.PlayerPanel;
 import tds.appMusic.modelo.AppMusic;
 import tds.appMusic.modelo.Cancion;
 import tds.appMusic.modelo.Playlist;
-import tds.appMusic.modelo.util.ReproductorListener;
-import um.tds.componente.CargadorCanciones;
 
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 public class MainWindow {
 	private AppMusic controlador = AppMusic.getInstanciaUnica();
@@ -45,17 +38,14 @@ public class MainWindow {
 	private JButton upgradeButton;
 	private JButton logoutButton;
 	private JPanel leftPanel;
-	private GridBagLayout gbl_leftPanel;
 	private NavigationPanel navigationPanel;
-	private GridBagConstraints gbc_navigationPanel;
 	private JList<Playlist> playlistsPanel;
 	private PlaylistListModel playlistsModel;
-	private GridBagConstraints gbc_playlistsPanel;
 	private MainPanel mainPanel;
 	private PlayerPanel playerPanel;
 
-	//Player control
-	private boolean isPlaying = false;
+	private ImageIcon iconoAppMusic;
+	private ImageIcon iconoPremium;
 
 	/**
 	 * Create the application.
@@ -73,17 +63,9 @@ public class MainWindow {
 		frmAppmusic.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmAppmusic.getContentPane().setLayout(new BorderLayout(0, 0));
 
-		ImageIcon iconoAppMusic = new ImageIcon(GuiUtils.loadAppIcon("icons/iconoAppMusic.png"));
-		ImageIcon iconoPremium = new ImageIcon(GuiUtils.loadAppIcon("icons/iconoAppMusicPremium.png"));
+		iconoAppMusic = new ImageIcon(GuiUtils.loadAppIcon("icons/iconoAppMusic.png"));
+		iconoPremium = new ImageIcon(GuiUtils.loadAppIcon("icons/iconoAppMusicPremium.png"));
 
-		if(controlador.isPremium()) {
-			frmAppmusic.setIconImage(iconoPremium.getImage());
-			frmAppmusic.setTitle("AppMusic Premium");
-		} else {
-			frmAppmusic.setIconImage(iconoAppMusic.getImage());
-			frmAppmusic.setTitle("AppMusic");
-		}
-		
 		//Panel superior
 		topPanel = new JPanel();
 		topPanel.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
@@ -102,13 +84,13 @@ public class MainWindow {
 			if(returnValue == JFileChooser.APPROVE_OPTION) {
 				File selected = ventana.getSelectedFile();
 
-				controlador.loadSongsFromFile(selected.getAbsolutePath());
+				controlador.addCancionesPorArchivo(selected.getAbsolutePath());
 			}
 		});
 
 		pulsadorPanel.add(pulsadorBusqueda);
 		topPanel.add(pulsadorPanel);
-		
+
 		fechaLabel = new JLabel();
 		Date date = new Date();
 		String strDateFormat = "E dd/MM/yyyy"; // El formato de fecha está especificado
@@ -116,34 +98,30 @@ public class MainWindow {
 		fechaLabel.setText(objSDF.format(date));
 		fechaLabel.setFont(new Font("Dialog", Font.PLAIN, 16));
 		topPanel.add(fechaLabel);
-		
+
 		horaLabel = new JLabel("Hora");
 		horaLabel.setFont(new Font("Dialog", Font.BOLD, 16));
 		GuiUtils.showTime(horaLabel);
 		topPanel.add(horaLabel);
-		
-		welcomeMessageLabel = new JLabel("<html><p><b><span style=\"color: rgb(178, 34, 34)\">Bienvenido, </span>" + controlador.getUsername() + "<dynamic></b> </p></html>");
+
+		welcomeMessageLabel = new JLabel("<html><p><b><span style=\"color: rgb(178, 34, 34)\">Bienvenido, </span>" + controlador.getLoggedUser().getUsername() + "<dynamic></b> </p></html>");
 		welcomeMessageLabel.setFont(new Font("Dialog", Font.PLAIN, 16));
 		topPanel.add(welcomeMessageLabel);
-		
+
 		upgradeButton = new JButton("<html><p><b><span style=\"color: rgb(239, 184, 16)\">Mejora tu cuenta</b></span></p></html>");
 		upgradeButton.setForeground(Color.YELLOW);
 		upgradeButton.setFont(new Font("Dialog", Font.PLAIN, 16));
 		upgradeButton.setFocusPainted(false);
 		upgradeButton.setBackground(Color.BLACK);
-		controlador.addPremiumListener((user, isPremium) -> {
-			setPremium(isPremium);
-		});
-
-		setPremium(controlador.isPremium());
 
 		upgradeButton.addActionListener(e -> {
 			//Abrir la ventana
-			PremiumWindow premiumWindow = new PremiumWindow();
+			PremiumWindow premiumWindow = new PremiumWindow(this);
 			premiumWindow.setVisible(true);
 		});
+
 		topPanel.add(upgradeButton);
-		
+
 		logoutButton = new JButton("Cerrar sesión");
 		logoutButton.setForeground(Color.WHITE);
 		logoutButton.setFont(new Font("Dialog", Font.BOLD, 16));
@@ -157,33 +135,33 @@ public class MainWindow {
 			controlador.logout();
 		});
 		topPanel.add(logoutButton);
-		
+
 		//Panel izquierdo (playlists y botones de navegacion)
 		leftPanel = new JPanel();
 		leftPanel.setBorder(new EtchedBorder());
-		
+
 		frmAppmusic.getContentPane().add(leftPanel, BorderLayout.WEST);
-		gbl_leftPanel = new GridBagLayout();
+		GridBagLayout gbl_leftPanel = new GridBagLayout();
 		gbl_leftPanel.columnWidths = new int[] {0};
 		gbl_leftPanel.rowHeights = new int[] {0, 0};
 		gbl_leftPanel.columnWeights = new double[]{0.0};
 		gbl_leftPanel.rowWeights = new double[]{0.0, 1.0};
 		leftPanel.setLayout(gbl_leftPanel);
-		
-		navigationPanel = new NavigationPanel();
-		gbc_navigationPanel = new GridBagConstraints();
+
+		navigationPanel = new NavigationPanel(this);
+		GridBagConstraints gbc_navigationPanel = new GridBagConstraints();
 		gbc_navigationPanel.anchor = GridBagConstraints.NORTHWEST;
 		gbc_navigationPanel.insets = new Insets(0, 0, 0, 5);
 		gbc_navigationPanel.gridx = 0;
 		gbc_navigationPanel.gridy = 0;
 		leftPanel.add(navigationPanel, gbc_navigationPanel);
-		
+
 		playlistsPanel = new JList<>();
 		playlistsPanel.setBorder(new TitledBorder("Mis listas"));
 		playlistsModel = new PlaylistListModel();
 		playlistsModel.setPlaylists(controlador.getPlaylists());
 		playlistsPanel.setModel(playlistsModel);
-		gbc_playlistsPanel = new GridBagConstraints();
+		GridBagConstraints gbc_playlistsPanel = new GridBagConstraints();
 		gbc_playlistsPanel.anchor = GridBagConstraints.NORTHWEST;
 		gbc_playlistsPanel.gridx = 0;
 		gbc_playlistsPanel.gridy = 1;
@@ -191,136 +169,73 @@ public class MainWindow {
 		playlistsPanel.setVisible(false);
 		leftPanel.add(playlistsPanel, gbc_playlistsPanel);
 
-		controlador.addPlaylistListenerToUser(l -> playlistsModel.setPlaylists(l));
-
-		controlador.addPremiumListener((user, isPremium) -> {
-			if(isPremium) {
-				frmAppmusic.setIconImage(iconoPremium.getImage());
-				frmAppmusic.setTitle("AppMusic Premium");
-			} else {
-				frmAppmusic.setIconImage(iconoAppMusic.getImage());
-				frmAppmusic.setTitle("AppMusic");
-			}
-		});
-
 		playlistsPanel.addListSelectionListener(e -> {
 			Playlist selected = playlistsPanel.getSelectedValue();
 			if(selected != null) {
-				mainPanel.setSelectedPlaylistView(selected);
+				mainPanel.setView(MainPanel.PLAYLIST);
 				playlistsPanel.clearSelection();
 			}
 		});
-		
-		navigationPanel.addSearchActionListener(e -> mainPanel.setSearchPanelView());
-		
-		navigationPanel.addNewListActionListener(e -> mainPanel.setPlaylistModPanelView());
-		
-		navigationPanel.addRecentsActionListener(e -> mainPanel.setRecentsView());
-		
-		navigationPanel.addMyListsActionListener(e -> playlistsPanel.setVisible(true));
-		
-		navigationPanel.addFavouritesActionListener(e -> mainPanel.setFavouritesView());
-		
+
 		//Panel central
-		mainPanel = new MainPanel(playlistsPanel);
+		mainPanel = new MainPanel(this);
 		frmAppmusic.getContentPane().add(mainPanel, BorderLayout.CENTER);
-		
+
 		//Panel inferior (reproductor)
-		playerPanel = new PlayerPanel();
+		playerPanel = new PlayerPanel(this);
 		frmAppmusic.getContentPane().add(playerPanel, BorderLayout.SOUTH);
 
-		playerPanel.getPlayButton().addActionListener(a -> {
-			int selection = mainPanel.getSelection();
-			List<Cancion> songs = mainPanel.getSongs();
-
-			if(controlador.getPlayingSong() == null) {
-				if(selection != -1) {
-					controlador.play(songs, selection);
-					isPlaying = true;
-				}
-			} else {
-				if(isPlaying) {
-					controlador.pause();
-					isPlaying = false;
-				} else {
-					if(selection == -1) {
-						controlador.resume();
-					} else {
-						if(controlador.getPlayingSong().equals(songs.get(selection)))
-							controlador.resume();
-						else
-							controlador.play(songs, selection);
-					}
-
-					isPlaying = true;
-				}
-			}
-		});
-
-		playerPanel.getBackButton().addActionListener(a -> controlador.goBack());
-
-		playerPanel.getForwardButton().addActionListener(a -> controlador.goNext());
-
-		playerPanel.getRandomButton().addActionListener(a -> controlador.alternateRandom());
-
-		playerPanel.getReplayButton().addActionListener(a -> controlador.alternateRepeat());
-
-		controlador.addListenerToPlayer(new ReproductorListener() {
-			@Override
-			public void onEmptyQueue() {
-				isPlaying = false;
-				playerPanel.setPlaying(false);
-			}
-
-			@Override
-			public void onStartedSong(Cancion c) {
-				isPlaying = true;
-				playerPanel.setPlaying(true);
-			}
-
-			@Override
-			public void onFinishedSong(Cancion c) {
-				isPlaying = false;
-				playerPanel.setPlaying(false);
-			}
-
-			@Override
-			public void onPausedSong(Cancion c) {
-				isPlaying = false;
-				playerPanel.setPlaying(false);
-			}
-
-			@Override
-			public void onResumedSong(Cancion c) {
-				isPlaying = true;
-				playerPanel.setPlaying(true);
-			}
-
-			@Override
-			public void onAlternatedRandom() {
-				playerPanel.alternateRandom();
-			}
-
-			@Override
-			public void onAlternatedRepeat() {
-				playerPanel.alternateReplay();
-			}
-		});
+		updatePremium(controlador.isPremium());
 	}
-	
+
 	public void setVisible(boolean value) {
 		frmAppmusic.setVisible(true);
 	}
 
-	private void setPremium(boolean isPremium) {
+	public void updatePremium(boolean isPremium) {
 		upgradeButton.setEnabled(!isPremium);
 
+		navigationPanel.updatePremium(isPremium);
+		mainPanel.updatePremium(isPremium);
+
 		if(isPremium) {
-			upgradeButton.setEnabled(false);
 			upgradeButton.setText("<html><p><b><span style=\"color: rgb(239, 184, 16)\">Ya eres premium!</b></span></p></html>");
+
+			frmAppmusic.setIconImage(iconoPremium.getImage());
+			frmAppmusic.setTitle("AppMusic Premium");
 		} else {
-			upgradeButton.setEnabled(true);
 			upgradeButton.setText("<html><p><b><span style=\"color: rgb(239, 184, 16)\">Mejora tu cuenta</b></span></p></html>");
+
+			frmAppmusic.setIconImage(iconoAppMusic.getImage());
+			frmAppmusic.setTitle("AppMusic");
 		}
+	}
+
+	public void updatedPlaylists() {
+		playlistsModel.setPlaylists(controlador.getPlaylists());
+	}
+
+	public JList<Playlist> getPlaylistsList() {
+		return playlistsPanel;
+	}
+
+	public PlaylistListModel getPlaylistsModel() {
+		return playlistsModel;
+	}
+
+	public void setMainPanelView(int view) {
+		mainPanel.setView(view);
+	}
+
+	public List<Cancion> getSongs() {
+		return mainPanel.getSongs();
+	}
+
+	public int getSelection() {
+		return mainPanel.getSelection();
+	}
+
+	public void selectSongOnTable(Cancion c) {
+		mainPanel.selectSongOnTable(c);
 	}
 }

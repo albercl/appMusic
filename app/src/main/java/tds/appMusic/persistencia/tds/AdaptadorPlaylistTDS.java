@@ -89,7 +89,6 @@ public class AdaptadorPlaylistTDS implements IAdaptadorPlaylistDAO {
 
         Playlist pl = new Playlist(entidadPlaylist.getId(), nombre, idsToSongList(songs));
 
-
         pool.addObjeto(entidadPlaylist.getId(), pl);
 
         return pl;

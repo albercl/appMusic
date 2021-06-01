@@ -12,6 +12,7 @@ import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -184,7 +185,7 @@ public class SearchControls extends JPanel {
 			if(text != null && !text.equals("TODOS"))
 				genre = text;
 				
-			List<Cancion> canciones = controlador.searchSongs(new Filter(song, artist, genre));
+			Collection<Cancion> canciones = controlador.searchSongs(new Filter(song, artist, genre));
 			tablePanel.setSongs(canciones);
 		});
 

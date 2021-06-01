@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import tds.appMusic.gui.auxiliarPanels.SearchControls;
 import tds.appMusic.gui.auxiliarPanels.SongTable;
+import tds.appMusic.gui.auxiliarPanels.SongTableModel;
 import tds.appMusic.modelo.Cancion;
 
 import java.awt.*;
@@ -21,7 +22,7 @@ public class SearchPanel extends JPanel {
 		setLayout(new BorderLayout(0, 10));
 		setPreferredSize(new Dimension(500, 400));
 		
-		searchTable = new SongTable();
+		searchTable = new SongTable(SongTableModel.NORMAL_MODE);
 		add(searchTable, BorderLayout.CENTER);
 		
 		searchControls = new SearchControls(searchTable);
@@ -36,7 +37,7 @@ public class SearchPanel extends JPanel {
 		return searchTable.getSelection();
 	}
 
-	public JTable getTable() {
-		return searchTable.getTable();
+	public SongTable getTable() {
+		return searchTable;
 	}
 }

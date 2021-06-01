@@ -6,21 +6,22 @@ import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.ListSelectionModel;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.awt.Dimension;
 
 import tds.appMusic.modelo.Cancion;
 
 public class SongTable extends JPanel {
-	private static final Object[] TABLE_IDENTIFIERS = {"Título", "Intérprete"};
 	
-	private JTable table;
-	private SongTableModel model = new SongTableModel();
+	private final JTable table;
+	private final SongTableModel model;
 
 	/**
 	 * Create the panel.
 	 */
-	public SongTable() {
+	public SongTable(int mode) {
 		setLayout(new BorderLayout(0, 0));
 		setPreferredSize(new Dimension(300, 400));
 		
@@ -33,14 +34,21 @@ public class SongTable extends JPanel {
 		table.setPreferredScrollableViewportSize(new Dimension(450, 400));
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		table.setFillsViewportHeight(true);
-		table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-		
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		model = new SongTableModel(mode);
 		table.setModel(model);
+
+		if(mode == SongTableModel.REPRODUCTION_MODE) {
+			table.getColumnModel().getColumn(0).setPreferredWidth(225);
+			table.getColumnModel().getColumn(1).setPreferredWidth(225);
+			table.getColumnModel().getColumn(2).setPreferredWidth(50);
+		}
 		scrollPane.setViewportView(table);
 	}
 	
-	public void setSongs(List<Cancion> songs) {
-		model.setCanciones(songs);
+	public void setSongs(Collection<Cancion> songs) {
+		model.setCanciones(new LinkedList<>(songs));
 	}
 	
 	public JTable getTable() {
@@ -63,6 +71,10 @@ public class SongTable extends JPanel {
 		return getSongs().get(selection);
 	}
 
+	public SongTableModel getModel() {
+		return model;
+	}
+
 	public void removeSelectedSong() {
 		Cancion song = getSelectedSong();
 		if(song != null)
@@ -79,5 +91,10 @@ public class SongTable extends JPanel {
 
 	public void clear() {
 		model.clearTable();
+	}
+
+	public void selectSong(Cancion c) {
+		int index = model.getCanciones().indexOf(c);
+		table.getSelectionModel().setSelectionInterval(index, index);
 	}
 }

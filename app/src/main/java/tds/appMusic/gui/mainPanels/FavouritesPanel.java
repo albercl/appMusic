@@ -1,5 +1,7 @@
 package tds.appMusic.gui.mainPanels;
 
+import tds.appMusic.gui.auxiliarPanels.SongTable;
+import tds.appMusic.gui.auxiliarPanels.SongTableModel;
 import tds.appMusic.modelo.AppMusic;
 import tds.appMusic.modelo.Cancion;
 import tds.appMusic.modelo.util.ReproductorListener;
@@ -18,7 +20,7 @@ public class FavouritesPanel extends JPanel {
 	private final AppMusic controlador = AppMusic.getInstanciaUnica();
 	private static final String[] TABLE_IDENTIFIERS = {"Título", "Intérprete", "Nº"};
 
-	private JTable table;
+	private SongTable table;
 	private Map<Cancion, Integer> songs = new HashMap<>();
 
 	/**
@@ -31,69 +33,28 @@ public class FavouritesPanel extends JPanel {
 		scrollPane.setPreferredSize(new Dimension(500, 0));
 		add(scrollPane);
 		
-		table = new JTable();
-		table.setPreferredScrollableViewportSize(new Dimension(500, 400));
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table.setModel(new DefaultTableModel(new Object[][] {}, TABLE_IDENTIFIERS));
-		configureModel();
+		table = new SongTable(SongTableModel.REPRODUCTION_MODE);
+
 		scrollPane.setViewportView(table);
-
-		//Update songs while in favourites table
-		controlador.addListenerToPlayer(new ReproductorListener() {
-			@Override
-			public void onStartedSong(Cancion c) {
-				if(isVisible()) {
-					Integer n = songs.get(c);
-					songs.put(c, ++n);
-
-					int selection = getSongs().indexOf(c);
-					table.getModel().setValueAt(n, selection, 2);
-				}
-			}
-		});
 	}
 
 	public void setSongs(Map<Cancion, Integer> songs) {
-		if(songs != null) {
-			String[][] newTable = new String[songs.size()][3];
-			List<Cancion> songsListOrdered = songs.keySet().stream()
-					.sorted(Comparator.comparingInt(songs::get).reversed())
-					.collect(Collectors.toList());
-
-			Iterator<Cancion> it = songsListOrdered.iterator();
-			for(int i = 0; it.hasNext(); i++) {
-				Cancion song = it.next();
-				newTable[i][0] = song.getTitulo();
-				newTable[i][1] = song.getInterpretesString();
-				newTable[i][2] = String.valueOf(songs.get(song));
-			}
-
-			((DefaultTableModel) table.getModel()).setDataVector(newTable, TABLE_IDENTIFIERS);
-			configureModel();
-			this.songs = songs;
-		} else {
-			((DefaultTableModel) table.getModel()).setDataVector(new Object[][] {}, TABLE_IDENTIFIERS);
-			configureModel();
-		}
-	}
-
-	private void configureModel() {
-		table.getColumnModel().getColumn(0).setPreferredWidth(225);
-		table.getColumnModel().getColumn(1).setPreferredWidth(225);
-		table.getColumnModel().getColumn(2).setPreferredWidth(50);
+		table.getModel().setCanciones(new ArrayList<>(songs.keySet()));
 	}
 
 	public List<Cancion> getSongs() {
-		return songs.keySet().stream()
-				.sorted(Comparator.comparingInt(songs::get).reversed())
-				.collect(Collectors.toList());
+		return table.getModel().getCanciones();
 	}
 
-	public JTable getTable() {
+	public SongTable getTable() {
 		return table;
 	}
 
 	public int getSelection() {
-		return table.getSelectedRow();
+		return table.getSelection();
+	}
+
+	public void selectSong(Cancion c) {
+		table.selectSong(c);
 	}
 }

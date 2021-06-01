@@ -6,7 +6,9 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
+import tds.appMusic.gui.MainWindow;
 import tds.appMusic.gui.auxiliarPanels.SongTable;
+import tds.appMusic.gui.auxiliarPanels.SongTableModel;
 import tds.appMusic.modelo.AppMusic;
 import tds.appMusic.modelo.Cancion;
 import tds.appMusic.modelo.Playlist;
@@ -14,6 +16,8 @@ import tds.appMusic.modelo.util.ReproductorListener;
 
 public class MainPanel extends JPanel {
 	private AppMusic controlador = AppMusic.getInstanciaUnica();
+	private final MainWindow mainWindow;
+	private final JList<Playlist> playlistList;
 
 	public static final int
 			NONE = 0,
@@ -34,12 +38,11 @@ public class MainPanel extends JPanel {
 	private SongTable playlistTable;
 	private JButton generatePdfButton;
 	private Playlist selectedPlaylist;
-
-	private JList<Playlist> playlistList;
 	
-	public MainPanel(JList<Playlist> playlistList) {
-		this.playlistList = playlistList;
-		
+	public MainPanel(MainWindow mainWindow) {
+		this.mainWindow = mainWindow;
+		playlistList = mainWindow.getPlaylistsList();
+
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] {500};
 		gridBagLayout.rowHeights = new int[] {0};
@@ -60,7 +63,7 @@ public class MainPanel extends JPanel {
 		gbc_searchPanel.gridy = 0;
 		add(searchPanel, gbc_searchPanel);
 		
-		recentsPanel = new SongTable();
+		recentsPanel = new SongTable(SongTableModel.NORMAL_MODE);
 		recentsPanel.setPreferredSize(new Dimension(500, 0));
 		GridBagConstraints gbc_recentsPanel = new GridBagConstraints();
 		gbc_recentsPanel.fill = GridBagConstraints.VERTICAL;
@@ -68,7 +71,7 @@ public class MainPanel extends JPanel {
 		gbc_recentsPanel.gridy = 0;
 		add(recentsPanel, gbc_recentsPanel);
 		
-		playlistModificationPanel = new PlaylistModificationPanel(playlistList);
+		playlistModificationPanel = new PlaylistModificationPanel(mainWindow);
 		GridBagConstraints gbc_playlistModificationPanel = new GridBagConstraints();
 		gbc_playlistModificationPanel.fill = GridBagConstraints.VERTICAL;
 		gbc_playlistModificationPanel.gridx = 0;
@@ -85,7 +88,7 @@ public class MainPanel extends JPanel {
 		gbc_playlistPanel.gridy = 0;
 
 		//Tabla
-		playlistTable = new SongTable();
+		playlistTable = new SongTable(SongTableModel.NORMAL_MODE);
 		playlistTable.setPreferredSize(new Dimension(500, 0));
 		playlistPanel.add(playlistTable, BorderLayout.CENTER);
 
@@ -98,24 +101,60 @@ public class MainPanel extends JPanel {
 		add(playlistPanel, gbc_playlistPanel);
 
 		generatePdfButton.setVisible(controlador.isPremium());
-
-		controlador.addPremiumListener((user, isPremium) -> generatePdfButton.setVisible(isPremium));
-
-		controlador.addListenerToPlayer(new ReproductorListener() {
-			@Override
-			public void onStartedSong(Cancion c) {
-				JTable table = getTable();
-				List<Cancion> songs = getSongs();
-
-				if(songs != null) {
-					int index = songs.indexOf(c);
-					if (index != -1)
-						table.setRowSelectionInterval(index, index);
-				}
-			}
-		});
 		
 		resetView();
+	}
+
+	public void setView(int view) {
+		resetView();
+
+		switch (view) {
+			case SEARCH:
+				setSearchPanelView();
+				break;
+			case FAVOURITES:
+				setFavouritesView();
+				break;
+			case RECENTS:
+				setRecentsView();
+				break;
+			case PLAYLIST_MOD:
+				setPlaylistModPanelView();
+				break;
+			case PLAYLIST:
+				setSelectedPlaylistView();
+				break;
+		}
+	}
+
+	public List<Cancion> getSongs() {
+		switch (state) {
+			case SEARCH:
+				return searchPanel.getSongsList();
+			case RECENTS:
+				return recentsPanel.getSongs();
+			case FAVOURITES:
+				return favouritesPanel.getSongs();
+			case PLAYLIST:
+				return playlistTable.getSongs();
+			default:
+				return null;
+		}
+	}
+
+	public int getSelection() {
+		switch (state) {
+			case SEARCH:
+				return searchPanel.getSelection();
+			case RECENTS:
+				return recentsPanel.getSelection();
+			case FAVOURITES:
+				return favouritesPanel.getSelection();
+			case PLAYLIST:
+				return playlistTable.getSelection();
+			default:
+				return -1;
+		}
 	}
 	
 	public void resetView() {
@@ -126,14 +165,12 @@ public class MainPanel extends JPanel {
 		playlistPanel.setVisible(false);
 		playlistList.setVisible(false);
 
-		playlistList.clearSelection();
 		setBorder(null);
 	}
 	
 	public void setSearchPanelView() {
 		state = SEARCH;
 
-		resetView();
 		this.setBorder(new TitledBorder("Búsqueda de canciones"));
 		searchPanel.setVisible(true);
 	}
@@ -141,7 +178,6 @@ public class MainPanel extends JPanel {
 	public void setPlaylistModPanelView() {
 		state = PLAYLIST_MOD;
 
-		resetView();
 		this.setBorder(new TitledBorder("Modificación de playlist"));
 		playlistModificationPanel.setVisible(true);
 		playlistList.setVisible(true);
@@ -150,7 +186,6 @@ public class MainPanel extends JPanel {
 	public void setRecentsView() {
 		state = RECENTS;
 
-		resetView();
 		this.setBorder(new TitledBorder("Canciones recientes"));
 		recentsPanel.setSongs(controlador.getUserHistory());
 		recentsPanel.setVisible(true);
@@ -159,18 +194,18 @@ public class MainPanel extends JPanel {
 	public void setFavouritesView() {
 		state = FAVOURITES;
 
-		resetView();
 		this.setBorder(new TitledBorder("Canciones favoritas"));
 		favouritesPanel.setSongs(controlador.getUserReproductions());
 		favouritesPanel.setVisible(true);
 	}
 
-	public void setSelectedPlaylistView(Playlist playlist) {
+	public void setSelectedPlaylistView() {
+		Playlist playlist = playlistList.getSelectedValue();
 		if (state == PLAYLIST_MOD) {
+			setPlaylistModPanelView();
 			playlistModificationPanel.setPlaylist(playlist);
 		} else {
 			state = PLAYLIST;
-			resetView();
 			playlistTable.setSongs(playlist.getSongs());
 			playlistPanel.setVisible(true);
 			playlistList.setVisible(true);
@@ -178,54 +213,20 @@ public class MainPanel extends JPanel {
 		}
 	}
 
-	public List<Cancion> getSongs() {
-		switch (state) {
-		case SEARCH:
-			return searchPanel.getSongsList();
-		case PLAYLIST_MOD:
-			return null;
-		case RECENTS:
-			return recentsPanel.getSongs();
-		case FAVOURITES:
-			return favouritesPanel.getSongs();
-		case PLAYLIST:
-			return playlistTable.getSongs();
-			default:
-				return null;
-		}
+	public void updatePremium(boolean isPremium) {
+		generatePdfButton.setVisible(isPremium);
 	}
 
-	public int getSelection() {
+	public void selectSongOnTable(Cancion c) {
 		switch (state) {
-		case SEARCH:
-			return searchPanel.getSelection();
-		case PLAYLIST_MOD:
-			return -1;
-		case RECENTS:
-			return recentsPanel.getSelection();
-		case FAVOURITES:
-			return favouritesPanel.getSelection();
-		case PLAYLIST:
-			return playlistTable.getSelection();
-			default:
-				return -1;
-		}
-	}
-
-	public JTable getTable() {
-		switch (state) {
-		case SEARCH:
-			return searchPanel.getTable();
-		case PLAYLIST_MOD:
-			return null;
-		case RECENTS:
-			return recentsPanel.getTable();
-		case FAVOURITES:
-			return favouritesPanel.getTable();
-		case PLAYLIST:
-			return playlistTable.getTable();
-			default:
-				return null;
+			case SEARCH:
+				searchPanel.getTable().selectSong(c);
+			case RECENTS:
+				recentsPanel.selectSong(c);
+			case FAVOURITES:
+				favouritesPanel.selectSong(c);
+			case PLAYLIST:
+				playlistTable.selectSong(c);
 		}
 	}
 }

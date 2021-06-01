@@ -1,12 +1,5 @@
 package tds.appMusic.modelo;
 
-import tds.appMusic.modelo.util.PlaylistListener;
-import tds.appMusic.modelo.util.PremiumListener;
-import tds.appMusic.persistencia.DAOException;
-import tds.appMusic.persistencia.FactoriaDAO;
-import tds.appMusic.persistencia.IAdaptadorPlaylistDAO;
-import tds.appMusic.persistencia.IAdaptadorUsuarioDAO;
-
 import java.util.*;
 
 public class Usuario {
@@ -28,18 +21,13 @@ public class Usuario {
 	
 	//Datos de la cuenta
 	private boolean premium;
-	private final List<PremiumListener> premiumListeners;
 
 	private final Map<String, Playlist> playlists;
-	private final List<PlaylistListener> playlistListeners;
 
 	private final Map<Cancion, Integer> reproductions;
 	private List<Cancion> history;
 
 	private final List<IDescuento> descuentos;
-
-	private IAdaptadorPlaylistDAO adaptadorPlaylistDAO;
-	private IAdaptadorUsuarioDAO adaptadorUsuarioDAO;
 	
 	//Constructores
 	public Usuario(int id, String nombreReal, Date fechaU, String emailU, String nombreU, String passwordU, boolean premium) {
@@ -54,8 +42,6 @@ public class Usuario {
 		playlists = new HashMap<>();
 		history = new LinkedList<>();
 		reproductions = new HashMap<>();
-		playlistListeners = new LinkedList<>();
-		premiumListeners = new LinkedList<>();
 		descuentos = new LinkedList<>();
 
 		if(isYoung())
@@ -63,13 +49,6 @@ public class Usuario {
 
 		if(isElder())
 			descuentos.add(new DescuentoJubilado());
-
-		try {
-			adaptadorPlaylistDAO = FactoriaDAO.getInstancia().getPlaylistDAO();
-			adaptadorUsuarioDAO = FactoriaDAO.getInstancia().getUsuarioDAO();
-		} catch (DAOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	//Funciones
@@ -96,20 +75,6 @@ public class Usuario {
 
 	public void setPremium(boolean premium) {
 		this.premium = premium;
-
-		for (PremiumListener l : premiumListeners) {
-			l.premiumChanged(this, premium);
-		}
-
-		adaptadorUsuarioDAO.modificarUsuario(this);
-	}
-
-	public void addPremiumListener(PremiumListener listener) {
-		premiumListeners.add(listener);
-	}
-
-	public void removePremiumListener(PremiumListener listener) {
-		premiumListeners.remove(listener);
 	}
 
 	public Date getBirthdate() {
@@ -124,26 +89,24 @@ public class Usuario {
 		return playlists.get(name);
 	}
 
-	public Playlist addPlaylist(String name, List<Cancion> songs) {
-		Playlist pl = new Playlist(name, songs);
+	public Playlist addPlaylist(String name, Collection<Cancion> songs) {
+		Playlist pl = new Playlist(name, new LinkedList<>(songs));
 		if(playlists.containsKey(name))
 			return null;
 
 		playlists.put(name, pl);
-
-		adaptadorPlaylistDAO.registrarPlaylist(pl);
-		adaptadorUsuarioDAO.modificarUsuario(this);
-
-		notifyListeners();
 		return pl;
 	}
 
-	public void removePlaylist(String name) {
-		adaptadorPlaylistDAO.borrarPlaylist(playlists.get(name));
-		playlists.remove(name);
-		adaptadorUsuarioDAO.modificarUsuario(this);
+	public Playlist overwritePlaylist(String name, Collection<Cancion> songs) {
+		Playlist pl = playlists.get(name);
+		pl.setSongs(new LinkedList<>(songs));
 
-		notifyListeners();
+		return pl;
+	}
+
+	public Playlist removePlaylist(String name) {
+		return playlists.remove(name);
 	}
 
 	public String getPassword() {
@@ -173,8 +136,6 @@ public class Usuario {
 		int timesPlayed = reproductions.computeIfAbsent(song, k -> 0);
 		timesPlayed = timesPlayed + 1;
 		reproductions.put(song, timesPlayed);
-
-		adaptadorUsuarioDAO.modificarUsuario(this);
 	}
 
 	public boolean checkPassword(String password) {
@@ -185,16 +146,6 @@ public class Usuario {
 		this.playlists.clear();
 		playlists.forEach(p -> this.playlists.put(p.getNombre(), p));
     }
-
-    public void addPlaylistListener(PlaylistListener listener) {
-		playlistListeners.add(listener);
-	}
-
-	private void notifyListeners() {
-		for (PlaylistListener l : playlistListeners) {
-			l.playlistListChanged(new ArrayList<>(playlists.values()));
-		}
-	}
 
 	public IDescuento getMejorDescuento() {
 		if(descuentos.isEmpty())
@@ -230,12 +181,19 @@ public class Usuario {
 
 	@Override
 	public String toString() {
-		return "Usuario{" +
-				"id='" + id + '\'' +
-				"username='" + username + '\'' +
-				", password='" + password + '\'' +
-				", premium=" + premium +
-				", playlists=" + playlists +
-				'}';
+		return username;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Usuario usuario = (Usuario) o;
+		return email.equals(usuario.email) && username.equals(usuario.username);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, name, birthdate, email, username, password, premium, playlists, reproductions, history, descuentos);
 	}
 }

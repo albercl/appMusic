@@ -2,15 +2,15 @@ package tds.appMusic.gui.mainPanels;
 
 import javax.swing.JPanel;
 
+import tds.appMusic.gui.GuiUtils;
+import tds.appMusic.gui.MainWindow;
 import tds.appMusic.modelo.AppMusic;
-import tds.appMusic.oldgui.GuiUtils;
 
 import java.awt.Font;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.Insets;
-import java.awt.event.ActionListener;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 
@@ -18,6 +18,7 @@ public class NavigationPanel extends JPanel {
 	private final Font BUTTON_FONT = new Font("Tahoma", Font.PLAIN, 13);
 
 	private final AppMusic controlador = AppMusic.getInstanciaUnica();
+	private final MainWindow mainWindow;
 
 	private final GridBagLayout gridBagLayout;
 	private final JButton searchButton;
@@ -34,7 +35,9 @@ public class NavigationPanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public NavigationPanel() {
+	public NavigationPanel(MainWindow mainWindow) {
+		this.mainWindow = mainWindow;
+
 		gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] {110};
 		gridBagLayout.rowHeights = new int[] {25, 25, 25, 25, 25};
@@ -125,28 +128,20 @@ public class NavigationPanel extends JPanel {
 
 		favouritesButton.setVisible(controlador.isPremium());
 
-		controlador.addPremiumListener((user, isPremium) -> favouritesButton.setVisible(isPremium));
+		installListeners();
 
 		add(favouritesButton, gbc_favouritesButton);
 	}
-	
-	public void addSearchActionListener(ActionListener listener) {
-		searchButton.addActionListener(listener);
+
+	private void installListeners() {
+		searchButton.addActionListener(e -> mainWindow.setMainPanelView(MainPanel.SEARCH));
+		newListButton.addActionListener(e -> mainWindow.setMainPanelView(MainPanel.PLAYLIST_MOD));
+		recentsButton.addActionListener(e -> mainWindow.setMainPanelView(MainPanel.RECENTS));
+		myListsButton.addActionListener(e -> mainWindow.getPlaylistsList().setVisible(true));
+		favouritesButton.addActionListener(e -> mainWindow.setMainPanelView(MainPanel.FAVOURITES));
 	}
-	
-	public void addNewListActionListener(ActionListener listener) {
-		newListButton.addActionListener(listener);
-	}
-	
-	public void addRecentsActionListener(ActionListener listener) {
-		recentsButton.addActionListener(listener);
-	}
-	
-	public void addMyListsActionListener(ActionListener listener) {
-		myListsButton.addActionListener(listener);
-	}
-	
-	public void addFavouritesActionListener(ActionListener listener) {
-		favouritesButton.addActionListener(listener);
+
+	public void updatePremium(boolean isPremium) {
+		favouritesButton.setVisible(isPremium);
 	}
 }

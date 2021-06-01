@@ -37,6 +37,7 @@ public class PremiumWindow {
 
 	private final AppMusic controlador;
 	private final Usuario loggedUser;
+	private MainWindow mainWindow;
 
 	private static final float PRECIO = 50f;
 
@@ -80,15 +81,18 @@ public class PremiumWindow {
 		});
 	}
 
+	private PremiumWindow() {
+		controlador = AppMusic.getInstanciaUnica();
+		loggedUser = controlador.getLoggedUser();
+		initialize();
+	}
+
 	/**
 	 * Create the application.
 	 */
-	public PremiumWindow() {
-		controlador = AppMusic.getInstanciaUnica();
-		loggedUser = controlador.getLoggedUser();
-
-
-		initialize();
+	public PremiumWindow(MainWindow mainWindow) {
+		this();
+		this.mainWindow = mainWindow;
 	}
 	
 	public void setVisible(boolean value) {
@@ -105,7 +109,6 @@ public class PremiumWindow {
 
 		iconoAppMusic = new ImageIcon(GuiUtils.loadAppIcon("icons/iconoAppMusicPremium.png"));
 		frame.setIconImage(iconoAppMusic.getImage());
-
 
 		mainPanel = new JPanel();
 		frame.getContentPane().add(mainPanel, BorderLayout.CENTER);
@@ -200,6 +203,8 @@ public class PremiumWindow {
 		button.addActionListener(arg0 -> {
 			JOptionPane.showMessageDialog(frame, "A partir de ahora eres usuario premium");
 			controlador.setPremium(true);
+			mainWindow.updatePremium(true);
+
 			frame.setVisible(false);
 		});
 		button.setFont(new Font("Tahoma", Font.PLAIN, 13));

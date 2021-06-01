@@ -5,10 +5,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 
+import tds.appMusic.gui.GuiUtils;
+import tds.appMusic.gui.MainWindow;
 import tds.appMusic.modelo.AppMusic;
 import tds.appMusic.modelo.Cancion;
 import tds.appMusic.modelo.util.ReproductorListener;
-import tds.appMusic.oldgui.GuiUtils;
 
 import java.awt.Insets;
 
@@ -21,9 +22,13 @@ import javax.swing.JSlider;
 import javax.swing.JScrollPane;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public class PlayerPanel extends JPanel {
 	private final AppMusic controlador = AppMusic.getInstanciaUnica();
+	private final MainWindow mainWindow;
 
 	private final ImageIcon randomOffIcon;
 	private final ImageIcon randomOnIcon;
@@ -33,6 +38,7 @@ public class PlayerPanel extends JPanel {
 	private final ImageIcon forwardIcon;
 	private final ImageIcon replayOffIcon;
 	private final ImageIcon replayOnIcon;
+
 	private JPanel buttonsPanel;
 	private JButton randomButton;
 	private JButton backButton;
@@ -47,10 +53,22 @@ public class PlayerPanel extends JPanel {
 	private JLabel songArtistLabel;
 	private JLabel songGenreLabel;
 
+	//Queue control
+	private int currentSongIndex;
+	private Cancion currentSong;
+	private List<Cancion> queue;
+	//Copia de la cola para cuando se randomize la original
+	private List<Cancion> backupQueue;
+	private boolean isPaused = false;
+	private boolean isRepeating = false;
+	private boolean isRandom = false;
+
 	/**
 	 * Create the panel.
 	 */
-	public PlayerPanel() {
+	public PlayerPanel(MainWindow mainWindow) {
+		this.mainWindow = mainWindow;
+
 		setBorder(new EtchedBorder());
 		backIcon = new ImageIcon(GuiUtils.loadImage("icons/iconoBack.png"));
 		playIcon = new ImageIcon(GuiUtils.loadImage("icons/iconoPlay.png", 45, 45));
@@ -163,80 +181,157 @@ public class PlayerPanel extends JPanel {
 		slider = new JSlider();
 		slider.setValue(50);
 		slider.setMaximum(50);
-		slider.addChangeListener(e -> {
-			controlador.setVolume(slider.getValue() / 100f);
-		});
+
 
 		volumePanel.add(slider);
 
+		installListeners();
+	}
+
+	private void installListeners() {
+		slider.addChangeListener(e -> controlador.setVolume(slider.getValue() / 100f));
+
 		controlador.addListenerToPlayer(new ReproductorListener() {
 			@Override
-			public void onStartedSong(Cancion c) {
-				songTitleLabel.setText(c.getTitulo());
-				songArtistLabel.setText(c.getInterpretesString());
-				songGenreLabel.setText(c.getEstilo());
-			}
+			public void onFinishedSong(Cancion c) {
+				if(isRepeating) {
+					controlador.play(currentSong);
+				} else if (!nextSong()) {
+					currentSong = null;
+				} else {
+					mainWindow.selectSongOnTable(currentSong);
+				}
 
-			@Override
-			public void onEmptyQueue() {
-				songTitleLabel.setText("Esperando canción...");
-				songArtistLabel.setText("");
-				songGenreLabel.setText("");
+				setSongInfo(currentSong);
+
+			}
+		});
+
+		playButton.addActionListener(e -> {
+			int selection = mainWindow.getSelection();
+			List<Cancion> songs = mainWindow.getSongs();
+
+			if(currentSong == null) {
+				if(selection >= 0) {
+					currentSong = songs.get(selection);
+					playSong();
+				} else {
+					alternatePause();
+				}
+			} else {
+				if(selection >= 0) {
+					if(!songs.get(selection).equals(currentSong) && isPaused) {
+						currentSong = songs.get(selection);
+						playSong();
+					} else {
+						alternatePause();
+					}
+				}
+			}
+		});
+
+		backButton.addActionListener(e -> {
+			if(currentSongIndex - 1 >= 0) {
+				currentSongIndex -= 1;
+				currentSong = queue.get(currentSongIndex);
+				setSongInfo(currentSong);
+
+				isPaused = false;
+				playButton.setIcon(pauseIcon);
+				mainWindow.selectSongOnTable(currentSong);
+				controlador.play(currentSong);
+			}
+		});
+
+		forwardButton.addActionListener(e -> nextSong());
+
+		randomButton.addActionListener(e -> {
+			if(isRandom) {
+				isRandom = false;
+				queue = new LinkedList<>(backupQueue);
+				currentSongIndex = queue.indexOf(currentSong);
+
+				randomButton.setIcon(randomOffIcon);
+
+			} else {
+				isRandom = true;
+				Collections.shuffle(queue);
+
+				queue.add(0, currentSong);
+				currentSongIndex = 0;
+
+				randomButton.setIcon(randomOnIcon);
+			}
+		});
+
+		replayButton.addActionListener(e -> {
+			if(isRepeating) {
+				isRepeating = false;
+				replayButton.setIcon(replayOffIcon);
+			} else {
+				isRepeating = true;
+				replayButton.setIcon(replayOnIcon);
 			}
 		});
 	}
 
-	public JButton getRandomButton() {
-		return randomButton;
-	}
-
-	public void setRandom(boolean value) {
-		if(value)
-			randomButton.setIcon(randomOnIcon);
-		else
-			randomButton.setIcon(randomOffIcon);
-	}
-
-	public void alternateRandom() {
-		setRandom(!randomButton.getIcon().equals(randomOnIcon));
-	}
-
-	public JButton getBackButton() {
-		return backButton;
-	}
-
-	public JButton getPlayButton() {
-		return playButton;
-	}
-
-	public void setPlaying(boolean value) {
-		if(value)
+	private boolean	 nextSong() {
+		if(currentSongIndex + 1 < queue.size()) {
+			currentSongIndex += 1;
+			currentSong = queue.get(currentSongIndex);
+			setSongInfo(currentSong);
+			isPaused = false;
 			playButton.setIcon(pauseIcon);
-		else
+			mainWindow.selectSongOnTable(currentSong);
+			controlador.play(currentSong);
+			return true;
+		}
+
+		return false;
+	}
+
+	private void setSongInfo(Cancion c) {
+		if(c != null) {
+			songTitleLabel.setText(c.getTitulo());
+			songArtistLabel.setText(c.getInterpretesString());
+			songGenreLabel.setText(c.getEstilo());
+		} else {
+			songTitleLabel.setText("Esperando canción...");
+			songArtistLabel.setText("");
+			songGenreLabel.setText("");
+		}
+	}
+
+	private void playSong() {
+		currentSongIndex = mainWindow.getSelection();
+		queue = new LinkedList<>(mainWindow.getSongs());
+		backupQueue = new LinkedList<>(queue);
+
+		currentSong = queue.get(currentSongIndex);
+
+		if (isRandom) {
+			Collections.shuffle(queue);
+
+			queue.add(0, currentSong);
+			currentSongIndex = 0;
+		}
+
+		setSongInfo(currentSong);
+		mainWindow.selectSongOnTable(currentSong);
+		isPaused = false;
+		controlador.play(currentSong);
+		playButton.setIcon(pauseIcon);
+	}
+
+	private void alternatePause() {
+		if(isPaused) {
+			isPaused = false;
+			controlador.resume();
+			playButton.setIcon(pauseIcon);
+		} else {
+			isPaused = true;
+			controlador.pause();
 			playButton.setIcon(playIcon);
-
-	}
-
-	public void alternatePlayingPause() {
-		setPlaying(!playButton.getIcon().equals(pauseIcon));
-	}
-
-	public JButton getForwardButton() {
-		return forwardButton;
-	}
-
-	public JButton getReplayButton() {
-		return replayButton;
-	}
-
-	public void setReplay(boolean value) {
-		if(value)
-			replayButton.setIcon(replayOnIcon);
-		else
-			replayButton.setIcon(replayOffIcon);
-	}
-
-	public void alternateReplay() {
-		setReplay(!replayButton.getIcon().equals(replayOnIcon));
+		}
 	}
 }

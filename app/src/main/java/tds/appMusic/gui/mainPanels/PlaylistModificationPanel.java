@@ -7,8 +7,12 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+
+import tds.appMusic.gui.MainWindow;
+import tds.appMusic.gui.PlaylistListModel;
 import tds.appMusic.gui.auxiliarPanels.SearchControls;
 import tds.appMusic.gui.auxiliarPanels.SongTable;
+import tds.appMusic.gui.auxiliarPanels.SongTableModel;
 import tds.appMusic.modelo.AppMusic;
 import tds.appMusic.modelo.Cancion;
 import tds.appMusic.modelo.Playlist;
@@ -33,14 +37,17 @@ public class PlaylistModificationPanel extends JPanel {
 	private final SongTable searchTable;
 
 	private Playlist selectedPlaylist = null;
-	private final JList<Playlist> playlistList;
 	private final SearchControls searchControls;
+
+	private final MainWindow mainWindow;
+	private final PlaylistListModel playlistListModel;
 
 	/**
 	 * Create the panel.
 	 */
-	public PlaylistModificationPanel(JList<Playlist> playlistList) {
-		this.playlistList = playlistList;
+	public PlaylistModificationPanel(MainWindow mainWindow) {
+		this.mainWindow = mainWindow;
+		playlistListModel = mainWindow.getPlaylistsModel();
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] {500};
@@ -96,14 +103,14 @@ public class PlaylistModificationPanel extends JPanel {
 		gbl_playlistModificationPanel.rowWeights = new double[]{1.0};
 		playlistModificationPanel.setLayout(gbl_playlistModificationPanel);
 
-		searchTable = new SongTable();
+		searchTable = new SongTable(SongTableModel.NORMAL_MODE);
 		GridBagConstraints gbc_searchTable = new GridBagConstraints();
 		gbc_searchTable.fill = GridBagConstraints.BOTH;
 		gbc_searchTable.gridx = 0;
 		gbc_searchTable.gridy = 0;
 		playlistModificationPanel.add(searchTable, gbc_searchTable);
 
-		playlistTable = new SongTable();
+		playlistTable = new SongTable(SongTableModel.NORMAL_MODE);
 		playlistTable.setBorder(new TitledBorder("Playlist"));
 		GridBagConstraints gbc_playlistTable = new GridBagConstraints();
 		gbc_playlistTable.fill = GridBagConstraints.BOTH;
@@ -189,6 +196,8 @@ public class PlaylistModificationPanel extends JPanel {
 						JOptionPane.showMessageDialog(this, "No se ha podido crear la playlist. Ya existe o el nombre está en blanco");
 					}
 				}
+
+				mainWindow.updatedPlaylists();
 			} else {
 				//Sobreescribir playlist existente
 				JOptionPane.showConfirmDialog(this,
@@ -196,8 +205,7 @@ public class PlaylistModificationPanel extends JPanel {
 						"Creación de playlist",
 						JOptionPane.DEFAULT_OPTION);
 
-				controlador.removePlaylist(name);
-				controlador.addPlaylist(name, songs);
+				controlador.overwritePlaylist(name, songs);
 			}
 		});
 
@@ -209,6 +217,7 @@ public class PlaylistModificationPanel extends JPanel {
 				//Eliminar playlist existente
 				controlador.removePlaylist(playlistNameField.getText());
 				setPlaylist(null);
+				mainWindow.updatedPlaylists();
 			}
 		});
 

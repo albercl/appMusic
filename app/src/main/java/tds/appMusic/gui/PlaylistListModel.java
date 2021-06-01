@@ -5,6 +5,7 @@ import tds.appMusic.modelo.Playlist;
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,8 +33,8 @@ public class PlaylistListModel implements ListModel<Playlist> {
         listeners.remove(listDataListener);
     }
 
-    public void setPlaylists(List<Playlist> playlists) {
-        this.playlists = playlists;
+    public void setPlaylists(Collection<Playlist> playlists) {
+        this.playlists = new LinkedList<>(playlists);
         notifyListChanges();
     }
 

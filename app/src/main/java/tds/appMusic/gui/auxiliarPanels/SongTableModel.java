@@ -17,7 +17,6 @@ public class SongTableModel implements TableModel {
     public static final int REPRODUCTION_MODE = 1;
 
     private List<Cancion> canciones = new LinkedList<>();
-    private final Map<Cancion, Integer> reproducciones = controlador.getUserReproductions();
 
     private final List<TableModelListener> listeners = new LinkedList<>();
 
@@ -44,6 +43,7 @@ public class SongTableModel implements TableModel {
             case REPRODUCTION_MODE:
                 return 3;
         }
+
         return 0;
     }
 
@@ -90,7 +90,7 @@ public class SongTableModel implements TableModel {
                 return cancion.getInterpretesString();
             case 2:
                 if(mode == REPRODUCTION_MODE)
-                    return reproducciones.get(cancion);
+                    return controlador.getUserReproductions().get(cancion);
                 else
                     return null;
         }

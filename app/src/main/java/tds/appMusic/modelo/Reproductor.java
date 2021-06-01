@@ -14,140 +14,42 @@ public class Reproductor {
 	private MediaPlayer currentPlayer;
 	private Cancion currentSong;
 
-	private Usuario currentUser;
-
-	private List<Cancion> queue;
-	private List<Cancion> backupQueue;
-
-	private Runnable backupEndOfMedia;
-	private boolean isRepeating;
-    private boolean isRandomized;
     private float volume = 1f;
 
-    private List<ReproductorListener> listeners;
+    private final List<ReproductorListener> listeners;
 	
 	public Reproductor() {
         com.sun.javafx.application.PlatformImpl.startup(()->{});
 
-		queue = new LinkedList<>();
 		listeners = new LinkedList<>();
 	}
 
 	public void addListener(ReproductorListener listener) {
 	    listeners.add(listener);
     }
-
-    public void setCurrentUser(Usuario currentUser) {
-        this.currentUser = currentUser;
-    }
-
-    public void play(Playlist playlist, int index) {
-        play(playlist.getSongs(), index);
-	}
-
-    public void play(List<Cancion> songs, int index) {
-        queue.clear();
-        queue = new LinkedList<>(songs);
-
-        currentSong = queue.get(index);
-        currentPlayer = createPlayer(currentSong);
-
-        setRepeatToFalse();
-        isRandomized = false;
-    }
 	
     public void play(Cancion song) {
-	    if(currentSong == song) {
-	        currentPlayer.play();
-        } else {
-            queue.clear();
-            queue.add(song);
+	    if(currentPlayer != null) {
+            currentPlayer.stop();
 
-            currentSong = song;
-            currentPlayer = createPlayer(currentSong);
-
-            setRepeatToFalse();
-            isRandomized = false;
+            if (currentSong == song) {
+                currentPlayer.play();
+            } else {
+                currentSong = song;
+                currentPlayer = createPlayer(currentSong);
+            }
         }
     }
     
     public void pause() {
 	    if(currentSong != null) {
             currentPlayer.pause();
-            listeners.forEach(l -> l.onPausedSong(currentSong));
         }
     }
     
     public void resume() {
         if(currentSong != null) {
             currentPlayer.play();
-            listeners.forEach(l -> l.onResumedSong(currentSong));
-        }
-    }
-
-    public Cancion goNext() {
-	    if(currentSong != null) {
-            int position = queue.indexOf(currentSong);
-            if (position + 1 < queue.size()) {
-                currentSong = queue.get(position + 1);
-
-                currentPlayer.stop();
-                currentPlayer = createPlayer(currentSong);
-
-                setRepeatToFalse();
-            }
-        }
-
-        return currentSong;
-    }
-
-    public Cancion goBack() {
-        if (currentSong != null){
-            int position = queue.indexOf(currentSong);
-            if (position - 1 >= 0) {
-                currentSong = queue.get(position - 1);
-
-                currentPlayer.stop();
-                currentPlayer = createPlayer(currentSong);
-
-                setRepeatToFalse();
-            }
-        }
-
-        return currentSong;
-    }
-
-    public void alternateRandom() {
-	    if(currentSong != null) {
-            if (!isRandomized) {
-                backupQueue = new LinkedList<>(queue);
-                Collections.shuffle(queue);
-                queue.remove(currentSong);
-                queue.add(0, currentSong);
-
-                isRandomized = true;
-            } else {
-                queue = backupQueue;
-                isRandomized = false;
-            }
-
-            listeners.forEach(ReproductorListener::onAlternatedRandom);
-        }
-    }
-
-    public void alternateRepeat() {
-	    if(currentSong != null) {
-            if (isRepeating) {
-                currentPlayer.setOnEndOfMedia(backupEndOfMedia);
-                isRepeating = false;
-            } else {
-                backupEndOfMedia = currentPlayer.getOnEndOfMedia();
-                currentPlayer.setOnEndOfMedia(() -> currentPlayer.seek(Duration.ZERO));
-
-                isRepeating = true;
-            }
-
-            listeners.forEach(ReproductorListener::onAlternatedRepeat);
         }
     }
 
@@ -156,49 +58,18 @@ public class Reproductor {
     }
 
     private MediaPlayer createPlayer(Cancion song) {
-        String fileName = song.getRuta();
-        String route;
-        if(System.getProperty("os.name").equals("Linux"))
-        	route = System.getProperty("user.home") + "/tds/canciones/" + fileName.replace("\\", "/");
-        else
-        	route = "C:\\tds\\canciones\\" + fileName;
+        String route = song.getRutaCompleta();
         
         File f = new File(route);
         Media hit = new Media(f.toURI().toString());
         MediaPlayer player = new MediaPlayer(hit);
         player.setVolume(volume);
-        
-        player.setOnEndOfMedia(() -> {
-            int position = queue.indexOf(song);
-            listeners.forEach(l -> l.onFinishedSong(currentSong));
 
-            if(position + 1 < queue.size()) {
-                Cancion nextSong = queue.get(position + 1);
-                currentSong = nextSong;
-
-                currentPlayer = createPlayer(nextSong);
-                currentPlayer.play();
-
-                currentUser.playedSong(nextSong);
-            } else {
-                listeners.forEach(ReproductorListener::onEmptyQueue);
-                currentPlayer = null;
-                currentSong = null;
-            }
-        });
+        player.setOnEndOfMedia(() -> listeners.forEach(l -> l.onFinishedSong(song)));
 
         player.play();
-        listeners.forEach(l -> l.onStartedSong(currentSong));
-        currentUser.playedSong(song);
 
         return player;
-    }
-
-    private void setRepeatToFalse() {
-	    if(isRepeating) {
-	        isRepeating = false;
-	        listeners.forEach(ReproductorListener::onAlternatedRepeat);
-        }
     }
 
     public void setVolume(float volume) {
