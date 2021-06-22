@@ -7,6 +7,7 @@ import tds.appMusic.persistencia.PoolDAO;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 import tds.appMusic.modelo.Playlist;
+import tds.appMusic.modelo.Reproduccion;
 import tds.appMusic.modelo.Usuario;
 import tds.appMusic.persistencia.IAdaptadorUsuarioDAO;
 
@@ -55,6 +56,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
                         new Propiedad("contrasena", usuario.getPassword()),
                         new Propiedad("premium", String.valueOf(usuario.isPremium())),
                         new Propiedad("playlists", listToIdString(usuario.getPlaylists())),
+                        new Propiedad("reproducidas", listToIdString(usuario.getReproductions())),
                         new Propiedad("recientes", listToIdString(recientes.subList(0, Math.min(recientes.size(), 10))
         )))));
 
@@ -69,9 +71,14 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
     public void borrarUsuario(Usuario usuario) {
         Entidad entidadUsuario;
         AdaptadorPlaylistTDS adaptadorPlaylistTDS = AdaptadorPlaylistTDS.getInstanciaUnica();
+        AdaptadorReproduccionTDS adaptadorReproduccionTDS = AdaptadorReproduccionTDS.getInstanciaUnica();
 
         for(Playlist pl : usuario.getPlaylists()) {
             adaptadorPlaylistTDS.borrarPlaylist(pl);
+        }
+        
+        for(Reproduccion rep : usuario.getReproductions()) {
+            adaptadorReproduccionTDS.borrarReproduccion(rep);
         }
 
         entidadUsuario = servicioPersistencia.recuperarEntidad(usuario.getId());
@@ -106,6 +113,9 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
                     break;
                 case "playlists":
                     p.setValor(listToIdString(usuario.getPlaylists()));
+                    break;
+                case "reproducidas":
+                    p.setValor(listToIdString(usuario.getReproductions()));
                     break;
                 case "recientes":
                     List<Cancion> recientes = usuario.getHistory();
@@ -168,6 +178,11 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
                 idStringToSongList(
                         servicioPersistencia.recuperarPropiedadEntidad(entidadUsuario, "recientes"))
         );
+        
+        usuario.setReproducidas(
+                idStringToReproduccionList(
+                        servicioPersistencia.recuperarPropiedadEntidad(entidadUsuario, "reproducidas"))
+        );
 
         pool.addObjeto(entidadUsuario.getId(), usuario);
 
@@ -194,6 +209,10 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
             } else if (o instanceof Cancion) {
                 Cancion c = (Cancion) o;
                 ids.append(c.getId()).append(" ");
+            }
+            else if (o instanceof Reproduccion) {
+                Reproduccion rep = (Reproduccion) o;
+                ids.append(rep.getId()).append(" ");
             }
         }
 
@@ -226,5 +245,20 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
         }
 
         return canciones;
+    }
+    
+    private List<Reproduccion> idStringToReproduccionList(String ids) {
+        List<Reproduccion> reproducciones = new LinkedList<>();
+        if(ids != null) {
+            StringTokenizer tokenizer = new StringTokenizer(ids, " ");
+
+            AdaptadorReproduccionTDS adaptadorReproduccionTDS = AdaptadorReproduccionTDS.getInstanciaUnica();
+
+            while (tokenizer.hasMoreTokens()) {
+                reproducciones.add(adaptadorReproduccionTDS.recuperarReproduccion(Integer.parseInt((String) tokenizer.nextElement())));
+            }
+        }
+
+        return reproducciones;
     }
 }

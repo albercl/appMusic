@@ -26,4 +26,5 @@ public abstract class FactoriaDAO {
     public abstract IAdaptadorUsuarioDAO getUsuarioDAO();
     public abstract IAdaptadorPlaylistDAO getPlaylistDAO();
     public abstract IAdaptadorCancionDAO getCancionDAO();
+    public abstract IAdaptadorReproduccionDAO getReproduccionDAO();
 }

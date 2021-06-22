@@ -3,6 +3,7 @@ package tds.appMusic.persistencia.tds;
 import tds.appMusic.persistencia.FactoriaDAO;
 import tds.appMusic.persistencia.IAdaptadorCancionDAO;
 import tds.appMusic.persistencia.IAdaptadorPlaylistDAO;
+import tds.appMusic.persistencia.IAdaptadorReproduccionDAO;
 import tds.appMusic.persistencia.IAdaptadorUsuarioDAO;
 
 public class TDSFactoriaDAO extends FactoriaDAO {
@@ -22,4 +23,9 @@ public class TDSFactoriaDAO extends FactoriaDAO {
     public IAdaptadorCancionDAO getCancionDAO() {
         return AdaptadorCancionTDS.getInstanciaUnica();
     }
+
+	@Override
+	public IAdaptadorReproduccionDAO getReproduccionDAO() {
+		return AdaptadorReproduccionTDS.getInstanciaUnica();
+	}
 }

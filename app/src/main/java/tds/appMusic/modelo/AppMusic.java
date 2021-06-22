@@ -18,6 +18,7 @@ public class AppMusic {
 	private IAdaptadorUsuarioDAO usuarioDAO;
 	private IAdaptadorPlaylistDAO playlistDAO;
 	private IAdaptadorCancionDAO cancionDAO;
+	private IAdaptadorReproduccionDAO reproduccionDAO;
 
 	private final CatalogoCanciones songs;
 	private final CatalogoUsuarios users;
@@ -47,6 +48,7 @@ public class AppMusic {
 		usuarioDAO = factoriaDAO.getUsuarioDAO();
 		cancionDAO = factoriaDAO.getCancionDAO();
 		playlistDAO = factoriaDAO.getPlaylistDAO();
+		reproduccionDAO = factoriaDAO.getReproduccionDAO();
 
 		users = new CatalogoUsuarios(usuarioDAO.recuperarTodosUsuarios());
 
@@ -62,6 +64,12 @@ public class AppMusic {
 		addListenerToCargador(event -> songs.addCanciones(
 				Cargador.descargarCanciones(
 						event.getCanciones())));
+		
+		List<Reproduccion> reproducciones = reproduccionDAO.recuperarTodasReproducciones();
+		if (!reproducciones.isEmpty()) {
+			for (Reproduccion r : reproducciones)
+				reproduccionDAO.registrarReproduccion(r);
+		}
 	}
 
 	public boolean login(String user, String password) {
@@ -160,7 +168,13 @@ public class AppMusic {
 		return loggedUser.getHistory();
 	}
 
-	public Map<Cancion, Integer> getUserReproductions() { return loggedUser.getReproductions(); }
+	public long getUserNumReproductions(Cancion c) { 
+		return loggedUser.getNumRep(c); 
+		}
+	
+	public List<Reproduccion> getUserReproductions() { 
+		return loggedUser.getReproductions(); 
+	}
 
 	// Controles de reproducción
 	public void play(Cancion song) {
@@ -170,7 +184,8 @@ public class AppMusic {
 		catch (RuntimeException exception) {
 			System.out.println("Error: No se ha podido reproducir el archivo");
 		}
-		loggedUser.playedSong(song);
+		reproduccionDAO.registrarReproduccion(loggedUser.playedSong(song));	
+		usuarioDAO.modificarUsuario(loggedUser);
 	}
 
 	public void resume() {

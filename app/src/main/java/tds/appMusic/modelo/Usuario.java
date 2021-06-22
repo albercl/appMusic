@@ -24,8 +24,8 @@ public class Usuario {
 
 	private final Map<String, Playlist> playlists;
 
-	private final Map<Cancion, Integer> reproductions;
 	private List<Cancion> history;
+	private List<Reproduccion> reproducidas;
 
 	private final List<IDescuento> descuentos;
 	
@@ -41,7 +41,7 @@ public class Usuario {
 
 		playlists = new HashMap<>();
 		history = new LinkedList<>();
-		reproductions = new HashMap<>();
+		reproducidas = new LinkedList<>();
 		descuentos = new LinkedList<>();
 
 		if(isYoung())
@@ -126,16 +126,24 @@ public class Usuario {
 	}
 
 	public void setHistory(List<Cancion> history) {this.history = history; }
+	
+	public void setReproducidas(List<Reproduccion> reproducidas) {this.reproducidas = reproducidas; }
 
-	public Map<Cancion, Integer> getReproductions() {
-		return new HashMap<>(reproductions);
+	public List<Reproduccion> getReproductions() {
+		return new LinkedList<>(reproducidas);
 	}
 
-	public void playedSong(Cancion song) {
+	public Reproduccion playedSong(Cancion song) {
 		history.add(song);
-		int timesPlayed = reproductions.computeIfAbsent(song, k -> 0);
-		timesPlayed = timesPlayed + 1;
-		reproductions.put(song, timesPlayed);
+		Reproduccion rep = new Reproduccion(song);
+		reproducidas.add(rep);
+		ordenarFavoritas();
+		return rep;
+	}
+
+	private void ordenarFavoritas() {
+		this.getReproductions();
+		
 	}
 
 	public boolean checkPassword(String password) {
@@ -160,6 +168,13 @@ public class Usuario {
 
 		return mejorDescuento;
 	}
+	
+	public long getNumRep(Cancion cancion) {
+		long numRep = this.getReproductions().stream()
+			.filter(rep -> rep.getCancion().getTitulo().contentEquals(cancion.getTitulo()))
+			.count();
+		return numRep;
+	}
 
 	private boolean isElder() {
 		Calendar c = Calendar.getInstance();
@@ -178,6 +193,9 @@ public class Usuario {
 
 		return d.after(new Date(System.currentTimeMillis()));
 	}
+	
+
+	
 
 	@Override
 	public String toString() {
@@ -194,6 +212,6 @@ public class Usuario {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, name, birthdate, email, username, password, premium, playlists, reproductions, history, descuentos);
+		return Objects.hash(id, name, birthdate, email, username, password, premium, playlists, reproducidas, history, descuentos);
 	}
 }

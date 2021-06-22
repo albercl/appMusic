@@ -90,7 +90,7 @@ public class SongTableModel implements TableModel {
                 return cancion.getInterpretesString();
             case 2:
                 if(mode == REPRODUCTION_MODE)
-                    return controlador.getUserReproductions().get(cancion);
+                    return controlador.getUserNumReproductions(cancion);
                 else
                     return null;
         }
